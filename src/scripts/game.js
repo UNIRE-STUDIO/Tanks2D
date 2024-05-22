@@ -3,7 +3,7 @@ import Input from "./input.js";
 import LevelManager from "./levelManager.js";
 import SaveManager from "./saveManager.js";
 
-export let GameScreens = {MENU: 0, LEVEL_SELECTION: 1, PLAY: 2, PAUSE: 3, WIN: 4, GAMEOVER: 5};
+export let GameScreens = {MENU: 0, PLAY: 1, PAUSE: 2, WIN: 3, GAMEOVER: 4};
 
 export default class Game
 {
@@ -15,8 +15,6 @@ export default class Game
 
         this.input = new Input();
         this.input.changeScreenEvent = this.changeScreen.bind(this);
-        this.input.startGameEvent = this.startGame.bind(this);
-
     }
     init(config){
         this.config = config;
@@ -31,14 +29,12 @@ export default class Game
     changeScreen(screen, parameter = 0)
     {
         // Если нажата НЕ кнопка назад
-        //if (screen != -1) this.ui_controller.turnOnSection(screen);
         switch (screen) {
             case GameScreens.MENU:
                 this.currentScreen = GameScreens.MENU;
             break;
             case GameScreens.PLAY:
-                console.log("PLAY");
-                if (parameter == 1) this.levelManager.setRestart();
+                if (parameter == 1) this.levelManager.start();
                 else if (parameter == 2) this.levelManager.setResume();
                 this.currentScreen = GameScreens.PLAY;
             break;
@@ -58,12 +54,6 @@ export default class Game
         }
     }
 
-    startGame()
-    {
-        this.changeScreen(GameScreens.PLAY);
-        this.levelManager.start();
-    }
-
     update(lag)
     {   
         if (this.currentScreen != GameScreens.PLAY) return;
@@ -72,8 +62,10 @@ export default class Game
 
     render(lag)
     {
-        if (this.currentScreen == GameScreens.MENU) return;
-        this.config.ctx.clearRect(0, 0, this.config.canvas.width, this.config.canvas.height);
+        if (this.currentScreen == GameScreens.MENU){
+            this.config.ctx.clearRect(0, 0, this.config.canvas.width, this.config.canvas.height);
+            return;
+        }
         this.config.ctx.imageSmoothingEnabled = false; // Отключить размытие
         this.config.ctx.mozImageSmoothingEnabled = false;
         this.config.ctx.webkitImageSmoothingEnabled = false;

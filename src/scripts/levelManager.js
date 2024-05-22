@@ -20,25 +20,27 @@ export default class LevelManager
         this.gameOverEvent;
         this.saveManager;
 
-        this.map = [[0,0,0,0,0,1,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,1,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,1,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,1,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,1,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,1,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,1,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,1,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,1,0,0,0,0,0,0,0],
+        this.map = [[0,0,0,0,0,1,1,1,1,0,0,0,0],
+                    [0,0,0,0,0,1,1,1,1,0,0,0,0],
+                    [0,0,0,0,0,1,1,1,1,0,0,0,0],
+                    [0,0,0,0,0,1,1,1,1,0,0,0,0],
+                    [0,0,0,0,0,1,1,1,1,0,0,0,0],
+                    [0,0,0,0,0,1,1,1,1,0,0,0,0],
+                    [0,0,0,0,0,1,1,1,1,0,0,0,0],
+                    [0,0,0,0,0,1,1,1,1,0,0,0,0],
+                    [0,0,0,0,0,1,1,1,1,0,0,0,0],
                     [0,0,0,0,0,1,1,1,1,1,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,1,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,1,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,1,0,0,0]];
+                    [0,0,0,0,0,0,0,1,1,1,0,0,0],
+                    [0,0,0,0,0,0,0,1,1,1,0,0,0],
+                    [0,0,0,0,0,0,0,1,1,1,0,0,0]];
         this.tiles = [new Image(), new Image()];
         this.tiles[0].src = "/src/sprites/Grass.png";
         this.tiles[1].src = "/src/sprites/Water.png";
         
         this.config = config;
         input.moveEvent = this.move.bind(this);
+
+        this.player = new Tank(this.config);
     }
     
     setPause()
@@ -49,11 +51,6 @@ export default class LevelManager
     setResume()
     {
         this.isPause = false;
-    }
-
-    setRestart()
-    {
-        this.startLevel(this.currentLevel);
     }
 
     gameOver()
@@ -69,12 +66,13 @@ export default class LevelManager
 
     move(dirX, dirY)
     {
-        this.bunny.move(dirX,dirY);   
+        this.player.setDirection(dirX,dirY);   
     }
 
     update(lag)
     {
-        
+        if (this.isPause) return;
+        this.player.update(lag);
     }
 
     render()
@@ -85,5 +83,6 @@ export default class LevelManager
                 drawImage(this.ctx, this.tiles[this.map[i][j]], {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid});
             }
         }
+        this.player.render();
     }
 }

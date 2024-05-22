@@ -1,8 +1,8 @@
 <script>
   export default {
     props: {
-        startClick: {
-            type: Function,
+        game: {
+            type: Object,
             required: true
         }
     },
@@ -11,9 +11,10 @@
 
 <template>
     <div class="panel">
-        <button @click="startClick()">СТАРТ</button>
+        <button class="btn" @click="game.changeScreen(1,1)">СТАРТ</button>
     </div>
 </template>
 
 <style scoped>
+
 </style>

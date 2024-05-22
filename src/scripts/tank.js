@@ -2,51 +2,68 @@ import { drawImage } from "./general.js";
 
 export default class Bunny
 {
-    constructor(ctx, canvas, config, mapSize)
+    constructor(config)
     {
-        this.position = {
-            x: 3,
-            y: 3
-        }
-        this.dirX;
-        this.image = new Image();
-        this.image.src = "assets/Bunny.png";
-        this.ctx = ctx;
-        this.canvas = canvas;
         this.config = config;
-        this.mapSize = mapSize;
+        this.position = {
+            x: 3 * this.config.grid,
+            y: 8 * this.config.grid
+        }
+        this.moveY = 0;
+        this.moveX = 0;
+        this.dirY = -1;
+        this.dirX = 0;
+        this.image_up = new Image();
+        this.image_up.src = "/src/sprites/Tank_Up.png";
+        this.image_down = new Image();
+        this.image_down.src = "/src/sprites/Tank_Down.png";
+        this.image_right = new Image();
+        this.image_right.src = "/src/sprites/Tank_Right.png";
+        this.image_left = new Image();
+        this.image_left.src = "/src/sprites/Tank_Left.png";
+        
+        this.speed = 0.03;
     };
 
-    move(dirX, dirY)
+    setDirection(dirX, dirY)
     {
-        if (this.position.x + dirX == this.mapSize.x
-            || this.position.x + dirX < 0
-            || this.position.y + dirY == this.mapSize.y
-            || this.position.y + dirY < 0) return; // Если выходим за границы карты
-
-        if (dirX != 0) this.dirX = dirX; 
-        
-        this.position.x += dirX;
-        this.position.y += dirY;
+        // Если поворачиваем
+        if (this.dirX != 0 && dirY != 0) 
+        {
+            this.position.x = Math.round(this.position.x / this.config.grid * 2) * this.config.grid / 2;
+        }
+        else if (this.dirY != 0 && dirX != 0){
+            this.position.y = Math.round(this.position.y / this.config.grid * 2) * this.config.grid / 2;
+        }
+        this.moveX = dirX;
+        this.moveY = dirY;
     }
 
-    update()
+    update(lag)
     {
+        if ((this.moveX == 0 && this.moveY == 0)
+            || this.position.x + this.moveX + this.config.grid > this.config.viewSize.x * this.config.grid
+            || this.position.x + this.moveX < 0
+            || this.position.y + this.moveY + this.config.grid > this.config.viewSize.y * this.config.grid
+            || this.position.y + this.moveY < 0) return; // Если выходим за границы карты
+        
+        this.position.x += this.moveX * 1000 / lag * this.speed;
+        this.position.y += this.moveY * 1000 / lag * this.speed;
 
+        this.dirY = this.moveY;
+        this.dirX = this.moveX;
     }
 
     render()
     {
-        let pos = {x: this.position.x * this.config.grid, y: this.position.y * this.config.grid};
-        if (this.dirX < 0)
-        {
-            this.ctx.save();
-            this.ctx.translate(this.canvas.width, 0);
-            this.ctx.scale(-1,1);                       // Отражаем изображение 
-            drawImage(this.ctx, this.image, {x: this.canvas.width - pos.x - this.config.grid, y: pos.y}, {x:this.config.grid, y:this.config.grid});
-            this.ctx.restore();
-            return;
-        }
-        drawImage(this.ctx, this.image, pos, {x:this.config.grid, y:this.config.grid});
+        let pos = {x: this.position.x, y: this.position.y};
+        if (this.dirX == 1)
+            drawImage(this.config.ctx, this.image_right, pos, {x:this.config.grid, y:this.config.grid});
+        else if (this.dirX == -1)
+            drawImage(this.config.ctx, this.image_left, pos, {x:this.config.grid, y:this.config.grid});
+        else if (this.dirY == 1)
+            drawImage(this.config.ctx, this.image_down, pos, {x:this.config.grid, y:this.config.grid});
+        else if (this.dirY == -1)
+            drawImage(this.config.ctx, this.image_up, pos, {x:this.config.grid, y:this.config.grid});
     }
 }

@@ -1,21 +1,27 @@
 <script>
   import Game from "./scripts/game.js";
   import Config from "./scripts/config.js";
-  import MainMenu from "./components/MainMenu.vue";
+  import MainScreen from "./components/MainScreen.vue";
+  import MainScreen_Top from "./components/MainScreen_Top.vue";
+  import PlayScreen_Top from "./components/PlayScreen_Top.vue";
+  import PauseScreen from "./components/PauseScreen.vue";
+  import PauseScreen_Top from "./components/PauseScreen_Top.vue";
+  
   export default{
     components: {
-        MainMenu
+      MainScreen, 
+	  MainScreen_Top, 
+	  PlayScreen_Top,
+	  PauseScreen,
+	  PauseScreen_Top
     },
     data(){
       return{
         canvasWidth: '',
         canvasHeight: '',
         config: null,
-        game: null,
+        game: new Game(),
       }
-    },
-    beforeMount(){
-      this.game = new Game();
     },
     mounted(){
       this.config = new Config(this.$refs.myCanvas);
@@ -24,36 +30,63 @@
       this.canvasHeight = (this.config.viewSize.y * this.config.grid) + 'px';
     },
     methods: {
-      startGame(){
-        this.game.startGame();
-      }
-    } 
+    }
   }
 </script>
 
 <template>
-  <div class="app">
+	<div class="app">
     <h1 class="h1">TANKS 2D</h1>
-    <div class="canvas-wrapper">
-      <canvas ref="myCanvas" id="myCanvas"></canvas>
-      <div class="content-center-wrapper">
-        <MainMenu v-if="this.game.currentScreen == 0" :startClick="startGame"/>
-      </div>
-    </div>
-  </div>
+		<div class="game">
+			<div class="left-part">
+				<div class="top-wrapper">
+					<MainScreen_Top v-if="game.currentScreen == 0"/>
+					<PlayScreen_Top v-if="game.currentScreen == 1" :game="game"/>
+					<PauseScreen_Top v-if="game.currentScreen == 2" :game="game"/>
+				</div>
+				<div class="canvas-wrapper">
+					<canvas ref="myCanvas" id="myCanvas"></canvas>
+					<div class="content-center-wrapper">
+						<MainScreen v-if="game.currentScreen == 0" :game="game"/>
+						<PauseScreen v-if="game.currentScreen == 2" :game="game"/>
+					</div>
+				</div>
+			</div>
+			<div class="right-part">
+				
+			</div>
+		</div>
+	</div>
 </template>
 
 <style scoped>
   .app {
     font-family: Helvetica, sans-serif;
     text-align: center;
-    margin-top: 40px;
   }
-  .canvas-wrapper{
+  .h1 {
+    margin-bottom: 20px;
+  }
+  .game {
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+    background-color: #161618;
+	border-radius: 8px;
+	padding: 20px;
   }
-  .content-center-wrapper{
+  .right-part {
+    width: 100px;
+    border-color: dimgray;
+    border-left: 2px;
+  }
+  .top-wrapper {
+	height: 50px;
+	margin-bottom: 10px;
+  }
+  .canvas-wrapper {
+	display: flex;
+  }
+  .content-center-wrapper {
     width: v-bind(canvasWidth);
     height: v-bind(canvasHeight);
     z-index: 1;
@@ -62,8 +95,9 @@
     align-items: center;
   }
   #myCanvas {
-    background-color: rgb(167, 167, 167);
     position: absolute;
+	background-color: #2d2d2d;
+	border-radius: 4px;
   }
 
 </style>

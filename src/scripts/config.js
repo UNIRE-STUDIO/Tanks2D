@@ -2,7 +2,7 @@ export default class Config
 {
     constructor(canvas)
     {
-        this.grid = 32;
+        this.grid = 40;
         this.viewSize = {
             x: 13,
             y: 13
