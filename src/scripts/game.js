@@ -62,8 +62,8 @@ export default class Game
 
     render(lag)
     {
+        this.config.ctx.clearRect(0, 0, this.config.canvas.width, this.config.canvas.height);
         if (this.currentScreen == GameScreens.MENU){
-            this.config.ctx.clearRect(0, 0, this.config.canvas.width, this.config.canvas.height);
             return;
         }
         this.config.ctx.imageSmoothingEnabled = false; // Отключить размытие

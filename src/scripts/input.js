@@ -7,6 +7,7 @@ export default class Input
 
         this.changeScreenEvent;
         this.moveEvent;
+        this.shootEvent;
 
         this.dirX = 0;
         this.dirY = 0;
@@ -39,6 +40,10 @@ export default class Input
 
     setKeydown(e)
     {   
+        if (e.code === "Space")
+        {
+            this.shootEvent();
+        }
         if (e.code === "ArrowRight")
         {
             this.dirY = 0;
