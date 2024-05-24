@@ -9,7 +9,8 @@
     "deploy": "gh-pages -d dist",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "homepage": "https://unire-studio.github.io/Tanks2D"
   },
   "dependencies": {
     "vue": "^3.4.21"
