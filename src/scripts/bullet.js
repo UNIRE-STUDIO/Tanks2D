@@ -16,13 +16,13 @@ export default class Bullet
         this.id = id;
 
         this.image_up = new Image();
-        this.image_up.src = "/sprites/Bullet_Up.png";
+        this.image_up.src = "/Tanks2D/sprites/Bullet_Up.png";
         this.image_down = new Image();
-        this.image_down.src = "/sprites/Bullet_Down.png";
+        this.image_down.src = "/Tanks2D/sprites/Bullet_Down.png";
         this.image_right = new Image();
-        this.image_right.src = "/sprites/Bullet_Right.png";
+        this.image_right.src = "/Tanks2D/sprites/Bullet_Right.png";
         this.image_left = new Image();
-        this.image_left.src = "/sprites/Bullet_Left.png";
+        this.image_left.src = "/Tanks2D/sprites/Bullet_Left.png";
         
         this.speed = 0.06;
     }
