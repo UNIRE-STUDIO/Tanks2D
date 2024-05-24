@@ -35,8 +35,8 @@ export default class LevelManager
                             [0,0,0,0,0,0,0,0,0,0,0,0,0],
                             [0,0,0,0,0,0,0,0,0,0,0,0,0]];
         this.tiles = [new Image(), new Image()];
-        this.tiles[0].src = "/src/sprites/Grass.png";
-        this.tiles[1].src = "/src/sprites/Water.png";
+        this.tiles[0].src = "/sprites/Grass.png";
+        this.tiles[1].src = "/sprites/Water.png";
         
         this.config = config;
         input.moveEvent = this.move.bind(this);
