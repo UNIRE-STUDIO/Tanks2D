@@ -1,4 +1,4 @@
-import Bullet from "./bullet.js";
+import BulletPool from "./bulletPool.js";
 import { drawImage } from "./general.js";
 //import SaveManager from "./saveManager.js";
 import Tank from "./tank.js";
@@ -21,7 +21,7 @@ export default class LevelManager
         this.gameOverEvent;
         this.saveManager;
 
-        this.currentMap = [[0,0,0,0,0,1,1,1,1,0,0,0,0],
+        this.currentMap =  [[0,0,0,0,0,1,1,1,1,0,0,0,0],
                             [0,0,0,0,0,1,1,1,1,0,0,0,0],
                             [0,0,0,0,0,0,0,0,0,0,0,0,0],
                             [0,0,0,0,0,1,1,1,1,0,0,0,0],
@@ -39,13 +39,12 @@ export default class LevelManager
         this.tiles[1].src = "/Tanks2D/sprites/Water.png";
         
         this.config = config;
-        input.moveEvent = this.move.bind(this);
-        input.shootEvent = this.shoot.bind(this);
 
-        this.player = new Tank(this.config, this.currentMap, this.spawnBullet.bind(this));
+        this.BulletPool = new BulletPool(this.config, this.currentMap);
+        this.player = new Tank(this.config, this.currentMap, this.BulletPool.create.bind(this.BulletPool));
 
-        this.bullets = new Map();
-        this.bulletCounter = 0;
+        input.moveEvent = this.player.setDirection.bind(this.player);
+        input.shootEvent = this.player.shoot.bind(this.player);
     }
     
     setPause()
@@ -69,38 +68,11 @@ export default class LevelManager
         this.isPause = false;
     }
 
-    move(dirX, dirY)
-    {
-        this.player.setDirection(dirX,dirY);   
-    }
-
-    shoot()
-    {
-        this.player.shoot();   
-    }
-
-    spawnBullet(pos, dir)
-    {
-        if (this.bulletCounter > 100) this.bulletCounter = 0;
-        this.bullets.set(this.bulletCounter, new Bullet(pos, dir, this.config, 
-                        this.currentMap, this.removeBullet.bind(this), this.bulletCounter));
-        this.bulletCounter++;
-    }
-
-    removeBullet(id)
-    {
-        this.bullets.delete(id);
-        console.log(this.bullets.size);
-    }
-
     update(lag)
     {
         if (this.isPause) return;
         this.player.update(lag);
-        if (this.bullets.length == 0) return;
-        this.bullets.forEach(e => {
-            e.update(lag);
-        });
+        this.BulletPool.update(lag);
     }
 
     render()
@@ -113,10 +85,6 @@ export default class LevelManager
             }
         }
         this.player.render();
-
-        if (this.bullets.length == 0) return;
-        this.bullets.forEach(e => {
-            e.render();
-        });
+        this.BulletPool.render();
     }
 }

@@ -2,18 +2,15 @@ import { drawImage } from "./general.js";
 
 export default class Bullet
 {
-    constructor(pos, dir, config, currentMap, remove, id)
+    constructor(config, currentMap)
     {
         this.config = config;
-        this.position = {
-            x: pos.x + (dir.x * this.config.grid/2),
-            y: pos.y + (dir.y * this.config.grid/2)
-        }
-        this.dirY = dir.y;
-        this.dirX = dir.x;
+        this.posX = 0;
+        this.posY = 0;
+        this.dirY = 0;
+        this.dirX = 0;
         this.currentMap = currentMap;
-        this.remove = remove;
-        this.id = id;
+        this.isUse = false;
 
         this.image_up = new Image();
         this.image_up.src = "/Tanks2D/sprites/Bullet_Up.png";
@@ -24,35 +21,22 @@ export default class Bullet
         this.image_left = new Image();
         this.image_left.src = "/Tanks2D/sprites/Bullet_Left.png";
         
-        this.speed = 0.06;
+        this.speed = 0.15;
     }
 
-    update(lag)
+    create(pos, dir)
     {
-        if ((this.dirX == 0 && this.dirY == 0) 
-            || this.checkCollisionWithBorders()
-            || this.checkCollisionWithObstacle()) this.remove(this.id);
-        
-        this.position.x += this.dirX * 1000 / lag * this.speed;
-        this.position.y += this.dirY * 1000 / lag * this.speed;
+        this.posX = pos.x + (dir.x * this.config.grid/2);
+        this.posY = pos.y + (dir.y * this.config.grid/2);
+        this.dirY = dir.y;
+        this.dirX = dir.x;
+        this.isUse = true;
     }
 
     checkCollisionWithObstacle()
     {
-        // let tileX2 = 0;
-        // let tileY2 = 0;
-        // if (this.dirY != 0) 
-        // {
-        //     tileX2 = Math.round((this.position.x - (this.config.grid / 2) + this.dirX * this.config.grid / 2) / this.config.grid);
-        //     tileY2 = Math.round((this.position.y + this.dirY * this.config.grid / 2) / this.config.grid);
-        // }
-        // else if (this.dirX != 0)
-        // {
-        //     tileX2 = Math.round((this.position.x + this.dirX * this.config.grid / 2) / this.config.grid);
-        //     tileY2 = Math.round((this.position.y - (this.config.grid / 2) + this.dirY * this.config.grid / 2) / this.config.grid);
-        // }
-        let tileX = Math.round((this.position.x) / this.config.grid);
-        let tileY = Math.round((this.position.y) / this.config.grid);
+        let tileX = Math.round((this.posX) / this.config.grid);
+        let tileY = Math.round((this.posY) / this.config.grid);
         
         if (tileX >= this.config.viewSize.x || tileY >= this.config.viewSize.y
              || tileX < 0 || tileY < 0) return false;
@@ -62,15 +46,25 @@ export default class Bullet
 
     checkCollisionWithBorders()
     {
-            return (this.position.x > this.config.viewSize.x * this.config.grid
-            || this.position.x < 0
-            || this.position.y > this.config.viewSize.y * this.config.grid
-            || this.position.y < 0);
+            return (this.posX > this.config.viewSize.x * this.config.grid
+            || this.posX < 0
+            || this.posY > this.config.viewSize.y * this.config.grid
+            || this.posY < 0);
+    }
+
+    update(lag)
+    {
+        if ((this.dirX == 0 && this.dirY == 0) 
+            || this.checkCollisionWithBorders()
+            || this.checkCollisionWithObstacle()) this.isUse = false;
+        
+        this.posX += this.dirX * lag * this.speed;
+        this.posY += this.dirY * lag * this.speed;
     }
 
     render()
     {
-        let pos = {x: this.position.x, y: this.position.y};
+        let pos = {x: this.posX, y: this.posY};
         if (this.dirX == 1)
             drawImage(this.config.ctx, this.image_right, pos, {x:this.config.grid/2, y:this.config.grid/2});
         else if (this.dirX == -1)

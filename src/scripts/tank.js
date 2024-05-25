@@ -25,9 +25,9 @@ export default class Tank
         this.image_left = new Image();
         this.image_left.src = "/Tanks2D/sprites/Tank_Left.png";
         
-        this.speed = 0.03;
+        this.speed = 0.1;
         this.isCooldown = false;
-        this.cooldownTime = 100;
+        this.cooldownTime = 1000;
     }
 
     setDirection(dirX, dirY)
@@ -95,8 +95,8 @@ export default class Tank
             || this.checkCollisionWithBorders()
             || this.checkCollisionWithObstacle()) return; // Если выходим за границы карты
         
-        this.position.x += this.moveX * 1000 / lag * this.speed;
-        this.position.y += this.moveY * 1000 / lag * this.speed;
+        this.position.x += this.moveX * lag * this.speed;
+        this.position.y += this.moveY * lag * this.speed;
     }
 
     render()
