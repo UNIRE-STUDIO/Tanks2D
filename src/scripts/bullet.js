@@ -26,8 +26,8 @@ export default class Bullet
 
     create(pos, dir)
     {
-        this.posX = pos.x + (dir.x * this.config.grid/2);
-        this.posY = pos.y + (dir.y * this.config.grid/2);
+        this.posX = pos.x + (dir.x * this.config.grid);
+        this.posY = pos.y + (dir.y * this.config.grid);
         this.dirY = dir.y;
         this.dirX = dir.x;
         this.isUse = true;
@@ -66,12 +66,12 @@ export default class Bullet
     {
         let pos = {x: this.posX, y: this.posY};
         if (this.dirX == 1)
-            drawImage(this.config.ctx, this.image_right, pos, {x:this.config.grid/2, y:this.config.grid/2});
+            drawImage(this.config.ctx, this.image_right, pos, {x:this.config.grid, y:this.config.grid});
         else if (this.dirX == -1)
-            drawImage(this.config.ctx, this.image_left, pos, {x:this.config.grid/2, y:this.config.grid/2});
+            drawImage(this.config.ctx, this.image_left, pos, {x:this.config.grid, y:this.config.grid});
         else if (this.dirY == 1)
-            drawImage(this.config.ctx, this.image_down, pos, {x:this.config.grid/2, y:this.config.grid/2});
+            drawImage(this.config.ctx, this.image_down, pos, {x:this.config.grid, y:this.config.grid});
         else if (this.dirY == -1)
-            drawImage(this.config.ctx, this.image_up, pos, {x:this.config.grid/2, y:this.config.grid/2});
+            drawImage(this.config.ctx, this.image_up, pos, {x:this.config.grid, y:this.config.grid});
     }
 }

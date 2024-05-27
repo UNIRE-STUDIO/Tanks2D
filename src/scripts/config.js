@@ -2,10 +2,12 @@ export default class Config
 {
     constructor(canvas)
     {
-        this.grid = 40;
+        
+        this.grid = 20;
+        this.grid2 = this.grid * 2;
         this.viewSize = {
-            x: 13,
-            y: 13
+            x: 26,
+            y: 26
         };
         this.canvas = canvas;
         this.ctx = this.canvas.getContext('2d');
