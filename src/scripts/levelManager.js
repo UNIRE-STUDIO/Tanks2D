@@ -33,11 +33,11 @@ export default class LevelManager
                             [0,0, 0,0, 0,1, 1,0, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                             [0,0, 0,0, 0,1, 1,0, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                            [0,0, 0,0, 0,0, 0,0, 0,0, 0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0],
+                            [0,0, 0,0, 0,0, 0,0, 0,0, 0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0],
 
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0],
+                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0],
 
                             [0,0, 0,0, 1,1, 1,0, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                             [0,0, 0,0, 1,1, 1,0, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -45,8 +45,8 @@ export default class LevelManager
                             [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                             [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 
-                            [0,0, 0,0, 0,0, 0,0, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 0,0, 0,0, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                            [0,0, 0,0, 2,2, 2,2, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                            [0,0, 0,0, 2,2, 2,2, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 
                             [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                             [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -59,17 +59,23 @@ export default class LevelManager
 
                             [0,0, 0,0, 1,1, 1,1, 1,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                             [0,0, 0,0, 1,1, 1,1, 1,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]];
-        this.tiles = [new Image(), new Image()];
+        this.tiles = [new Image(), new Image(), new Image()];
         this.tiles[0].src = "/Tanks2D/sprites/Grass.png";
         this.tiles[1].src = "/Tanks2D/sprites/Water.png";
+        this.tiles[2].src = "/Tanks2D/sprites/Brick.png";
         
         this.config = config;
 
-        this.BulletPool = new BulletPool(this.config, this.currentMap);
+        this.BulletPool = new BulletPool(this.config, this.currentMap, this.removeTile.bind(this));
         this.player = new Tank(this.config, this.currentMap, this.BulletPool.create.bind(this.BulletPool));
 
         input.moveEvent = this.player.setDirection.bind(this.player);
         input.shootEvent = this.player.shoot.bind(this.player);
+    }
+
+    removeTile(posX, posY)
+    {
+        this.currentMap[posY][posX] = 0;
     }
     
     setPause()

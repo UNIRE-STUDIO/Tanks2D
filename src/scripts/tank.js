@@ -51,24 +51,15 @@ export default class Tank
     {
         let tileX = Math.ceil((this.position.x + this.config.grid * this.moveX) / this.config.grid);
         let tileY = Math.ceil((this.position.y + this.config.grid * this.moveY) / this.config.grid);
-        if (tileX >= this.config.viewSize.x || tileY >= this.config.viewSize.y
-            || tileX < 0 || tileY < 0) return false;
+        if (this.currentMap[tileY][tileX]) return true;
         if (this.moveY != 0) 
         {
-            return (this.currentMap[tileY][tileX] == 1 || this.currentMap[tileY][tileX+1] == 1);
+            return (this.currentMap[tileY][tileX] != 0 || this.currentMap[tileY][tileX+1] != 0);
         }
         else if (this.moveX != 0)
         {
-            return (this.currentMap[tileY][tileX] == 1 || this.currentMap[tileY+1][tileX] == 1);
+            return (this.currentMap[tileY][tileX] != 0 || this.currentMap[tileY+1][tileX] != 0);
         } 
-    }
-
-    checkCollisionWithBorders(incrementX, incrementY)
-    {
-            return (this.position.x + incrementX + this.config.grid2 > this.config.viewSize.x * this.config.grid
-            || this.position.x + incrementX < 0
-            || this.position.y + incrementY + this.config.grid2 > this.config.viewSize.y * this.config.grid
-            || this.position.y + incrementY < 0);
     }
 
     shoot()
@@ -86,8 +77,7 @@ export default class Tank
     {
         let incrementX = this.moveX * lag * this.speed;
         let incrementY = this.moveY * lag * this.speed;
-        if ((this.moveX == 0 && this.moveY == 0) 
-            || this.checkCollisionWithBorders(incrementX, incrementY)
+        if ((this.moveX == 0 && this.moveY == 0)
             || this.checkCollisionWithObstacle()) return; // Если выходим за границы карты
         
         this.position.x += incrementX;
