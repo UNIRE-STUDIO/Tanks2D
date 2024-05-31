@@ -2,19 +2,21 @@ import { drawImage, drawRect } from "./general.js";
 
 export default class Tank
 {
-    constructor(config, currentMap, spawnBullet)
+    constructor(config, spawnBullet)
     {
         this.config = config;
         this.position = {
-            x: 0 * this.config.grid2,
-            y: 3 * this.config.grid2
+            x: 0,
+            y: 0
         }
         this.moveY = 0;
         this.moveX = 0;
         this.dirY = -1;
         this.dirX = 0;
-        this.currentMap = currentMap;
         this.spawnBullet = spawnBullet;
+        this.isPause = false;
+        this.currentMap;
+        this.isUse = false;
 
         this.image_up = new Image();
         this.image_up.src = "/Tanks2D/sprites/Tank_Up.png";
@@ -30,8 +32,23 @@ export default class Tank
         this.cooldownTime = 1000;
     }
 
+    init(currentMap, pos)
+    {
+        this.currentMap = currentMap;
+        this.position.x = pos.x * this.config.grid2;
+        this.position.y = pos.y * this.config.grid2;
+        this.isUse = true;
+    }
+
+    reset()
+    {
+        this.isUse = false;
+    }
+
     setDirection(dirX, dirY)
     {
+        if (this.isPause || !this.isUse) return;
+
         // Если поворачиваем
         if (this.dirX != 0 && dirY != 0) 
         {
@@ -51,7 +68,8 @@ export default class Tank
     {
         let tileX = Math.ceil((this.position.x + this.config.grid * this.moveX) / this.config.grid);
         let tileY = Math.ceil((this.position.y + this.config.grid * this.moveY) / this.config.grid);
-        if (this.currentMap[tileY][tileX]) return true;
+        if (this.currentMap[tileY] === undefined 
+            || this.currentMap[tileY][tileX] === undefined) return true;
         if (this.moveY != 0) 
         {
             return (this.currentMap[tileY][tileX] != 0 || this.currentMap[tileY][tileX+1] != 0);
@@ -64,8 +82,9 @@ export default class Tank
 
     shoot()
     {
-        if (this.isCooldown) return;
-        let centerPos = {x: this.position.x + this.config.grid/2, y: this.position.y + this.config.grid/2}
+        if (this.isCooldown || this.isPause || !this.isUse) return;
+        let centerPos = {x: this.position.x + this.config.grid/2 + (this.dirX * this.config.grid), 
+        y: this.position.y + this.config.grid/2 + (this.dirY * this.config.grid)};
         this.spawnBullet(centerPos, {x: this.dirX, y: this.dirY});
         this.isCooldown = true;
         setTimeout(() => {
@@ -75,6 +94,7 @@ export default class Tank
 
     update(lag)
     {
+        if (!this.isUse) return;
         let incrementX = this.moveX * lag * this.speed;
         let incrementY = this.moveY * lag * this.speed;
         if ((this.moveX == 0 && this.moveY == 0)
@@ -86,6 +106,8 @@ export default class Tank
 
     render()
     {
+        if (!this.isUse) return;
+
         let pos = {x: this.position.x, y: this.position.y};
         if (this.dirX == 1)
             drawImage(this.config.ctx, this.image_right, pos, {x:this.config.grid2, y:this.config.grid2});

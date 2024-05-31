@@ -16,7 +16,8 @@ export default class Game
         this.input = new Input();
         this.input.changeScreenEvent = this.changeScreen.bind(this);
     }
-    init(config){
+    init(config)
+    {
         this.config = config;
         this.saveManager = new SaveManager(); 
         new GameLoop(this.update.bind(this), this.render.bind(this));

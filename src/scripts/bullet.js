@@ -2,14 +2,14 @@ import { drawImage, drawRect } from "./general.js";
 
 export default class Bullet
 {
-    constructor(config, currentMap, removeTile)
+    constructor(config, removeTile)
     {
         this.config = config;
         this.posX = 0;
         this.posY = 0;
         this.dirY = 0;
         this.dirX = 0;
-        this.currentMap = currentMap;
+        this.currentMap;
         this.isUse = false;
 
         this.image_up = new Image();
@@ -51,7 +51,6 @@ export default class Bullet
         {
             this.removeTile(tileX, tileY);
             isCollision = true;
-            console.log("Основной");
         }
         if (this.dirY != 0 
             && this.currentMap[0][tileX - 1] !== undefined
@@ -59,7 +58,6 @@ export default class Bullet
         {
             this.removeTile(tileX - 1, tileY);
             isCollision = true;
-            console.log("Дополнительный");
         }
         else if (this.dirX != 0 
             && this.currentMap[tileY - 1] !== undefined
@@ -67,7 +65,6 @@ export default class Bullet
         {
             this.removeTile(tileX, tileY - 1);
             isCollision = true;
-            console.log("Дополнительный");
         }
         return isCollision;
     }

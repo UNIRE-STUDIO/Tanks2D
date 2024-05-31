@@ -2,6 +2,7 @@ import BulletPool from "./bulletPool.js";
 import { drawImage } from "./general.js";
 //import SaveManager from "./saveManager.js";
 import Tank from "./tank.js";
+import levels from "./levels.json";
 
 export default class LevelManager
 {
@@ -21,44 +22,9 @@ export default class LevelManager
         this.gameOverEvent;
         this.saveManager;
 
-        this.currentMap =  [[0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-
-                            [0,0, 0,0, 0,1, 1,0, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 0,1, 1,0, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-
-                            [0,0, 0,0, 0,0, 0,0, 0,0, 0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 0,0, 0,0, 0,0, 0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0],
-
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0],
-
-                            [0,0, 0,0, 1,1, 1,0, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 1,1, 1,0, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-
-                            [0,0, 0,0, 2,2, 2,2, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 2,2, 2,2, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-
-                            [0,0, 0,0, 1,1, 1,1, 0,0, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 1,1, 1,1, 0,1, 0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-
-                            [0,0, 0,0, 1,1, 1,1, 1,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                            [0,0, 0,0, 1,1, 1,1, 1,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]];
+        this.currentLevel = 0;
+        this.currentMap = null;
+        
         this.tiles = [new Image(), new Image(), new Image()];
         this.tiles[0].src = "/Tanks2D/sprites/Grass.png";
         this.tiles[1].src = "/Tanks2D/sprites/Water.png";
@@ -66,8 +32,8 @@ export default class LevelManager
         
         this.config = config;
 
-        this.BulletPool = new BulletPool(this.config, this.currentMap, this.removeTile.bind(this));
-        this.player = new Tank(this.config, this.currentMap, this.BulletPool.create.bind(this.BulletPool));
+        this.bulletPool = new BulletPool(this.config, this.removeTile.bind(this));
+        this.player = new Tank(this.config, this.bulletPool.create.bind(this.bulletPool));
 
         input.moveEvent = this.player.setDirection.bind(this.player);
         input.shootEvent = this.player.shoot.bind(this.player);
@@ -81,11 +47,13 @@ export default class LevelManager
     setPause()
     {
         this.isPause = true;
+        this.player.isPause = true;
     }
 
     setResume()
     {
         this.isPause = false;
+        this.player.isPause = false;
     }
 
     gameOver()
@@ -95,15 +63,31 @@ export default class LevelManager
 
     start()
     {
-        this.score = 0;
-        this.isPause = false;
+        this.reset();
+        this.currentMap = [];
+
+        // Поскольку Object.assign делает только поверхностную копию мы присваиваем каждую полосу отдельно
+        for (let i = 0; i < levels[this.currentLevel].map.length; i++) {
+            this.currentMap.push(Object.assign({}, levels[this.currentLevel].map[i]));
+        }
+        setTimeout(() => {        
+            this.bulletPool.init(this.currentMap);
+            this.player.init(this.currentMap, levels[this.currentLevel].playerSpawnPos1);
+            this.score = 0;
+            this.isPause = false;
+            this.player.isPause = false;
+        }, 1000);
+    }
+    reset()
+    {
+        this.player.reset();
     }
 
     update(lag)
     {
         if (this.isPause) return;
         this.player.update(lag);
-        this.BulletPool.update(lag);
+        this.bulletPool.update(lag);
     }
 
     render()
@@ -116,6 +100,6 @@ export default class LevelManager
             }
         }
         this.player.render();
-        this.BulletPool.render();
+        this.bulletPool.render();
     }
 }
