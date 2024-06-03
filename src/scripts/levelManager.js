@@ -72,7 +72,7 @@ export default class LevelManager
         }
         setTimeout(() => {        
             this.bulletPool.init(this.currentMap);
-            this.player.init(this.currentMap, levels[this.currentLevel].playerSpawnPos1);
+            this.player.create(this.currentMap, levels[this.currentLevel].playerSpawnPos1);
             this.score = 0;
             this.isPause = false;
             this.player.isPause = false;

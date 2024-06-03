@@ -32,7 +32,7 @@ export default class Tank
         this.cooldownTime = 1000;
     }
 
-    init(currentMap, pos)
+    create(currentMap, pos)
     {
         this.currentMap = currentMap;
         this.position.x = pos.x * this.config.grid2;
