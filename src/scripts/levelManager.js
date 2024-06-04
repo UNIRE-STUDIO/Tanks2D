@@ -3,6 +3,7 @@ import { drawImage } from "./general.js";
 //import SaveManager from "./saveManager.js";
 import Tank from "./tank.js";
 import levels from "./levels.json";
+import NpcPool from "./npcPool.js";
 
 export default class LevelManager
 {
@@ -34,6 +35,7 @@ export default class LevelManager
 
         this.bulletPool = new BulletPool(this.config, this.removeTile.bind(this));
         this.player = new Tank(this.config, this.bulletPool.create.bind(this.bulletPool));
+        this.npcPool = new NpcPool(this.config, this.bulletPool);
 
         input.moveEvent = this.player.setDirection.bind(this.player);
         input.shootEvent = this.player.shoot.bind(this.player);
@@ -48,12 +50,14 @@ export default class LevelManager
     {
         this.isPause = true;
         this.player.isPause = true;
+        this.npcPool.setPause();
     }
 
     setResume()
     {
         this.isPause = false;
         this.player.isPause = false;
+        this.npcPool.setResume();
     }
 
     gameOver()
@@ -73,6 +77,7 @@ export default class LevelManager
         setTimeout(() => {        
             this.bulletPool.init(this.currentMap);
             this.player.create(this.currentMap, levels[this.currentLevel].playerSpawnPos1);
+            this.npcPool.init(this.currentMap, this.currentLevel);
             this.score = 0;
             this.isPause = false;
             this.player.isPause = false;
@@ -88,6 +93,7 @@ export default class LevelManager
         if (this.isPause) return;
         this.player.update(lag);
         this.bulletPool.update(lag);
+        this.npcPool.update(lag);
     }
 
     render()
@@ -101,5 +107,6 @@ export default class LevelManager
         }
         this.player.render();
         this.bulletPool.render();
+        this.npcPool.render();
     }
 }

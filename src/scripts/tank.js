@@ -91,10 +91,9 @@ export default class Tank
             this.isCooldown = false;
         }, this.cooldownTime);
     }
-
-    update(lag)
+    
+    move(lag)
     {
-        if (!this.isUse) return;
         let incrementX = this.moveX * lag * this.speed;
         let incrementY = this.moveY * lag * this.speed;
         if ((this.moveX == 0 && this.moveY == 0)
@@ -102,6 +101,12 @@ export default class Tank
         
         this.position.x += incrementX;
         this.position.y += incrementY;
+    }
+
+    update(lag)
+    {
+        if (!this.isUse) return;
+        this.move(lag);
     }
 
     render()
