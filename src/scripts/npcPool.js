@@ -18,7 +18,7 @@ export default class NpcPool
         {
             this.tanks[i] = new NpcTank(this.config, bulletPool);
         }
-        this.cooldown = 4;
+        this.cooldown = 2;
         this.timerSpawn = new Timer(this.cooldown, this.create.bind(this));
     }
 
