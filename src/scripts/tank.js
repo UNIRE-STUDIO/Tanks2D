@@ -54,7 +54,8 @@ export default class Tank
         {
             this.position.x = Math.round(this.position.x / this.config.grid) * this.config.grid;
         }
-        else if (this.dirY != 0 && dirX != 0){
+        else if (this.dirY != 0 && dirX != 0)
+        {
             this.position.y = Math.round(this.position.y / this.config.grid) * this.config.grid;
         }
         this.moveX = dirX;

@@ -11,7 +11,7 @@ export default class NpcPool
         this.currentMap;
         this.currentLevel;
 
-        const pool_size = 1;
+        const pool_size = 3;
         this.tanks = [];
 
         for (let i = 0; i < pool_size; i++) 
