@@ -1,4 +1,4 @@
-import { drawRect, randomRange } from "./general.js";
+import { drawRect, randomRange, moveTo, coordinatesToId, idToCoordinates } from "./general.js";
 import Tank from "./tank.js";
 
 export default class NpcTank extends Tank 
@@ -25,7 +25,7 @@ export default class NpcTank extends Tank
         this.moveY = this.dirY;
         setTimeout(() => {
             this.drivingMode = 1;
-            this.depthFirstSearch([Math.floor(this.position.x / this.config.grid), Math.floor(this.position.y / this.config.grid)])
+            this.depthFirstSearch([Math.floor(this.position.x / this.config.grid), Math.floor(this.position.y / this.config.grid)]);
         }, 10000);
     }
 
@@ -116,12 +116,13 @@ export default class NpcTank extends Tank
 
     movingTowardsTheGoal()
     {
-
+        //moveTo(this.position, this.visited.get);
     }
 
     depthFirstSearch(pos)
     {
-        this.visited.push(pos.toString());
+        let l = this.currentMap[0].length;
+        this.visited.push(coordinatesToId(pos[0], pos[1], l));
         if (pos[0] == this.target[0] && pos[1] == this.target[1])
         {
             console.log(this.visited);
@@ -129,25 +130,25 @@ export default class NpcTank extends Tank
         }
         if (this.currentMap[pos[1]][pos[0] - 2] !== undefined // Проверяем слева
          && this.currentMap[pos[1]][pos[0] - 2] == 0
-         && !this.visited.includes([pos[0] - 2, pos[1]].toString()))
+         && !this.visited.includes(coordinatesToId(pos[0] - 2, pos[1], l)))
         {
             this.stack.push([pos[0] - 2, pos[1]]);
         }
         if (this.currentMap[pos[1] - 2] !== undefined // Проверяем сверху
          && this.currentMap[pos[1] - 2][pos[0]] == 0
-         && !this.visited.includes([pos[0], pos[1] - 2].toString()))
+         && !this.visited.includes(coordinatesToId(pos[0], pos[1] - 2, l)))
         {
             this.stack.push([pos[0], pos[1] - 2]);
         }
         if (this.currentMap[pos[1]][pos[0] + 2] !== undefined // Проверяем справа
          && this.currentMap[pos[1]][pos[0] + 2] == 0
-         && !this.visited.includes([pos[0] + 2, pos[1]].toString()))
+         && !this.visited.includes(coordinatesToId(pos[0] + 2, pos[1], l)))
         {
             this.stack.push([pos[0] + 2, pos[1]]);
         }
         if (this.currentMap[pos[1] + 2] !== undefined // Проверяем снизу
          && this.currentMap[pos[1] + 2][pos[0]] == 0
-         && !this.visited.includes([pos[0], pos[1] + 2].toString()))
+         && !this.visited.includes(coordinatesToId(pos[0], pos[1] + 2, l)))
         {
             this.stack.push([pos[0], pos[1] + 2]);
         }
@@ -164,13 +165,21 @@ export default class NpcTank extends Tank
         }
         else
         {
-            
+            this.movingTowardsTheGoal();
         }
     }
 
     render()
     {
         super.render();
+        
+        for (let i = 0; i < this.visited.length; i++) {
+            let pos = {
+                        x: idToCoordinates(this.visited[i]).x * this.config.grid,
+                        y: idToCoordinates(this.visited[i]).y * this.config.grid
+                    }; 
+            drawRect(this.config.ctx, pos, {x:this.config.grid, y:this.config.grid}, "#ff7");
+        }
         // let pos = 0;
         // if (this.dirY != 0) 
         // {

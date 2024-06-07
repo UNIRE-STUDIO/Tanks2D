@@ -72,7 +72,7 @@ export default class LevelManager
 
         // Поскольку Object.assign делает только поверхностную копию мы присваиваем каждую полосу отдельно
         for (let i = 0; i < levels[this.currentLevel].map.length; i++) {
-            this.currentMap.push(Object.assign({}, levels[this.currentLevel].map[i]));
+            this.currentMap.push(levels[this.currentLevel].map[i].slice());
         }
         setTimeout(() => {        
             this.bulletPool.init(this.currentMap);

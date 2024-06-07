@@ -72,3 +72,14 @@ export function drawImage(ctx, image, pos, scale)
 {
     ctx.drawImage(image, pos.x, pos.y, scale.x, scale.y);
 }
+
+export function coordinatesToId(x, y, length)
+{
+    return x + y + length * y - 1 * y;
+}
+
+export function idToCoordinates(id, length)
+{
+    let y = Math.floor(id/length);
+    return {x: id - length * y, y: y};
+}
