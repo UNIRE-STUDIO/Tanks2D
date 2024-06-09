@@ -1,9 +1,9 @@
-import { drawRect, randomRange, moveTo, coordinatesToId, idToCoordinates } from "./general.js";
+import { drawRect, drawText, randomRange, moveTo, coordinatesToId, idToCoordinates } from "./general.js";
 import Tank from "./tank.js";
 
 export default class NpcTank extends Tank 
 {
-    constructor(config, spawnBullet)
+    constructor(config, spawnBullet, player)
     {
         super(config, spawnBullet);
         this.dirY = 1;
@@ -12,10 +12,18 @@ export default class NpcTank extends Tank
         this.isBlockTurn = false;
         this.drivingMode = 0; // 0 =
 
+        this.player = player;
+        
         this.stack = [];
         this.visited = [];
-        this.target = [0,0];
-        this.counter = 0;
+        this.whereFrom = new Map();
+        this.path = [];
+        this.target = [24,24];
+
+        this.sides = [[-2, 0], // слева
+                      [0, -2], // сверху
+                      [2, 0],  // справа
+                      [0, 2]]; // снизу
     }
 
     create(currentMap, pos)
@@ -25,7 +33,14 @@ export default class NpcTank extends Tank
         this.moveY = this.dirY;
         setTimeout(() => {
             this.drivingMode = 1;
-            this.depthFirstSearch([Math.floor(this.position.x / this.config.grid), Math.floor(this.position.y / this.config.grid)]);
+            this.target = [Math.round(this.player.position.x / this.config.grid2) * 2,
+                           Math.round(this.player.position.y / this.config.grid2) * 2];
+            console.log(this.target);
+            console.log({ x:Math.round(this.position.x / this.config.grid2) * 2, 
+            y:Math.round(this.position.y / this.config.grid2) * 2});
+            this.identifyPrioritiesSides();
+            this.depthFirstSearch({ x:Math.round(this.position.x / this.config.grid2) * 2, 
+                                    y:Math.round(this.position.y / this.config.grid2) * 2});
         }, 10000);
     }
 
@@ -119,40 +134,80 @@ export default class NpcTank extends Tank
         //moveTo(this.position, this.visited.get);
     }
 
+    identifyPrioritiesSides()
+    {
+        let distX = this.player.position.x - this.position.x;
+        let distY = this.player.position.y - this.position.y;
+        // По горизонтали ближе
+        if (Math.abs(distX) < Math.abs(distY)) 
+        {
+            
+            this.sides[3] = [distX < 0 ? -2 : 2, 0];
+            this.sides[2] = [0, distY < 0 ? -2 : 2];
+            this.sides[1] = [distX < 0 ? 2 : -2, 0];
+            this.sides[0] = [0, distY < 0 ? 2 : -2];
+        }
+        else // По вертикали ближе
+        {
+            this.sides[3] = [0, distY < 0 ? -2 : 2];
+            this.sides[2] = [distX < 0 ? -2 : 2, 0];
+            this.sides[1] = [0, distY < 0 ? 2 : -2];
+            this.sides[0] = [distX < 0 ? 2 : -2, 0];
+        }
+    }
+
+    saveWhereFrom(currentId, neighboringId) 
+    {
+        // Запоминаем откуда мы нашли эту клетку
+        if (!this.whereFrom.has(currentId)) 
+            this.whereFrom.set(currentId, []);
+            
+        this.whereFrom.get(currentId).push(neighboringId);  
+    }
+
     depthFirstSearch(pos)
     {
         let l = this.currentMap[0].length;
-        this.visited.push(coordinatesToId(pos[0], pos[1], l));
-        if (pos[0] == this.target[0] && pos[1] == this.target[1])
+        this.visited.push(coordinatesToId(pos.x, pos.y, l));
+        if (pos.x == this.target[0] && pos.y == this.target[1]) // Дошли до цели
         {
-            console.log(this.visited);
+            this.path.push(coordinatesToId(pos.x, pos.y, l));
+            while(this.visited[0] !== this.path[this.path.length-1]) // Если дошли до старотовой позиции
+            {
+                console.log(this.path[this.path.length-1]);
+                console.log(this.whereFrom.get(this.path[this.path.length-1]));
+                this.path.push(this.whereFrom.get(this.path[this.path.length-1]));
+            }
+            this.path.reverse();
             return;
         }
-        if (this.currentMap[pos[1]][pos[0] - 2] !== undefined // Проверяем слева
-         && this.currentMap[pos[1]][pos[0] - 2] == 0
-         && !this.visited.includes(coordinatesToId(pos[0] - 2, pos[1], l)))
+        
+        let x = 0;
+        let y = 0;
+        let priority = [];
+        for (let i = 0; i < 4; i++) 
         {
-            this.stack.push([pos[0] - 2, pos[1]]);
+            x = pos.x + this.sides[i][0];
+            y = pos.y + this.sides[i][1];
+            let getId = coordinatesToId(x, y, l);
+            if (this.currentMap[y] !== undefined
+            && this.currentMap[y][x] !== undefined
+            && this.currentMap[y][x] == 0
+            && !this.visited.includes(getId))
+            {
+                if (!this.stack.includes(getId)) // Если клетка НЕ находится в очереди ставим её в приоритет
+                {
+                    this.saveWhereFrom(coordinatesToId(pos.x, pos.y, l), getId);
+                    priority.push(getId);
+                    continue;
+                }
+                this.saveWhereFrom(coordinatesToId(pos.x, pos.y, l), getId);
+                this.stack.push(getId);          // Если клетка находится в очереди добавляем её обычным образом
+            }
         }
-        if (this.currentMap[pos[1] - 2] !== undefined // Проверяем сверху
-         && this.currentMap[pos[1] - 2][pos[0]] == 0
-         && !this.visited.includes(coordinatesToId(pos[0], pos[1] - 2, l)))
-        {
-            this.stack.push([pos[0], pos[1] - 2]);
-        }
-        if (this.currentMap[pos[1]][pos[0] + 2] !== undefined // Проверяем справа
-         && this.currentMap[pos[1]][pos[0] + 2] == 0
-         && !this.visited.includes(coordinatesToId(pos[0] + 2, pos[1], l)))
-        {
-            this.stack.push([pos[0] + 2, pos[1]]);
-        }
-        if (this.currentMap[pos[1] + 2] !== undefined // Проверяем снизу
-         && this.currentMap[pos[1] + 2][pos[0]] == 0
-         && !this.visited.includes(coordinatesToId(pos[0], pos[1] + 2, l)))
-        {
-            this.stack.push([pos[0], pos[1] + 2]);
-        }
-        this.depthFirstSearch(this.stack.pop());
+        this.stack.push(...priority);
+
+        this.depthFirstSearch(idToCoordinates(this.stack.pop(), l));
     }
 
     update(lag)
@@ -173,12 +228,13 @@ export default class NpcTank extends Tank
     {
         super.render();
         
-        for (let i = 0; i < this.visited.length; i++) {
+        for (let i = 0; i < this.path.length; i++) {
             let pos = {
-                        x: idToCoordinates(this.visited[i], this.currentMap[0].length).x * this.config.grid,
-                        y: idToCoordinates(this.visited[i], this.currentMap[0].length).y * this.config.grid
+                        x: idToCoordinates(this.path[i], this.currentMap[0].length).x * this.config.grid,
+                        y: idToCoordinates(this.path[i], this.currentMap[0].length).y * this.config.grid
                     }; 
-            drawRect(this.config.ctx, pos, {x:this.config.grid, y:this.config.grid}, "#"+i);
+            drawRect(this.config.ctx, pos, {x:this.config.grid-4, y:this.config.grid-4}, "#f7f");
+            drawText(this.config.ctx, pos, ""+i);
         }
         // let pos = 0;
         // if (this.dirY != 0) 

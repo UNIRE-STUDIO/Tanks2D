@@ -5,7 +5,7 @@ import Timer from "./timer.js";
 
 export default class NpcPool
 {
-    constructor(config, bulletPool)
+    constructor(config, bulletPool, player)
     {
         this.config = config;
         this.currentMap;
@@ -16,7 +16,7 @@ export default class NpcPool
 
         for (let i = 0; i < pool_size; i++) 
         {
-            this.tanks[i] = new NpcTank(this.config, bulletPool);
+            this.tanks[i] = new NpcTank(this.config, bulletPool, player);
         }
         this.cooldown = 2;
         this.timerSpawn = new Timer(this.cooldown, this.create.bind(this));

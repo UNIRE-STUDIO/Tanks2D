@@ -47,10 +47,10 @@ export function getMousePos(canvas, event) {
     };
 }
 
-export function drawText(text){
-    ctx.font = '10pt arial';
-    ctx.fillStyle = '#000000'
-    ctx.fillText('label: ' + text, 13, 50);
+export function drawText(ctx, pos = {x:13, y:50}, text){
+    ctx.font = '8pt arial';
+    ctx.fillStyle = '#fff'
+    ctx.fillText(text, pos.x, pos.y+8);
 }
 
 export function moveTo(current, target, step){
@@ -58,7 +58,7 @@ export function moveTo(current, target, step){
     return current + moveStep;
 }
 
-export function clearCanvas()
+export function clearCanvas(ctx, canvas)
 {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }

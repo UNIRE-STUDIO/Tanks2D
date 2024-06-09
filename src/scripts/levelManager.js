@@ -35,7 +35,7 @@ export default class LevelManager
 
         this.bulletPool = new BulletPool(this.config, this.removeTile.bind(this));
         this.player = new Tank(this.config, this.bulletPool.create.bind(this.bulletPool));
-        this.npcPool = new NpcPool(this.config, this.bulletPool);
+        this.npcPool = new NpcPool(this.config, this.bulletPool, this.player);
 
         input.moveEvent = this.player.setDirection.bind(this.player);
         input.shootEvent = this.player.shoot.bind(this.player);
