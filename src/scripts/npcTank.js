@@ -7,7 +7,7 @@ export default class NpcTank extends Tank
     {
         super(config, spawnBullet);
         this.dirY = 1;
-        this.speed = 0.07;
+        this.speed = 0.03; // 0.07
 
         this.isBlockTurn = false;
         this.drivingMode = 0; // 0 =
@@ -132,14 +132,32 @@ export default class NpcTank extends Tank
         let posOnPath = idToCoordinates(this.path[this.currentPosOnPath], this.currentMap[0].length);
         posOnPath.x *= this.config.grid;
         posOnPath.y *= this.config.grid;
-        let incrementX = posOnPath.x - this.position.x * lag * this.speed;
+
+        let newDirX = posOnPath.x - this.position.x > 0 ? 1 : posOnPath.x - this.position.x < 0 ? -1 : 0;
+        let newDirY = posOnPath.y - this.position.y > 0 ? 1 : posOnPath.y - this.position.y < 0 ? -1 : 0;
+        
+        let incrementX = this.dirX * lag * this.speed;
         let incrementY = this.dirY * lag * this.speed;
 
-
-        if (Math.floor((this.position.x - incrementX) / this.config.grid2) != Math.floor(this.position.x / this.config.grid2)
-            || Math.floor((this.position.y - incrementY) / this.config.grid2) != Math.floor(this.position.y / this.config.grid2))
+        if (this.dirX != this.newDirX || this.dirY != this.newDirY)
         {
-            
+            this.setDirection(newDirX, newDirY);
+        }
+
+        this.position.x += incrementX;
+        this.position.y += incrementY;
+        console.log(newDirX + " | " + newDirY);
+        console.log(posOnPath.x / this.config.grid + " === " + Math.round(this.position.x / this.config.grid));
+        console.log(posOnPath.y / this.config.grid + " === " + Math.round(this.position.y / this.config.grid));
+        if (posOnPath.x / this.config.grid === Math.round(this.position.x / this.config.grid)
+            && posOnPath.y / this.config.grid === Math.round(this.position.y / this.config.grid))
+        {
+            this.currentPosOnPath++;
+            if (this.currentPosOnPath >= this.path.length)
+            {
+                // Завершаем путь
+                this.drivingMode = 0;
+            }
         }
     }
 
