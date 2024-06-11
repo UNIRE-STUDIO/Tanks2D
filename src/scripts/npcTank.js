@@ -19,6 +19,7 @@ export default class NpcTank extends Tank
         this.whereFrom = new Map();
         this.path = [];
         this.target = [24,24];
+        this.currentPosOnPath = 1; // Позиция на пути к цели
 
         this.sides = [[-2, 0], // слева
                       [0, -2], // сверху
@@ -32,15 +33,12 @@ export default class NpcTank extends Tank
         this.moveX = this.dirX;
         this.moveY = this.dirY;
         setTimeout(() => {
-            this.drivingMode = 1;
             this.target = [Math.round(this.player.position.x / this.config.grid2) * 2,
                            Math.round(this.player.position.y / this.config.grid2) * 2];
-            console.log(this.target);
-            console.log({ x:Math.round(this.position.x / this.config.grid2) * 2, 
-            y:Math.round(this.position.y / this.config.grid2) * 2});
             this.identifyPrioritiesSides();
             this.depthFirstSearch({ x:Math.round(this.position.x / this.config.grid2) * 2, 
                                     y:Math.round(this.position.y / this.config.grid2) * 2});
+            this.drivingMode = 1;
         }, 10000);
     }
 
@@ -129,9 +127,20 @@ export default class NpcTank extends Tank
         }
     }
 
-    movingTowardsTheGoal()
+    movingTowardsTheGoal(lag)
     {
-        //moveTo(this.position, this.visited.get);
+        let posOnPath = idToCoordinates(this.path[this.currentPosOnPath], this.currentMap[0].length);
+        posOnPath.x *= this.config.grid;
+        posOnPath.y *= this.config.grid;
+        let incrementX = posOnPath.x - this.position.x * lag * this.speed;
+        let incrementY = this.dirY * lag * this.speed;
+
+
+        if (Math.floor((this.position.x - incrementX) / this.config.grid2) != Math.floor(this.position.x / this.config.grid2)
+            || Math.floor((this.position.y - incrementY) / this.config.grid2) != Math.floor(this.position.y / this.config.grid2))
+        {
+            
+        }
     }
 
     identifyPrioritiesSides()
@@ -159,10 +168,8 @@ export default class NpcTank extends Tank
     saveWhereFrom(currentId, neighboringId) 
     {
         // Запоминаем откуда мы нашли эту клетку
-        if (!this.whereFrom.has(currentId)) 
-            this.whereFrom.set(currentId, []);
-            
-        this.whereFrom.get(currentId).push(neighboringId);  
+        if (!this.whereFrom.has(neighboringId)) 
+            this.whereFrom.set(neighboringId, currentId);
     }
 
     depthFirstSearch(pos)
@@ -174,8 +181,6 @@ export default class NpcTank extends Tank
             this.path.push(coordinatesToId(pos.x, pos.y, l));
             while(this.visited[0] !== this.path[this.path.length-1]) // Если дошли до старотовой позиции
             {
-                console.log(this.path[this.path.length-1]);
-                console.log(this.whereFrom.get(this.path[this.path.length-1]));
                 this.path.push(this.whereFrom.get(this.path[this.path.length-1]));
             }
             this.path.reverse();
@@ -189,7 +194,7 @@ export default class NpcTank extends Tank
         {
             x = pos.x + this.sides[i][0];
             y = pos.y + this.sides[i][1];
-            let getId = coordinatesToId(x, y, l);
+            let getId = coordinatesToId(x, y, l); // Соседняя клетка
             if (this.currentMap[y] !== undefined
             && this.currentMap[y][x] !== undefined
             && this.currentMap[y][x] == 0
@@ -197,7 +202,7 @@ export default class NpcTank extends Tank
             {
                 if (!this.stack.includes(getId)) // Если клетка НЕ находится в очереди ставим её в приоритет
                 {
-                    this.saveWhereFrom(coordinatesToId(pos.x, pos.y, l), getId);
+                    this.saveWhereFrom(coordinatesToId(pos.x, pos.y, l), getId); // Сохраняем, что-бы в последствии построить "прямой" путь
                     priority.push(getId);
                     continue;
                 }
@@ -220,7 +225,7 @@ export default class NpcTank extends Tank
         }
         else
         {
-            this.movingTowardsTheGoal();
+            this.movingTowardsTheGoal(lag);
         }
     }
 
