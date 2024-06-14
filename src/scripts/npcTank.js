@@ -7,7 +7,7 @@ export default class NpcTank extends Tank
     {
         super(config, spawnBullet);
         this.dirY = 1;
-        this.speed = 0.03; // 0.07
+        this.speed = 0.06; // 0.07
 
         this.isBlockTurn = false;
         this.drivingMode = 0; // 0 =
@@ -33,12 +33,13 @@ export default class NpcTank extends Tank
         this.moveX = this.dirX;
         this.moveY = this.dirY;
         setTimeout(() => {
-            this.target = [Math.round(this.player.position.x / this.config.grid2) * 2,
-                           Math.round(this.player.position.y / this.config.grid2) * 2];
+            this.target = [Math.round(this.player.position.x / this.config.grid),
+                           Math.round(this.player.position.y / this.config.grid)];
             this.identifyPrioritiesSides();
-            this.depthFirstSearch({ x:Math.round(this.position.x / this.config.grid2) * 2, 
-                                    y:Math.round(this.position.y / this.config.grid2) * 2});
+            this.depthFirstSearch({ x:Math.round(this.position.x / this.config.grid), 
+                                    y:Math.round(this.position.y / this.config.grid)});
             this.drivingMode = 1;
+            console.log("ПОИСК");
         }, 10000);
     }
 
@@ -129,35 +130,30 @@ export default class NpcTank extends Tank
 
     movingTowardsTheGoal(lag)
     {
+        let accuracy = 5; // Точность
         let posOnPath = idToCoordinates(this.path[this.currentPosOnPath], this.currentMap[0].length);
         posOnPath.x *= this.config.grid;
         posOnPath.y *= this.config.grid;
-
-        let newDirX = posOnPath.x - this.position.x > 0 ? 1 : posOnPath.x - this.position.x < 0 ? -1 : 0;
-        let newDirY = posOnPath.y - this.position.y > 0 ? 1 : posOnPath.y - this.position.y < 0 ? -1 : 0;
-        
-        // let incrementX = this.dirX * lag * this.speed;
-        // let incrementY = this.dirY * lag * this.speed;
+        let distX = Math.abs(posOnPath.x - this.position.x) < accuracy ? 0 : posOnPath.x - this.position.x;
+        let distY = Math.abs(posOnPath.y - this.position.y) < accuracy ? 0 : posOnPath.y - this.position.y;
+        let newDirX = distX > 0 ? 1 : (distX < 0 ? -1 : 0);
+        let newDirY = distY > 0 ? 1 : (distY < 0 ? -1 : 0);
 
         if (this.dirX != this.newDirX || this.dirY != this.newDirY)
         {
             this.setDirection(newDirX, newDirY);
         }
 
-        // this.position.x += incrementX;
-        // this.position.y += incrementY;
-        // console.log("1. " + this.position.x);
-        this.position.x = moveTo(this.position.x, posOnPath.x, lag * this.speed);
-        this.position.y = moveTo(this.position.y, posOnPath.y, lag * this.speed);
-        // console.log("2. " + this.position.x);
+        let incrementX = this.dirX * lag * this.speed;
+        let incrementY = this.dirY * lag * this.speed;
 
-        // console.log(newDirX + " | " + newDirY);
-        // console.log(Math.abs(posOnPath.x - this.position.x));
-        // console.log(Math.abs(posOnPath.y - this.position.y));
-        if (Math.abs(posOnPath.x - this.position.x) < 10
-            && Math.abs(posOnPath.y - this.position.y) < 10)
+        this.position.x += incrementX;
+        this.position.y += incrementY;
+
+        if (Math.abs(posOnPath.x - this.position.x) < accuracy
+            && Math.abs(posOnPath.y - this.position.y) < accuracy)
         {
-            console.log(123);
+            
             this.currentPosOnPath++;
             if (this.currentPosOnPath >= this.path.length)
             {
@@ -175,17 +171,17 @@ export default class NpcTank extends Tank
         if (Math.abs(distX) < Math.abs(distY)) 
         {
             
-            this.sides[3] = [distX < 0 ? -2 : 2, 0];
-            this.sides[2] = [0, distY < 0 ? -2 : 2];
-            this.sides[1] = [distX < 0 ? 2 : -2, 0];
-            this.sides[0] = [0, distY < 0 ? 2 : -2];
+            this.sides[3] = [distX < 0 ? -1 : 1, 0];
+            this.sides[2] = [0, distY < 0 ? -1 : 1];
+            this.sides[1] = [distX < 0 ? 1 : -1, 0];
+            this.sides[0] = [0, distY < 0 ? 1 : -1];
         }
         else // По вертикали ближе
         {
-            this.sides[3] = [0, distY < 0 ? -2 : 2];
-            this.sides[2] = [distX < 0 ? -2 : 2, 0];
-            this.sides[1] = [0, distY < 0 ? 2 : -2];
-            this.sides[0] = [distX < 0 ? 2 : -2, 0];
+            this.sides[3] = [0, distY < 0 ? -1 : 1];
+            this.sides[2] = [distX < 0 ? -1 : 1, 0];
+            this.sides[1] = [0, distY < 0 ? 1 : -1];
+            this.sides[0] = [distX < 0 ? 1 : -1, 0];
         }
     }
 
@@ -200,7 +196,11 @@ export default class NpcTank extends Tank
     {
         let l = this.currentMap[0].length;
         this.visited.push(coordinatesToId(pos.x, pos.y, l));
-        if (pos.x == this.target[0] && pos.y == this.target[1]) // Дошли до цели
+        if (pos.x == this.target[0] && pos.y == this.target[1]
+         || pos.x + 1 == this.target[0] && pos.y == this.target[1]
+         || pos.x == this.target[0] && pos.y + 1 == this.target[1]
+         || pos.x + 1 == this.target[0] && pos.y + 1 == this.target[1]
+        ) // Дошли до цели
         {
             this.path.push(coordinatesToId(pos.x, pos.y, l));
             while(this.visited[0] !== this.path[this.path.length-1]) // Если дошли до старотовой позиции
@@ -221,7 +221,12 @@ export default class NpcTank extends Tank
             let getId = coordinatesToId(x, y, l); // Соседняя клетка
             if (this.currentMap[y] !== undefined
             && this.currentMap[y][x] !== undefined
+            && this.currentMap[y + 1] !== undefined
+            && this.currentMap[y + 1][x + 1] !== undefined
             && this.currentMap[y][x] == 0
+            && this.currentMap[y][x + 1] == 0
+            && this.currentMap[y + 1][x] == 0
+            && this.currentMap[y + 1][x + 1] == 0
             && !this.visited.includes(getId))
             {
                 if (!this.stack.includes(getId)) // Если клетка НЕ находится в очереди ставим её в приоритет
@@ -257,44 +262,14 @@ export default class NpcTank extends Tank
     {
         super.render();
         
-        for (let i = 0; i < this.path.length; i++) {
-            let pos = {
-                        x: idToCoordinates(this.path[i], this.currentMap[0].length).x * this.config.grid,
-                        y: idToCoordinates(this.path[i], this.currentMap[0].length).y * this.config.grid
-                    }; 
-            drawRect(this.config.ctx, pos, {x:this.config.grid-4, y:this.config.grid-4}, "#f7f");
-            drawText(this.config.ctx, pos, ""+i);
-        }
-        // let pos = 0;
-        // if (this.dirY != 0) 
+        // for (let i = 0; i < this.path.length; i++) 
         // {
-        //     // right
-        //     pos = {
-        //         x: Math.ceil((this.position.x + this.config.grid * 2) / this.config.grid) * this.config.grid,
-        //         y: Math.ceil(this.position.y / this.config.grid) * this.config.grid
-        //     };
-        //     drawRect(this.config.ctx, pos, { x: this.config.grid, y: this.config.grid }, "#fff");
-
-        //     // left
-        //     pos = {
-        //         x: Math.ceil((this.position.x - this.config.grid) / this.config.grid) * this.config.grid,
-        //         y: Math.ceil(this.position.y / this.config.grid) * this.config.grid
-        //     };
-        //     drawRect(this.config.ctx, pos, { x: this.config.grid, y: this.config.grid }, "#f7f");
-        // }
-
-        // if (this.dirX != 0) 
-        // {
-        //     // down
-        //     pos = {x: Math.ceil(this.position.x / this.config.grid) * this.config.grid,
-        //     y: Math.ceil((this.position.y + this.config.grid * 2) / this.config.grid) * this.config.grid};
-        //     drawRect(this.config.ctx, pos, {x:this.config.grid, y:this.config.grid}, "#ff7");
-
-        //     // up
-        //     pos = {x: Math.ceil(this.position.x / this.config.grid) * this.config.grid,
-        //     y: Math.ceil((this.position.y - this.config.grid) / this.config.grid) * this.config.grid};
-        //     drawRect(this.config.ctx, pos, {x:this.config.grid, y:this.config.grid}, "#007");
-
+        //     let pos = {
+        //                 x: idToCoordinates(this.path[i], this.currentMap[0].length).x * this.config.grid,
+        //                 y: idToCoordinates(this.path[i], this.currentMap[0].length).y * this.config.grid
+        //             }; 
+        //     drawRect(this.config.ctx, pos, {x:this.config.grid-4, y:this.config.grid-4}, "#f7f");
+        //     drawText(this.config.ctx, pos, ""+i);
         // }
     }
 }
