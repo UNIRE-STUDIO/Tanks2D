@@ -1,4 +1,4 @@
-import { drawRect, drawText, randomRange, moveTo, coordinatesToId, idToCoordinates } from "./general.js";
+import { drawRect, drawText, randomRange, coordinatesToId, idToCoordinates } from "./general.js";
 import Tank from "./tank.js";
 
 export default class NpcTank extends Tank 
@@ -8,12 +8,14 @@ export default class NpcTank extends Tank
         super(config, spawnBullet);
         this.dirY = 1;
         this.speed = 0.06; // 0.07
+        this.timeOfModeChange = 23; // Длительность режима в секундах
 
         this.isBlockTurn = false;
         this.drivingMode = 0; // 0 =
 
         this.player = player;
         
+        // ПОИСК | Это всё нужно обнулять
         this.stack = [];
         this.visited = [];
         this.whereFrom = new Map();
@@ -32,15 +34,27 @@ export default class NpcTank extends Tank
         super.create(currentMap, pos);
         this.moveX = this.dirX;
         this.moveY = this.dirY;
-        setTimeout(() => {
-            this.target = [Math.round(this.player.position.x / this.config.grid),
-                           Math.round(this.player.position.y / this.config.grid)];
-            this.identifyPrioritiesSides();
-            this.depthFirstSearch({ x:Math.round(this.position.x / this.config.grid), 
-                                    y:Math.round(this.position.y / this.config.grid)});
-            this.drivingMode = 1;
-            console.log("ПОИСК");
-        }, 10000);
+        setInterval(() => {
+            this.changeMode(this.drivingMode + 1 > 1 ? 0 : this.drivingMode + 1); // Циклически меняем режимы
+        }, this.timeOfModeChange * 1000);
+    }
+
+    changeMode(id)
+    {
+        switch (id) {
+            case 0:
+                
+                break;
+        
+            case 1:
+                this.search([Math.round(this.player.position.x / this.config.grid), Math.round(this.player.position.y / this.config.grid)])
+                break;
+
+            case 2:
+                
+                break;
+        }
+        this.drivingMode = id;
     }
 
     tryTurn()
@@ -161,6 +175,19 @@ export default class NpcTank extends Tank
                 this.drivingMode = 0;
             }
         }
+    }
+
+    search(target)
+    {
+        this.target = target; // Обнуление
+        this.path = [];
+        this.stack = [];
+        this.visited = [];
+        this.whereFrom.clear();
+        this.currentPosOnPath = 1;
+
+        this.identifyPrioritiesSides(); // Выбираем приоритетные направления поиска
+        this.depthFirstSearch({ x: Math.round(this.position.x / this.config.grid), y: Math.round(this.position.y / this.config.grid)});
     }
 
     identifyPrioritiesSides()
