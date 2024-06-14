@@ -136,22 +136,28 @@ export default class NpcTank extends Tank
         let newDirX = posOnPath.x - this.position.x > 0 ? 1 : posOnPath.x - this.position.x < 0 ? -1 : 0;
         let newDirY = posOnPath.y - this.position.y > 0 ? 1 : posOnPath.y - this.position.y < 0 ? -1 : 0;
         
-        let incrementX = this.dirX * lag * this.speed;
-        let incrementY = this.dirY * lag * this.speed;
+        // let incrementX = this.dirX * lag * this.speed;
+        // let incrementY = this.dirY * lag * this.speed;
 
         if (this.dirX != this.newDirX || this.dirY != this.newDirY)
         {
             this.setDirection(newDirX, newDirY);
         }
 
-        this.position.x += incrementX;
-        this.position.y += incrementY;
-        console.log(newDirX + " | " + newDirY);
-        console.log(posOnPath.x / this.config.grid + " === " + Math.round(this.position.x / this.config.grid));
-        console.log(posOnPath.y / this.config.grid + " === " + Math.round(this.position.y / this.config.grid));
-        if (posOnPath.x / this.config.grid === Math.round(this.position.x / this.config.grid)
-            && posOnPath.y / this.config.grid === Math.round(this.position.y / this.config.grid))
+        // this.position.x += incrementX;
+        // this.position.y += incrementY;
+        // console.log("1. " + this.position.x);
+        this.position.x = moveTo(this.position.x, posOnPath.x, lag * this.speed);
+        this.position.y = moveTo(this.position.y, posOnPath.y, lag * this.speed);
+        // console.log("2. " + this.position.x);
+
+        // console.log(newDirX + " | " + newDirY);
+        // console.log(Math.abs(posOnPath.x - this.position.x));
+        // console.log(Math.abs(posOnPath.y - this.position.y));
+        if (Math.abs(posOnPath.x - this.position.x) < 10
+            && Math.abs(posOnPath.y - this.position.y) < 10)
         {
+            console.log(123);
             this.currentPosOnPath++;
             if (this.currentPosOnPath >= this.path.length)
             {
