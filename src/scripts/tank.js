@@ -30,6 +30,8 @@ export default class Tank
         this.speed = 0.1;
         this.isCooldown = false;
         this.cooldownTime = 1000;
+
+        this.otherTanks = []; // Присваивает Level Manager или npcPool
     }
 
     create(currentMap, pos)
@@ -81,6 +83,54 @@ export default class Tank
         } 
     }
 
+    sortOtherTanks()
+    {
+        let check = 0;
+        for (let i = 0; i < this.otherTanks.length; i++) {
+            if (this.otherTanks[i].isUse)
+            {
+                check = this.checkCollisionWithTank(this.otherTanks[i]) ? check + 1 : check;
+            }
+        }
+        return check > 0;
+    }
+
+    checkCollisionWithTank(tank)
+    {
+        let tX = Math.round((this.position.x + this.config.grid/2 * this.moveX) / this.config.grid);
+        let tY = Math.round((this.position.y + this.config.grid/2 * this.moveY) / this.config.grid);
+
+        let oX = Math.round((tank.position.x) / this.config.grid);
+        let oY = Math.round((tank.position.y) / this.config.grid);
+
+        if (this.moveY > 0)  // Двигаясь вниз
+        {
+            if (tX === oX + 1 && tY + 1 === oY // Сравниваем левый нижний угл нашего танка с правым верхним углом другого
+                || tX + 1 === oX && tY + 1 === oY // правый нижний угл нашего танка с левым верхним углом другого
+                || tX === oX && tY + 1 === oY) return true; // левый нижний угл нашего танка с левым верхним углом другого
+        }
+        else if (this.moveY < 0) // Двигаясь вверх
+        {
+            if (tX === oX + 1 && tY === oY + 1 // Сравниваем левый верхний угл нашего танка с правым нижним углом другого
+            || tX + 1 === oX && tY === oY + 1 // правый верхний угл нашего танка с левым нижним углом другого
+            || tX === oX && tY === oY + 1) return true; // левый верхний угл нашего танка с левым верхним углом другого
+        }
+        else if (this.moveX > 0) // Двигаясь вправо
+        {
+            if (tX + 1 === oX && tY === oY + 1 // Сравниваем правый верхний угл нашего танка с левым нижним углом другого
+            || tX + 1 === oX && tY + 1 === oY // правый нижний угл нашего танка с левым верхним углом другого
+            || tX + 1 === oX && tY === oY) return true; // правый верхний угл нашего танка с левым верхним углом другого
+        }
+        else if (this.moveX < 0) // Двигаясь влево
+        {
+            if (tX === oX + 1 && tY === oY + 1 // Сравниваем левый верхний угл нашего танка с правым нижним углом другого
+            || tX === oX + 1 && tY + 1 === oY // левый нижний угл нашего танка с правым верхним углом другого
+            || tX === oX + 1 && tY === oY) return true; // левый верхний угл нашего танка с правым верхним углом другого
+        }
+
+        return false;
+    }
+
     shoot()
     {
         if (this.isCooldown || this.isPause || !this.isUse) return;
@@ -98,7 +148,8 @@ export default class Tank
         let incrementX = this.moveX * lag * this.speed;
         let incrementY = this.moveY * lag * this.speed;
         if ((this.moveX == 0 && this.moveY == 0)
-            || this.checkCollisionWithObstacle()) return; // Если выходим за границы карты
+            || this.checkCollisionWithObstacle()
+            || this.sortOtherTanks()) return; // Если выходим за границы карты
         
         this.position.x += incrementX;
         this.position.y += incrementY;

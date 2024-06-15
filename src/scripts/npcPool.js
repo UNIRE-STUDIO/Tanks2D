@@ -18,6 +18,11 @@ export default class NpcPool
         {
             this.tanks[i] = new NpcTank(this.config, bulletPool, player);
         }
+        for (let i = 0; i < pool_size; i++) 
+        {
+            this.tanks[i].otherTanks.push(...this.tanks);
+            this.tanks[i].otherTanks.splice(i,1);
+        }
         this.cooldown = 4;
         this.timerSpawn = new Timer(this.cooldown, this.create.bind(this));
     }
