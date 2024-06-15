@@ -86,6 +86,7 @@ export default class LevelManager
     reset()
     {
         this.player.reset();
+        this.npcPool.setReset();
     }
 
     update(lag)

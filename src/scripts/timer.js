@@ -16,6 +16,7 @@ export default class Timer
 
     start()
     {
+        if (this.interval !== undefined) this.stop();
         this.interval = setInterval(() => {
             if (--this.timer <= 0) this.endEvent();
         }, 1000)

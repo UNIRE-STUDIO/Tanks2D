@@ -21,7 +21,7 @@ export default class Game
         this.config = config;
         this.saveManager = new SaveManager(); 
         new GameLoop(this.update.bind(this), this.render.bind(this));
-        this.levelManager = new LevelManager(this.input, this.config); // Создавать сразу?
+        this.levelManager = new LevelManager(this.input, this.config);
         this.levelManager.gameOverEvent = this.changeScreen.bind(this, GameScreens.GAMEOVER);
         this.levelManager.saveManager = this.saveManager;
     }

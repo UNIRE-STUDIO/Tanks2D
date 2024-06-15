@@ -1,5 +1,6 @@
 import { drawRect, drawText, randomRange, coordinatesToId, idToCoordinates } from "./general.js";
 import Tank from "./tank.js";
+import Timer from "./timer.js";
 
 export default class NpcTank extends Tank 
 {
@@ -20,13 +21,15 @@ export default class NpcTank extends Tank
         this.visited = [];
         this.whereFrom = new Map();
         this.path = [];
-        this.target = [24,24];
-        this.currentPosOnPath = 1; // Позиция на пути к цели
+        this.target = [];
+        this.currentPosOnPath = 0; // Позиция на пути к цели
 
         this.sides = [[-2, 0], // слева
                       [0, -2], // сверху
                       [2, 0],  // справа
                       [0, 2]]; // снизу
+        
+        this.timerDrivingMode = new Timer(this.timeOfModeChange, this.changeMode.bind(this));
     }
 
     create(currentMap, pos)
@@ -34,14 +37,31 @@ export default class NpcTank extends Tank
         super.create(currentMap, pos);
         this.moveX = this.dirX;
         this.moveY = this.dirY;
-        setInterval(() => {
-            this.changeMode(this.drivingMode + 1 > 1 ? 0 : this.drivingMode + 1); // Циклически меняем режимы
-        }, this.timeOfModeChange * 1000);
+        this.drivingMode = 0;
+        this.timerDrivingMode.reset();
+        this.timerDrivingMode.start();
     }
 
-    changeMode(id)
+    setReset()
     {
-        switch (id) {
+        this.timerDrivingMode.stop();
+        this.timerDrivingMode.reset();
+    }
+
+    setPause()
+    {
+        this.timerDrivingMode.stop();
+    }
+
+    setResume()
+    {
+        this.timerDrivingMode.start();
+    }
+
+    changeMode()
+    {
+        this.drivingMode = this.drivingMode + 1 > 1 ? 0 : this.drivingMode + 1;
+        switch (this.drivingMode) {
             case 0:
                 
                 break;
@@ -54,7 +74,7 @@ export default class NpcTank extends Tank
                 
                 break;
         }
-        this.drivingMode = id;
+        this.timerDrivingMode.start();
     }
 
     tryTurn()

@@ -18,7 +18,7 @@ export default class NpcPool
         {
             this.tanks[i] = new NpcTank(this.config, bulletPool, player);
         }
-        this.cooldown = 2;
+        this.cooldown = 4;
         this.timerSpawn = new Timer(this.cooldown, this.create.bind(this));
     }
 
@@ -26,6 +26,7 @@ export default class NpcPool
     {
         this.currentMap = currentMap;
         this.currentLevel = currentLevel;
+        this.timerSpawn.reset();
         this.timerSpawn.start();
     }
 
@@ -52,6 +53,16 @@ export default class NpcPool
     setResume()
     {
         this.timerSpawn.start();
+    }
+
+    setReset()
+    {
+        this.timerSpawn.stop();
+        this.timerSpawn.reset();
+        for (let i = 0; i < this.tanks.length; i++) {
+            this.tanks[i].isUse = false;
+            this.tanks[i].setReset();
+        }
     }
 
     update(lag)
