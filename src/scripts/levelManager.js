@@ -4,6 +4,7 @@ import { drawImage } from "./general.js";
 import Tank from "./tank.js";
 import levels from "./levels.json";
 import NpcPool from "./npcPool.js";
+import PlayerTank from "./playerTank.js";
 
 export default class LevelManager
 {
@@ -14,9 +15,8 @@ export default class LevelManager
         this.ctx = config.ctx;
 
         this.timeUpdate = 0;
-        
         this.score = 0;
-
+        this.playerHealth1 = 3;
         this.isPause = false;
 
         // Присваивает класс Game
@@ -34,8 +34,8 @@ export default class LevelManager
         this.config = config;
 
         this.bulletPool = new BulletPool(this.config, this.removeTile.bind(this));
-        this.player = new Tank(this.config, this.bulletPool.create.bind(this.bulletPool));
-        this.npcPool = new NpcPool(this.config, this.bulletPool.create.bind(this.bulletPool), this.player);
+        this.player = new PlayerTank(this.config, this.bulletPool.create.bind(this.bulletPool), this.playerDead.bind(this), 0);
+        this.npcPool = new NpcPool(this.config, this.bulletPool.create.bind(this.bulletPool), this.player, this.win.bind(this));
 
         this.player.otherTanks.push(...this.npcPool.tanks);
         this.bulletPool.setListNpcTanks(this.npcPool.tanks);
@@ -43,6 +43,9 @@ export default class LevelManager
 
         input.moveEvent = this.player.setDirection.bind(this.player);
         input.shootEvent = this.player.shoot.bind(this.player);
+
+        // VUE 
+        this.updateHealth = null;
     }
 
     removeTile(posX, posY)
@@ -53,7 +56,7 @@ export default class LevelManager
     setPause()
     {
         this.isPause = true;
-        this.player.isPause = true;
+        this.player.setPause();
         this.npcPool.setPause();
     }
 
@@ -66,6 +69,13 @@ export default class LevelManager
 
     gameOver()
     {   
+        this.setPause();
+        this.gameOverEvent();
+    }
+
+    win()
+    {
+        this.setPause(); // Временно!!!
         this.gameOverEvent();
     }
 
@@ -87,11 +97,28 @@ export default class LevelManager
             this.player.isPause = false;
         }, 1000);
     }
+
     reset()
     {
         this.player.setReset();
         this.npcPool.setReset();
         this.bulletPool.setReset();
+        this.playerHealth1 = 3;
+    }
+
+    playerDead(playerId)
+    {
+        this.playerHealth1--;
+        this.updateHealth();
+        if (this.playerHealth1 === 0)
+        {
+            this.gameOver();
+            return;
+        }
+        setTimeout(() => 
+        {
+            this.player.create(this.currentMap, levels[this.currentLevel].playerSpawnPos1);
+        }, 2000);
     }
 
     update(lag)

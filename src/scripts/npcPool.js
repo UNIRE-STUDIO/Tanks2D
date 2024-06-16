@@ -5,41 +5,59 @@ import Timer from "./timer.js";
 
 export default class NpcPool
 {
-    constructor(config, bulletPool, player)
+    constructor(config, bulletPool, player, winEvent)
     {
         this.config = config;
         this.currentMap;
         this.currentLevel;
+        this.countReserveNpcTanks = 0;
+        this.countNpcTanks = 0;
 
-        const pool_size = 3;
+        const pool_size = 5;
         this.tanks = [];
 
         for (let i = 0; i < pool_size; i++) 
         {
-            this.tanks[i] = new NpcTank(this.config, bulletPool, player);
+            this.tanks[i] = new NpcTank(this.config, bulletPool, player, this.deadNpcEvent.bind(this));
         }
         for (let i = 0; i < pool_size; i++) 
         {
             this.tanks[i].otherTanks.push(...this.tanks);
             this.tanks[i].otherTanks.splice(i,1);
         }
-        this.cooldown = 4;
+        this.cooldown = 3;
         this.timerSpawn = new Timer(this.cooldown, this.create.bind(this));
+
+        this.winEvent = winEvent;
+
+        // VUE
+        this.updateCountReserveNpcTanks;
     }
 
     init(currentMap, currentLevel)
     {
         this.currentMap = currentMap;
         this.currentLevel = currentLevel;
+        this.countReserveNpcTanks = levels[currentLevel].countNpc;
+        this.updateCountReserveNpcTanks();
+        this.countNpcTanks = levels[currentLevel].countNpc;
         this.timerSpawn.reset();
         this.timerSpawn.start();
     }
 
     create()
     {
+        if (this.countReserveNpcTanks === 0)
+        {
+            this.timerSpawn.stop();
+            this.timerSpawn.reset();
+            return;
+        }
         for (let i = 0; i < this.tanks.length; i++) {
             if (!this.tanks[i].isUse)
             {
+                this.countReserveNpcTanks--;
+                this.updateCountReserveNpcTanks();
                 let rand = randomRange(0, levels[this.currentLevel].spawnPoints.length);
                 this.tanks[i].create(this.currentMap, {x: levels[this.currentLevel].spawnPoints[rand][0], 
                                                        y: levels[this.currentLevel].spawnPoints[rand][1]});
@@ -54,10 +72,22 @@ export default class NpcPool
     setPause()
     {
         this.timerSpawn.stop();
+        for (let i = 0; i < this.tanks.length; i++) {
+            if (this.tanks[i].isUse)
+            {
+                this.tanks[i].setPause();
+            }
+        }
     }
     setResume()
     {
         this.timerSpawn.start();
+        for (let i = 0; i < this.tanks.length; i++) {
+            if (this.tanks[i].isUse)
+            {
+                this.tanks[i].setResume();
+            }
+        }
     }
 
     setReset()
@@ -67,6 +97,15 @@ export default class NpcPool
         for (let i = 0; i < this.tanks.length; i++) {
             this.tanks[i].isUse = false;
             this.tanks[i].setReset();
+        }
+    }
+
+    deadNpcEvent()
+    {
+        this.countNpcTanks--
+        if (this.countNpcTanks === 0)
+        {
+            this.winEvent();
         }
     }
 

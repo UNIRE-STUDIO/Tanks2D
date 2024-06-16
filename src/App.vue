@@ -6,15 +6,19 @@
   import PlayScreen_Top from "./components/PlayScreen_Top.vue";
   import PauseScreen from "./components/PauseScreen.vue";
   import PauseScreen_Top from "./components/PauseScreen_Top.vue";
+  import GameOverScreen from "./components/GameOverScreen.vue";
+  import PlayScreen_Right from "./components/PlayScreen_Right.vue";
   
   export default{
     components: {
-      MainScreen, 
-	  MainScreen_Top, 
-	  PlayScreen_Top,
-	  PauseScreen,
-	  PauseScreen_Top
-    },
+    MainScreen,
+    MainScreen_Top,
+    PlayScreen_Top,
+    PlayScreen_Right,
+    PauseScreen,
+    PauseScreen_Top,
+    GameOverScreen,
+},
     data(){
       return{
         canvasWidth: '',
@@ -49,11 +53,12 @@
 					<div class="content-center-wrapper">
 						<MainScreen v-if="game.currentScreen == 0" :game="game"/>
 						<PauseScreen v-if="game.currentScreen == 2" :game="game"/>
+            <GameOverScreen v-if="game.currentScreen == 4" :game="game"/>
 					</div>
 				</div>
 			</div>
 			<div class="right-part">
-				
+				<PlayScreen_Right v-if="game.currentScreen == 1" :game="game"/>
 			</div>
 		</div>
 	</div>

@@ -11,6 +11,8 @@ export default class Game
     {
         this.config;
         this.currentScreen;
+        this.levelManager;
+        
         this.changeScreen(0);
 
         this.input = new Input();

@@ -4,7 +4,7 @@ import Timer from "./timer.js";
 
 export default class NpcTank extends Tank 
 {
-    constructor(config, spawnBullet, player)
+    constructor(config, spawnBullet, player, deadNpcEvent)
     {
         super(config, spawnBullet);
         this.dirY = 1;
@@ -15,6 +15,7 @@ export default class NpcTank extends Tank
         this.drivingMode = 0; // 0 =
 
         this.player = player;
+        this.deadNpcEvent = deadNpcEvent;
 
         this.image_up.src = "/Tanks2D/sprites/TankNpc_Up.png";
         this.image_down.src = "/Tanks2D/sprites/TankNpc_Down.png";
@@ -67,11 +68,13 @@ export default class NpcTank extends Tank
 
     setPause()
     {
+        this.timerShoot.stop();
         this.timerDrivingMode.stop();
     }
 
     setResume()
     {
+        this.timerShoot.start();
         this.timerDrivingMode.start();
     }
 
@@ -398,6 +401,7 @@ export default class NpcTank extends Tank
         if (this.health === 0)
         {
             this.setReset();
+            this.deadNpcEvent();
         }
     }
 

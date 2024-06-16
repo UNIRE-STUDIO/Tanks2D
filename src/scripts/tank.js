@@ -19,18 +19,12 @@ export default class Tank
         this.isUse = false;
 
         this.image_up = new Image();
-        this.image_up.src = "/Tanks2D/sprites/Tank_Up.png";
         this.image_down = new Image();
-        this.image_down.src = "/Tanks2D/sprites/Tank_Down.png";
         this.image_right = new Image();
-        this.image_right.src = "/Tanks2D/sprites/Tank_Right.png";
         this.image_left = new Image();
-        this.image_left.src = "/Tanks2D/sprites/Tank_Left.png";
         
-        this.speed = 0.1;
+        this.speed = 0;
         this.health = 1;
-        this.isCooldown = false;
-        this.cooldownTime = 1000;
 
         this.otherTanks = []; // Присваивает Level Manager или npcPool
     }
@@ -41,11 +35,6 @@ export default class Tank
         this.position.x = pos.x * this.config.grid2;
         this.position.y = pos.y * this.config.grid2;
         this.isUse = true;
-    }
-
-    setReset()
-    {
-        this.isUse = false;
     }
 
     setDirection(dirX, dirY)
@@ -130,45 +119,6 @@ export default class Tank
         }
 
         return false;
-    }
-
-    shoot()
-    {
-        if (this.isCooldown || this.isPause || !this.isUse) return;
-        let centerPos = {x: this.position.x + this.config.grid/2 + (this.dirX * this.config.grid), 
-        y: this.position.y + this.config.grid/2 + (this.dirY * this.config.grid)};
-        this.spawnBullet(centerPos, {x: this.dirX, y: this.dirY}, true);
-        this.isCooldown = true;
-        setTimeout(() => {
-            this.isCooldown = false;
-        }, this.cooldownTime);
-    }
-    
-    move(lag)
-    {
-        let incrementX = this.moveX * lag * this.speed;
-        let incrementY = this.moveY * lag * this.speed;
-        if ((this.moveX == 0 && this.moveY == 0)
-            || this.checkCollisionWithObstacle()
-            || this.sortOtherTanks()) return; // Если выходим за границы карты
-        
-        this.position.x += incrementX;
-        this.position.y += incrementY;
-    }
-
-    setDamage(damage)
-    {
-        this.health = this.health - damage <= 0 ? 0 : this.health - damage;
-        if (this.health)
-        {
-            this.setReset();
-        }
-    }
-
-    update(lag)
-    {
-        if (!this.isUse) return;
-        this.move(lag);
     }
 
     render()

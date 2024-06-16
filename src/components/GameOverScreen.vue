@@ -10,13 +10,13 @@
 </script>
 
 <template>
-  <div class="wrapper">
-      <p class="lbl">ПАУЗА</p>
-      <div class="panel">
-          <button class="btn" @click="game.changeScreen(0)">Меню</button>
-          <button class="btn" @click="game.changeScreen(1,2)">Продолжить</button>
-      </div>
-  </div>
+    <div class="wrapper">
+        <p class="lbl">Вы проиграли!</p>
+        <div class="panel">
+            <button class="btn" @click="game.changeScreen(0)">Меню</button>
+            <button class="btn" @click="game.changeScreen(1,1)">Рестарт</button>
+        </div>
+    </div>
 </template>
 
 <style scoped>
