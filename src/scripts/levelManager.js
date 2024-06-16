@@ -35,9 +35,11 @@ export default class LevelManager
 
         this.bulletPool = new BulletPool(this.config, this.removeTile.bind(this));
         this.player = new Tank(this.config, this.bulletPool.create.bind(this.bulletPool));
-        this.npcPool = new NpcPool(this.config, this.bulletPool, this.player);
+        this.npcPool = new NpcPool(this.config, this.bulletPool.create.bind(this.bulletPool), this.player);
 
         this.player.otherTanks.push(...this.npcPool.tanks);
+        this.bulletPool.setListNpcTanks(this.npcPool.tanks);
+        this.bulletPool.setListPlayers([this.player]);
 
         input.moveEvent = this.player.setDirection.bind(this.player);
         input.shootEvent = this.player.shoot.bind(this.player);
@@ -87,8 +89,9 @@ export default class LevelManager
     }
     reset()
     {
-        this.player.reset();
+        this.player.setReset();
         this.npcPool.setReset();
+        this.bulletPool.setReset();
     }
 
     update(lag)

@@ -16,6 +16,21 @@ export default class BulletPool
         }
     }
 
+    setListNpcTanks(tanks)
+    {
+        for (let i = 0; i < this.bullets.length; i++) 
+        {
+            this.bullets[i].tanks.push(...tanks);
+        }
+    }
+    setListPlayers(tanks)
+    {
+        for (let i = 0; i < this.bullets.length; i++) 
+        {
+            this.bullets[i].players.push(...tanks);
+        }
+    }
+
     init(currentMap)
     {
         this.currentMap = currentMap;
@@ -25,16 +40,24 @@ export default class BulletPool
         }
     }
 
-    create(pos, dir)
+    create(pos, dir, playersBullet)
     {
         for (let i = 0; i < this.bullets.length; i++) {
             if (!this.bullets[i].isUse)
             {
-                this.bullets[i].create(pos, dir);
+                this.bullets[i].create(pos, dir, playersBullet);
                 return;
             }
         }
         console.log("BulletPool переполнен");
+    }
+
+    setReset()
+    {
+        for (let i = 0; i < this.bullets.length; i++) 
+        {
+            this.bullets[i].isUse = false;
+        }
     }
 
     update(lag)

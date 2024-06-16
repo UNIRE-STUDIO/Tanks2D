@@ -15,6 +15,11 @@ export default class NpcTank extends Tank
         this.drivingMode = 0; // 0 =
 
         this.player = player;
+
+        this.image_up.src = "/Tanks2D/sprites/TankNpc_Up.png";
+        this.image_down.src = "/Tanks2D/sprites/TankNpc_Down.png";
+        this.image_right.src = "/Tanks2D/sprites/TankNpc_Right.png";
+        this.image_left.src = "/Tanks2D/sprites/TankNpc_Left.png";
         
         // ПОИСК | Это всё нужно обнулять
         this.stack = [];
@@ -30,8 +35,13 @@ export default class NpcTank extends Tank
                       [0, 2]]; // снизу
         
         this.timerDrivingMode = new Timer(this.timeOfModeChange, this.changeMode.bind(this));
-        this.timerOfJamming = 0;
+
+        this.timerOfJamming = 0; // Застревание
         this.timeWaitOfJamming = randomRange(100, 1500);
+
+        this.minCooldownTime = 1;
+        this.maxCooldownTime = 5;
+        this.timerShoot = new Timer(randomRange(this.minCooldownTime, this.maxCooldownTime), this.randomShoot.bind(this));
     }
 
     create(currentMap, pos)
@@ -42,12 +52,17 @@ export default class NpcTank extends Tank
         this.drivingMode = 0;
         this.timerDrivingMode.reset();
         this.timerDrivingMode.start();
+        this.timerShoot.reset();
+        this.timerShoot.start();
     }
 
     setReset()
     {
+        this.isUse = false;
         this.timerDrivingMode.stop();
         this.timerDrivingMode.reset();
+        this.timerShoot.reset();
+        this.timerShoot.stop();
     }
 
     setPause()
@@ -375,6 +390,31 @@ export default class NpcTank extends Tank
             return;
         }
         this.depthFirstSearch(idToCoordinates(this.stack.pop(), l));
+    }
+
+    setDamage(damage)
+    {
+        this.health = this.health - damage <= 0 ? 0 : this.health - damage;
+        if (this.health === 0)
+        {
+            this.setReset();
+        }
+    }
+
+    randomShoot()
+    {
+        this.shoot();
+        this.timerShoot.seconds = randomRange(this.minCooldownTime, this.maxCooldownTime);
+        this.timerShoot.reset();
+        this.timerShoot.start();
+    }
+
+    shoot()
+    {
+        if (this.isPause || !this.isUse) return;
+        let centerPos = {x: this.position.x + this.config.grid/2 + (this.dirX * this.config.grid), 
+        y: this.position.y + this.config.grid/2 + (this.dirY * this.config.grid)};
+        this.spawnBullet(centerPos, {x: this.dirX, y: this.dirY}, false);
     }
 
     update(lag)

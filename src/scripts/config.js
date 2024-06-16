@@ -1,3 +1,5 @@
+import levels from "./levels.json";
+
 export default class Config 
 {
     constructor(canvas)
@@ -6,8 +8,8 @@ export default class Config
         this.grid = 20;
         this.grid2 = this.grid * 2;
         this.viewSize = {
-            x: 26,
-            y: 26
+            x: levels[0].map[0].length,
+            y: levels[0].map.length
         };
         this.canvas = canvas;
         this.ctx = this.canvas.getContext('2d');

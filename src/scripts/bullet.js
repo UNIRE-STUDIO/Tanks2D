@@ -22,17 +22,23 @@ export default class Bullet
         this.image_left.src = "/Tanks2D/sprites/Bullet_Left.png";
         
         this.speed = 0.15;
+        this.damage = 1;
+        this.bulletsPlayer = false;
 
         this.removeTile = removeTile;
+        this.tanks = []; // bulletPool
+        this.players = [] // bulletPool
+        
     }
 
-    create(pos, dir)
+    create(pos, dir, bulletsPlayer)
     {
         this.posX = pos.x;
         this.posY = pos.y;
         this.dirY = dir.y;
         this.dirX = dir.x;
         this.isUse = true;
+        this.bulletsPlayer = bulletsPlayer;
     }
 
     checkCollisionWithObstacle()
@@ -69,9 +75,75 @@ export default class Bullet
         return isCollision;
     }
 
+    sortTanks()
+    {
+        for (let i = 0; i < this.tanks.length; i++) 
+        {
+            if (this.tanks[i].isUse)
+            {
+                if (this.checkCollisionWithTank(this.tanks[i]))
+                {
+                    if (this.bulletsPlayer) this.tanks[i].setDamage(this.damage);
+
+                    return true;
+                }
+            }
+        }
+        for (let i = 0; i < this.players.length; i++) 
+        {
+            if (this.players[i].isUse)
+            {
+                if (this.checkCollisionWithTank(this.players[i]))
+                {
+                    if (!this.bulletsPlayer) this.players[i].setDamage(this.damage);
+
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    checkCollisionWithTank(tank)
+    {
+        let tX = Math.round((this.posX + this.config.grid/2 * this.dirX) / this.config.grid);
+        let tY = Math.round((this.posY + this.config.grid/2 * this.dirY) / this.config.grid);
+
+        let oX = Math.round(tank.position.x / this.config.grid);
+        let oY = Math.round(tank.position.y / this.config.grid);
+
+        if (this.dirY > 0)  // Двигаясь вниз
+        {
+            if (tX-1 === oX + 1 && tY === oY // Сравниваем левую часть пули с правым верхним углом танка
+             || tX === oX    && tY === oY // правую часть пули с левым верхним углом танка
+             || tX-1 === oX  && tY === oY) return true; // левую часть пули с левым верхним углом танка
+        }
+        else if (this.dirY < 0) // Двигаясь вверх
+        {
+            if (tX-1 === oX + 1 && tY === oY + 1 // Сравниваем левую часть пули с правым нижним углом танка
+             || tX === oX     && tY === oY + 1 // правую часть пули с левым нижним углом танка
+             || tX-1 === oX && tY === oY + 1) return true; // левую часть пули с левым верхним углом танка
+        }
+        else if (this.dirX > 0) // Двигаясь вправо
+        {
+            if (tX === oX && tY-1 === oY + 1 // Сравниваем верхнюю часть пули с левым нижним углом танка
+             || tX === oX && tY === oY // нижнюю часть пули с левым верхним углом танка
+             || tX === oX && tY-1 === oY) return true; // верхнюю часть пули с левым верхним углом танка
+        }
+        else if (this.dirX < 0) // Двигаясь влево
+        {
+            if (tX === oX + 1 && tY-1 === oY + 1 // Сравниваем верхнюю часть пули с правым нижним углом танка
+             || tX === oX + 1 && tY === oY // нижнюю часть пули с правым верхним углом танка
+             || tX === oX + 1 && tY-1 === oY) return true; // верхнюю часть пули с правым верхним углом танка
+        }
+
+        return false;
+    }
+
     update(lag)
     {
-        if (this.checkCollisionWithObstacle()){
+        if (this.checkCollisionWithObstacle()
+            || this.sortTanks()){
                 this.isUse = false;
                 return;
             } 
