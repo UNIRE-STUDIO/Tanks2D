@@ -27,7 +27,7 @@ export default class LevelManager
         this.currentMap = null;
         
         this.tiles = [new Image(), new Image(), new Image()];
-        this.tiles[0].src = "/Tanks2D/sprites/Grass.png";
+        this.tiles[0].src = "/Tanks2D/sprites/block02.png";
         this.tiles[1].src = "/Tanks2D/sprites/Water.png";
         this.tiles[2].src = "/Tanks2D/sprites/Brick.png";
         
@@ -134,7 +134,6 @@ export default class LevelManager
         for (let i = 0; i < this.config.viewSize.y; i++) {
             for (let j = 0; j < this.config.viewSize.x; j++) 
             {
-                if (this.currentMap[i][j] == 0) continue;
                 drawImage(this.ctx, this.tiles[this.currentMap[i][j]], {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid});
             }
         }
