@@ -1,5 +1,4 @@
 <script>
-import { ref } from 'vue'
   export default {
     props: {
         game: {
@@ -11,22 +10,7 @@ import { ref } from 'vue'
     data() {
         return{
             
-            countNpc: 0
-        }
-    },
-
-    setup() {
-        console.log(this.game);
-
-        // передайте состояние шаблону
-        return {
-            playerHealth1
-        }
-    },
-
-    watch: {
-        playerHealth1: function(n){
-            console.log(n);
+            countNpc: this.game.levelManager.npcPool.countReserveNpcTanks
         }
     },
 
@@ -34,7 +18,7 @@ import { ref } from 'vue'
     },
 
     mounted(){
-        this.countNpc = this.game.levelManager.npcPool.countReserveNpcTanks;
+        
     },
   }
 </script>
@@ -42,11 +26,11 @@ import { ref } from 'vue'
 <template>
     <div class="panel">
         <div id="countNpcTanks">
-            <img v-for="n in this.countNpc" :key="n" class="npcTanks" width="24px" height="24px" src="/Tanks2D/sprites/TankNpc_Down.png" alt="">
+            <img v-for="n in this.countNpc" :key="n" class="npcTanks" width="24px" height="24px" src="/sprites/TankNpc_Down.png" alt="">
         </div>
         <div id="playerHealth1">
-            <img width="24px" height="24px" src="/Tanks2D/sprites/Tank_Up.png" alt="">
-            <p class="lbl">{{ playerHealth1 }}</p>
+            <img width="24px" height="24px" src="/sprites/Tank_Up.png" alt="">
+            <p class="lbl">{{ this.game.levelManager.playerHealth1 }}</p>
         </div>
     </div>
 </template>
