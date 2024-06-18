@@ -1,4 +1,5 @@
 <script>
+import { ref } from 'vue'
   export default {
     props: {
         game: {
@@ -9,8 +10,23 @@
 
     data() {
         return{
-            playerHealth1: 0,
+            
             countNpc: 0
+        }
+    },
+
+    setup() {
+        console.log(this.game);
+
+        // передайте состояние шаблону
+        return {
+            playerHealth1
+        }
+    },
+
+    watch: {
+        playerHealth1: function(n){
+            console.log(n);
         }
     },
 
@@ -18,9 +34,7 @@
     },
 
     mounted(){
-        this.playerHealth1 = this.game.levelManager.playerHealth1;
-        this.game.levelManager.updateHealth = () => {this.playerHealth1 = this.game.levelManager.playerHealth1}; // Иначе не обновляется
-        this.game.levelManager.npcPool.updateCountReserveNpcTanks = () => {this.countNpc = this.game.levelManager.npcPool.countReserveNpcTanks};
+        this.countNpc = this.game.levelManager.npcPool.countReserveNpcTanks;
     },
   }
 </script>
@@ -28,11 +42,11 @@
 <template>
     <div class="panel">
         <div id="countNpcTanks">
-            <img v-for="n in countNpc" class="npcTanks" width="24px" height="24px" src="/Tanks2D/sprites/TankNpc_Down.png" alt="">
+            <img v-for="n in this.countNpc" :key="n" class="npcTanks" width="24px" height="24px" src="/Tanks2D/sprites/TankNpc_Down.png" alt="">
         </div>
         <div id="playerHealth1">
             <img width="24px" height="24px" src="/Tanks2D/sprites/Tank_Up.png" alt="">
-            <p class="lbl">{{ this.playerHealth1 }}</p>
+            <p class="lbl">{{ playerHealth1 }}</p>
         </div>
     </div>
 </template>

@@ -29,9 +29,6 @@ export default class NpcPool
         this.timerSpawn = new Timer(this.cooldown, this.create.bind(this));
 
         this.winEvent = winEvent;
-
-        // VUE
-        this.updateCountReserveNpcTanks;
     }
 
     init(currentMap, currentLevel)
@@ -39,7 +36,6 @@ export default class NpcPool
         this.currentMap = currentMap;
         this.currentLevel = currentLevel;
         this.countReserveNpcTanks = levels[currentLevel].countNpc;
-        this.updateCountReserveNpcTanks();
         this.countNpcTanks = levels[currentLevel].countNpc;
         this.timerSpawn.reset();
         this.timerSpawn.start();
@@ -57,7 +53,6 @@ export default class NpcPool
             if (!this.tanks[i].isUse)
             {
                 this.countReserveNpcTanks--;
-                this.updateCountReserveNpcTanks();
                 let rand = randomRange(0, levels[this.currentLevel].spawnPoints.length);
                 this.tanks[i].create(this.currentMap, {x: levels[this.currentLevel].spawnPoints[rand][0], 
                                                        y: levels[this.currentLevel].spawnPoints[rand][1]});

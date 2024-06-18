@@ -43,9 +43,6 @@ export default class LevelManager
 
         input.moveEvent = this.player.setDirection.bind(this.player);
         input.shootEvent = this.player.shoot.bind(this.player);
-
-        // VUE 
-        this.updateHealth = null;
     }
 
     removeTile(posX, posY)
@@ -109,7 +106,6 @@ export default class LevelManager
     playerDead(playerId)
     {
         this.playerHealth1--;
-        this.updateHealth();
         if (this.playerHealth1 === 0)
         {
             this.gameOver();
