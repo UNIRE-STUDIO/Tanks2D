@@ -25,6 +25,7 @@ export default class Game
         new GameLoop(this.update.bind(this), this.render.bind(this));
         this.levelManager = new LevelManager(this.input, this.config, uiFields);
         this.levelManager.gameOverEvent = this.changeScreen.bind(this, GameScreens.GAMEOVER);
+        this.levelManager.winEvent = this.changeScreen.bind(this, GameScreens.WIN);
         this.levelManager.saveManager = this.saveManager;
     }
 
@@ -49,6 +50,13 @@ export default class Game
             case GameScreens.GAMEOVER:
 
                 this.currentScreen = GameScreens.GAMEOVER;
+            break;
+            case GameScreens.WIN:
+                setTimeout( () => {
+                    this.levelManager.nextLevel();
+                    this.changeScreen(1, 1);
+                }, 2000);
+                this.currentScreen = GameScreens.WIN;
             break;
             case -1: // Если нажата кнопка назад
                 if (this.currentScreen == GameScreens.PAUSE) this.changeScreen(GameScreens.MENU);

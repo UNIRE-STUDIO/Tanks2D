@@ -18,6 +18,7 @@ export default class LevelManager
 
         // Присваивает класс Game
         this.gameOverEvent;
+        this.winEvent;
         this.saveManager;
 
         this.currentLevel = 0;
@@ -69,8 +70,8 @@ export default class LevelManager
 
     win()
     {
-        this.setPause(); // Временно!!!
-        this.gameOverEvent();
+        this.setPause();
+        this.winEvent();
     }
 
     start()
@@ -112,6 +113,11 @@ export default class LevelManager
         {
             this.player.create(this.currentMap, levels[this.currentLevel].playerSpawnPos1);
         }, 2000);
+    }
+
+    nextLevel()
+    {
+        this.currentLevel = this.currentLevel >= levels.length-1 ? this.currentLevel = 0 : this.currentLevel+1;
     }
 
     update(lag)
