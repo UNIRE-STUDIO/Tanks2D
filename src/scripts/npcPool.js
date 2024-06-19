@@ -5,12 +5,13 @@ import Timer from "./timer.js";
 
 export default class NpcPool
 {
-    constructor(config, bulletPool, player, winEvent)
+    constructor(config, bulletPool, player, winEvent, uiFields)
     {
         this.config = config;
         this.currentMap;
         this.currentLevel;
-        this.countReserveNpcTanks = 0;
+        this.uiFields = uiFields;
+        this.uiFields.countReserveNpcTanks = 0;
         this.countNpcTanks = 0;
 
         const pool_size = 5;
@@ -35,7 +36,7 @@ export default class NpcPool
     {
         this.currentMap = currentMap;
         this.currentLevel = currentLevel;
-        this.countReserveNpcTanks = levels[currentLevel].countNpc;
+        this.uiFields.countReserveNpcTanks = levels[currentLevel].countNpc;
         this.countNpcTanks = levels[currentLevel].countNpc;
         this.timerSpawn.reset();
         this.timerSpawn.start();
@@ -43,7 +44,7 @@ export default class NpcPool
 
     create()
     {
-        if (this.countReserveNpcTanks === 0)
+        if (this.uiFields.countReserveNpcTanks === 0)
         {
             this.timerSpawn.stop();
             this.timerSpawn.reset();
@@ -52,7 +53,7 @@ export default class NpcPool
         for (let i = 0; i < this.tanks.length; i++) {
             if (!this.tanks[i].isUse)
             {
-                this.countReserveNpcTanks--;
+                this.uiFields.countReserveNpcTanks--;
                 let rand = randomRange(0, levels[this.currentLevel].spawnPoints.length);
                 this.tanks[i].create(this.currentMap, {x: levels[this.currentLevel].spawnPoints[rand][0], 
                                                        y: levels[this.currentLevel].spawnPoints[rand][1]});

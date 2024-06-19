@@ -1,22 +1,19 @@
 import BulletPool from "./bulletPool.js";
 import { drawImage } from "./general.js";
 //import SaveManager from "./saveManager.js";
-import Tank from "./tank.js";
 import levels from "./levels.json";
 import NpcPool from "./npcPool.js";
 import PlayerTank from "./playerTank.js";
 
 export default class LevelManager
 {
-    constructor(input, config)
+    constructor(input, config, uiFields)
     {
-        // куда-то
-        this.canvas = config.canvas;
-        this.ctx = config.ctx;
+        this.uiFields = uiFields;
 
         this.timeUpdate = 0;
         this.score = 0;
-        this.playerHealth1 = 3;
+        this.uiFields.playerHealth1 = 3;
         this.isPause = false;
 
         // Присваивает класс Game
@@ -35,7 +32,7 @@ export default class LevelManager
 
         this.bulletPool = new BulletPool(this.config, this.removeTile.bind(this));
         this.player = new PlayerTank(this.config, this.bulletPool.create.bind(this.bulletPool), this.playerDead.bind(this), 0);
-        this.npcPool = new NpcPool(this.config, this.bulletPool.create.bind(this.bulletPool), this.player, this.win.bind(this));
+        this.npcPool = new NpcPool(this.config, this.bulletPool.create.bind(this.bulletPool), this.player, this.win.bind(this), uiFields);
 
         this.player.otherTanks.push(...this.npcPool.tanks);
         this.bulletPool.setListNpcTanks(this.npcPool.tanks);
@@ -100,13 +97,13 @@ export default class LevelManager
         this.player.setReset();
         this.npcPool.setReset();
         this.bulletPool.setReset();
-        this.playerHealth1 = 3;
+        this.uiFields.playerHealth1 = 3;
     }
 
     playerDead(playerId)
     {
-        this.playerHealth1--;
-        if (this.playerHealth1 === 0)
+        this.uiFields.playerHealth1--;
+        if (this.uiFields.playerHealth1 === 0)
         {
             this.gameOver();
             return;
@@ -130,7 +127,7 @@ export default class LevelManager
         for (let i = 0; i < this.config.viewSize.y; i++) {
             for (let j = 0; j < this.config.viewSize.x; j++) 
             {
-                drawImage(this.ctx, this.tiles[this.currentMap[i][j]], {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid});
+                drawImage(this.config.ctx, this.tiles[this.currentMap[i][j]], {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid});
             }
         }
         this.player.render();

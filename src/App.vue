@@ -1,6 +1,7 @@
 <script>
   import Game from "./scripts/game.js";
   import Config from "./scripts/config.js";
+  import UIFields from "./scripts/uiFields.js";
   import MainScreen from "./components/MainScreen.vue";
   import MainScreen_Top from "./components/MainScreen_Top.vue";
   import PlayScreen_Top from "./components/PlayScreen_Top.vue";
@@ -24,12 +25,13 @@
         canvasWidth: '',
         canvasHeight: '',
         config: null,
+        uiFields: new UIFields(),
         game: new Game(),
       }
     },
     mounted(){
       this.config = new Config(this.$refs.myCanvas);
-      this.game.init(this.config);
+      this.game.init(this.config, this.uiFields);
       this.canvasWidth = (this.config.viewSize.x * this.config.grid) + 'px';
       this.canvasHeight = (this.config.viewSize.y * this.config.grid) + 'px';
     },
@@ -58,7 +60,7 @@
 				</div>
 			</div>
 			<div class="right-part">
-				<PlayScreen_Right v-if="game.currentScreen == 1" :game="game"/>
+				<PlayScreen_Right v-if="game.currentScreen == 1" :uiFields="uiFields"/>
 			</div>
 		</div>
 	</div>

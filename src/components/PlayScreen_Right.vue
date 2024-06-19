@@ -1,24 +1,10 @@
 <script>
   export default {
     props: {
-        game: {
+        uiFields: {
             type: Object,
             required: true
         }
-    },
-
-    data() {
-        return{
-            
-            countNpc: this.game.levelManager.npcPool.countReserveNpcTanks
-        }
-    },
-
-    methods: {
-    },
-
-    mounted(){
-        
     },
   }
 </script>
@@ -26,11 +12,11 @@
 <template>
     <div class="panel">
         <div id="countNpcTanks">
-            <img v-for="n in this.countNpc" :key="n" class="npcTanks" width="24px" height="24px" src="/sprites/TankNpc_Down.png" alt="">
+            <img v-for="n in this.uiFields.countReserveNpcTanks" :key="n" class="npcTanks" width="24px" height="24px" src="/sprites/TankNpc_Down.png" alt="">
         </div>
         <div id="playerHealth1">
             <img width="24px" height="24px" src="/sprites/Tank_Up.png" alt="">
-            <p class="lbl">{{ this.game.levelManager.playerHealth1 }}</p>
+            <p class="lbl">{{ this.uiFields.playerHealth1 }}</p>
         </div>
     </div>
 </template>

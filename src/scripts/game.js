@@ -18,12 +18,12 @@ export default class Game
         this.input = new Input();
         this.input.changeScreenEvent = this.changeScreen.bind(this);
     }
-    init(config)
+    init(config, uiFields)
     {
         this.config = config;
         this.saveManager = new SaveManager(); 
         new GameLoop(this.update.bind(this), this.render.bind(this));
-        this.levelManager = new LevelManager(this.input, this.config);
+        this.levelManager = new LevelManager(this.input, this.config, uiFields);
         this.levelManager.gameOverEvent = this.changeScreen.bind(this, GameScreens.GAMEOVER);
         this.levelManager.saveManager = this.saveManager;
     }
@@ -63,7 +63,7 @@ export default class Game
         this.levelManager.update(lag);
     }   
 
-    render(lag)
+    render()
     {
         this.config.ctx.clearRect(0, 0, this.config.canvas.width, this.config.canvas.height);
         if (this.currentScreen == GameScreens.MENU){
