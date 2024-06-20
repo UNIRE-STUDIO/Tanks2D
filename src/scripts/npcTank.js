@@ -4,7 +4,7 @@ import Timer from "./timer.js";
 
 export default class NpcTank extends Tank 
 {
-    constructor(config, spawnBullet, player, deadNpcEvent)
+    constructor(config, spawnBullet, players, deadNpcEvent)
     {
         super(config, spawnBullet);
         this.dirY = 1;
@@ -14,7 +14,7 @@ export default class NpcTank extends Tank
         this.isBlockTurn = false;
         this.drivingMode = 0; // 0 =
 
-        this.player = player;
+        this.players = players;
         this.deadNpcEvent = deadNpcEvent;
 
         this.image_up.src = "/Tanks2D/sprites/TankNpc_Up.png";
@@ -82,13 +82,14 @@ export default class NpcTank extends Tank
     {
         this.drivingMode = this.drivingMode + 1 > 1 ? 0 : this.drivingMode + 1;
         this.timerOfJamming = 0;
+        let id = randomRange(0,2);
         switch (this.drivingMode) {
             case 0:
                 
                 break;
         
             case 1:
-                this.search([Math.round(this.player.position.x / this.config.grid), Math.round(this.player.position.y / this.config.grid)])
+                this.search([Math.round(this.players[id].position.x / this.config.grid), Math.round(this.players[id].position.y / this.config.grid)], id);
                 break;
 
             case 2:
@@ -225,7 +226,8 @@ export default class NpcTank extends Tank
 
         if (!this.checkCollisionWithObstacle() 
             && !this.sortOtherTanks()
-            && !this.checkCollisionWithTank(this.player)) // Игрока можно обрабатывать отдельно
+            && !this.checkCollisionWithTank(this.players[0])
+            && !this.checkCollisionWithTank(this.players[1])) // Игрока можно обрабатывать отдельно
         {
             this.position.x += incrementX;
             this.position.y += incrementY;
@@ -271,7 +273,8 @@ export default class NpcTank extends Tank
         let incrementY = this.dirY * lag * this.speed;
 
         if (this.sortOtherTanks() 
-            || this.checkCollisionWithTank(this.player))
+            || this.checkCollisionWithTank(this.players[0])
+            || this.checkCollisionWithTank(this.players[1]))
         {
             this.timerOfJamming += lag;
             if (this.timerOfJamming >= 2000) // Если мы застряли дольше определенного времени
@@ -297,7 +300,7 @@ export default class NpcTank extends Tank
         }
     }
 
-    search(target)
+    search(target, id)
     {
         this.target = target; // Обнуление
         this.path = [];
@@ -306,14 +309,14 @@ export default class NpcTank extends Tank
         this.whereFrom.clear();
         this.currentPosOnPath = 1;
 
-        this.identifyPrioritiesSides(); // Выбираем приоритетные направления поиска
+        this.identifyPrioritiesSides(id); // Выбираем приоритетные направления поиска
         this.depthFirstSearch({ x: Math.round(this.position.x / this.config.grid), y: Math.round(this.position.y / this.config.grid)});
     }
 
-    identifyPrioritiesSides()
+    identifyPrioritiesSides(id)
     {
-        let distX = this.player.position.x - this.position.x;
-        let distY = this.player.position.y - this.position.y;
+        let distX = this.players[id].position.x - this.position.x;
+        let distY = this.players[id].position.y - this.position.y;
         // По горизонтали ближе
         if (Math.abs(distX) < Math.abs(distY)) 
         {

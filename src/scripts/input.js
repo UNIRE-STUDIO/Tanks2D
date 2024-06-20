@@ -6,16 +6,25 @@ export default class Input
         document.addEventListener('keyup', (e) => this.setKeyup(e));
 
         this.changeScreenEvent;
-        this.moveEvent;
-        this.shootEvent;
 
-        this.dirX = 0;
-        this.dirY = 0;
+        this.movePlayer1Event;
+        this.shootPlayer1Event;
 
-        this.isUp = false;
-        this.isDown = false;
-        this.isRight = false;
-        this.isLeft = false;
+        this.dirX1 = 0;
+        this.dirY1 = 0;
+
+        this.dirX2 = 0;
+        this.dirY2 = 0;
+
+        this.isUp1 = false;
+        this.isDown1 = false;
+        this.isRight1 = false;
+        this.isLeft1 = false;
+
+        this.isUp2 = false;
+        this.isDown2 = false;
+        this.isRight2 = false;
+        this.isLeft2 = false;
     }
 
     backButton_click()
@@ -40,67 +49,127 @@ export default class Input
 
     setKeydown(e)
     {   
-        if (e.code === "Space")
+        if (e.code === "ControlRight")
         {
-            this.shootEvent();
+            this.shootPlayer1Event();
         }
         if (e.code === "ArrowRight")
         {
-            this.dirY = 0;
-            this.dirX = 1;
-            this.isRight = true;
+            this.dirY1 = 0;
+            this.dirX1 = 1;
+            this.isRight1 = true;
         }
         if (e.code === "ArrowLeft")
         {
-            this.dirY = 0;
-            this.dirX = -1;
-            this.isLeft = true;
+            this.dirY1 = 0;
+            this.dirX1 = -1;
+            this.isLeft1 = true;
         }
         if (e.code === "ArrowUp")
         {
-            this.dirX = 0;
-            this.dirY = -1;
-            this.isUp = true;
+            this.dirX1 = 0;
+            this.dirY1 = -1;
+            this.isUp1 = true;
         }
         if (e.code === "ArrowDown")
         {
-            this.dirX = 0;
-            this.dirY = 1;
-            this.isDown = true;
+            this.dirX1 = 0;
+            this.dirY1 = 1;
+            this.isDown1 = true;
         }
-        this.moveEvent(this.dirX, this.dirY);
+
+        if (e.code === "Space")
+        {
+            this.shootPlayer2Event();
+        }
+        if (e.code === "KeyD")
+        {
+            this.dirY2 = 0;
+            this.dirX2 = 1;
+            this.isRight2 = true;
+        }
+        if (e.code === "KeyA")
+        {
+            this.dirY2 = 0;
+            this.dirX2 = -1;
+            this.isLeft2 = true;
+        }
+        if (e.code === "KeyW")
+        {
+            this.dirX2 = 0;
+            this.dirY2 = -1;
+            this.isUp2 = true;
+        }
+        if (e.code === "KeyS")
+        {
+            this.dirX2 = 0;
+            this.dirY2 = 1;
+            this.isDown2 = true;
+        }
+
+        this.movePlayer2Event(this.dirX2, this.dirY2);
+        this.movePlayer1Event(this.dirX1, this.dirY1);
     }
 
     setKeyup(e)
     {
         if (e.code === "ArrowRight")
         {
-            this.dirX = 0;
-            this.isRight = false;
+            this.dirX1 = 0;
+            this.isRight1 = false;
         }
         if (e.code === "ArrowLeft")
         {
-            this.dirX = 0;
-            this.isLeft = false;
+            this.dirX1 = 0;
+            this.isLeft1 = false;
         }
         if (e.code === "ArrowUp")
         {
-            this.dirY = 0;
-            this.isUp = false;
+            this.dirY1 = 0;
+            this.isUp1 = false;
         }
         if (e.code === "ArrowDown")
         {
-            this.dirY = 0;
-            this.isDown = false;
+            this.dirY1 = 0;
+            this.isDown1 = false;
         }
 
-        if (this.isRight) this.dirX = 1;
-        else if (this.isLeft) this.dirX = -1;
-        else if (this.isUp) this.dirY = -1;
-        else if (this.isDown) this.dirY = 1;
+        if (e.code === "KeyD")
+        {
+            this.dirX2 = 0;
+            this.isRight2 = false;
+        }
+        if (e.code === "KeyA")
+        {
+            this.dirX2 = 0;
+            this.isLeft2 = false;
+        }
+        if (e.code === "KeyW")
+        {
+            this.dirY2 = 0;
+            this.isUp2 = false;
+        }
+        if (e.code === "KeyS")
+        {
+            this.dirY2 = 0;
+            this.isDown2 = false;
+        }
 
-        if (this.dirY != 0 && this.dirX != 0) this.dirY = 0;
-        this.moveEvent(this.dirX, this.dirY);
+        if (this.isRight1) this.dirX1 = 1;
+        else if (this.isLeft1) this.dirX1 = -1;
+        else if (this.isUp1) this.dirY1 = -1;
+        else if (this.isDown1) this.dirY1 = 1;
+
+        if (this.isRight2) this.dirX2 = 1;
+        else if (this.isLeft2) this.dirX2 = -1;
+        else if (this.isUp2) this.dirY2 = -1;
+        else if (this.isDown2) this.dirY2 = 1;
+
+        if (this.dirY1 != 0 && this.dirX1 != 0) this.dirY1 = 0;
+        if (this.dirY2 != 0 && this.dirX2 != 0) this.dirY2 = 0;
+
+        this.movePlayer1Event(this.dirX1, this.dirY1);
+        this.movePlayer2Event(this.dirX2, this.dirY2);
     }
     
 }

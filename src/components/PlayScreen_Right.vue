@@ -14,9 +14,13 @@
         <div id="countNpcTanks">
             <img v-for="n in this.uiFields.countReserveNpcTanks" :key="n" class="npcTanks" width="24px" height="24px" src="/sprites/TankNpc_Down.png" alt="">
         </div>
-        <div id="playerHealth1">
+        <div class="playerHealth">
             <img width="24px" height="24px" src="/sprites/Tank_Up.png" alt="">
-            <p class="lbl">{{ this.uiFields.playerHealth1 }}</p>
+            <p class="lbl">{{ this.uiFields.playersHealth[0] }}</p>
+        </div>
+        <div class="playerHealth">
+            <img width="24px" height="24px" src="/sprites/Tank_Up.png" alt="">
+            <p class="lbl">{{ this.uiFields.playersHealth[0] }}</p>
         </div>
     </div>
 </template>
@@ -39,7 +43,7 @@
         gap: 2px;
     }
     
-    #playerHealth1 {
+    #playerHealth {
         display: flex;
         justify-content: center; 
         width: 100%;

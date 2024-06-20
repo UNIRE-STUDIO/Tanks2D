@@ -30,7 +30,7 @@ export default class Game
     }
 
     // изменить экран игры на указанный + дополнительный параметр для уточнения поведения
-    changeScreen(screen, parameter = 0)
+    changeScreen(screen, parameter = 0, secondParam = 0)
     {
         // Если нажата НЕ кнопка назад
         switch (screen) {
@@ -38,7 +38,7 @@ export default class Game
                 this.currentScreen = GameScreens.MENU;
             break;
             case GameScreens.PLAY:
-                if (parameter == 1) this.levelManager.start();
+                if (parameter == 1) this.levelManager.start(secondParam);
                 else if (parameter == 2) this.levelManager.setResume();
                 this.currentScreen = GameScreens.PLAY;
             break;
