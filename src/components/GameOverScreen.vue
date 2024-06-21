@@ -4,6 +4,10 @@
         game: {
             type: Object,
             required: true
+        },
+        uiFields: {
+            type: Object,
+            required: true
         }
     },
   }
@@ -14,7 +18,7 @@
         <p class="lbl">Вы проиграли!</p>
         <div class="panel">
             <button class="btn" @click="game.changeScreen(0)">Меню</button>
-            <button class="btn" @click="game.changeScreen(1,1)">Рестарт</button>
+            <button class="btn" @click="game.changeScreen(1,1,uiFields.playersMode)">Рестарт</button>
         </div>
     </div>
 </template>

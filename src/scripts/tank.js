@@ -27,6 +27,7 @@ export default class Tank
         this.health = 1;
 
         this.otherTanks = []; // Присваивает Level Manager или npcPool
+        this.otherCollisionObject = [];
     }
 
     create(currentMap, pos)
@@ -34,7 +35,13 @@ export default class Tank
         this.currentMap = currentMap;
         this.position.x = pos.x * this.config.grid2;
         this.position.y = pos.y * this.config.grid2;
+        this.otherCollisionObject = [];
         this.isUse = true;
+    }
+
+    setOtherCollisionObject(obj)
+    {
+        this.otherCollisionObject.push(obj);
     }
 
     setDirection(dirX, dirY)
@@ -73,25 +80,35 @@ export default class Tank
         } 
     }
 
+    sortOtherObjects()
+    {
+        let check = 0;
+        for (let i = 0; i < this.otherCollisionObject.length; i++) 
+        {
+            check = this.checkCollisionWithObject(this.otherCollisionObject[i]) ? check + 1 : check;
+        }
+        return check > 0;
+    }
+
     sortOtherTanks()
     {
         let check = 0;
         for (let i = 0; i < this.otherTanks.length; i++) {
             if (this.otherTanks[i].isUse)
             {
-                check = this.checkCollisionWithTank(this.otherTanks[i]) ? check + 1 : check;
+                check = this.checkCollisionWithObject(this.otherTanks[i].position) ? check + 1 : check;
             }
         }
         return check > 0;
     }
 
-    checkCollisionWithTank(tank)
+    checkCollisionWithObject(objPos)
     {
         let tX = Math.round((this.position.x + this.config.grid/2 * this.moveX) / this.config.grid);
         let tY = Math.round((this.position.y + this.config.grid/2 * this.moveY) / this.config.grid);
 
-        let oX = Math.round((tank.position.x) / this.config.grid);
-        let oY = Math.round((tank.position.y) / this.config.grid);
+        let oX = Math.round((objPos.x) / this.config.grid);
+        let oY = Math.round((objPos.y) / this.config.grid);
 
         if (this.moveY > 0)  // Двигаясь вниз
         {

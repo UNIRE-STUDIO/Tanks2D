@@ -42,6 +42,14 @@ export default class NpcPool
         this.timerSpawn.start();
     }
 
+    setOtherCollisionObject(obj)
+    {
+        for (let i = 0; i < this.tanks.length; i++) 
+        {
+            this.tanks[i].setOtherCollisionObject(obj);
+        }
+    }
+
     create()
     {
         if (this.uiFields.countReserveNpcTanks === 0)

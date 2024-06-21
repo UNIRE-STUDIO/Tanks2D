@@ -42,6 +42,10 @@ export default class LevelManager
         this.npcPool = new NpcPool(this.config, this.bulletPool.create.bind(this.bulletPool), this.players, this.win.bind(this), uiFields);
 
         this.players[0].otherTanks.push(...this.npcPool.tanks);
+        this.players[1].otherTanks.push(...this.npcPool.tanks);
+        this.players[0].otherTanks.push(this.players[1]);
+        this.players[1].otherTanks.push(this.players[0]);
+        
         this.bulletPool.setListNpcTanks(this.npcPool.tanks);
         this.bulletPool.setListPlayers([this.players[0]]);
         this.bulletPool.setListPlayers([this.players[1]]);
@@ -64,16 +68,20 @@ export default class LevelManager
             this.currentMap.push(levels[this.uiFields.currentLevel].map[i].slice());
         }
         setTimeout(() => {        
-            this.bulletPool.init(this.currentMap, levels[this.uiFields.currentLevel].basePos);
+            let base = {x: levels[this.uiFields.currentLevel].basePos.x * this.config.grid, y: levels[this.uiFields.currentLevel].basePos.y * this.config.grid};
+            this.bulletPool.init(this.currentMap, base);
             this.isPause = false;
             this.players[0].create(this.currentMap, levels[this.uiFields.currentLevel].playerSpawnsPos[0]);
+            //this.players[0].setOtherCollisionObject(base);
             this.players[0].isPause = false;
             if (playersMode === 1)
             {
                 this.players[1].create(this.currentMap, levels[this.uiFields.currentLevel].playerSpawnsPos[1]);
+                //this.players[1].setOtherCollisionObject(base);
                 this.players[1].isPause = false;
             }
             this.npcPool.init(this.currentMap, this.uiFields.currentLevel);
+            //this.npcPool.setOtherCollisionObject(base);
         }, 1000);
     }
 
@@ -157,11 +165,11 @@ export default class LevelManager
 
     render()
     {
+        let tile;
         for (let i = 0; i < this.config.viewSize.y; i++) {
             for (let j = 0; j < this.config.viewSize.x; j++) 
             {
-                let tile;
-                if (this.currentMap[i][j] === 0) tile = this.tiles[j%2+(i%2 * 2)];
+                if (this.currentMap[i][j] === 0 || this.currentMap[i][j] === 9) tile = this.tiles[j%2+(i%2 * 2)];
                 else tile = this.tiles[this.currentMap[i][j]];
                 drawImage(this.config.ctx, tile, {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid});
             }

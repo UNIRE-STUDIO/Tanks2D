@@ -8,7 +8,7 @@ export default class NpcTank extends Tank
     {
         super(config, spawnBullet);
         this.dirY = 1;
-        this.speed = 0.06; // 0.07
+        this.speed = 0.003 * config.grid;
         this.timeOfModeChange = 23; // Длительность режима в секундах
 
         this.isBlockTurn = false;
@@ -226,8 +226,9 @@ export default class NpcTank extends Tank
 
         if (!this.checkCollisionWithObstacle() 
             && !this.sortOtherTanks()
-            && !this.checkCollisionWithTank(this.players[0])
-            && !this.checkCollisionWithTank(this.players[1])) // Игрока можно обрабатывать отдельно
+            && !this.checkCollisionWithObject(this.players[0].position)
+            && !this.checkCollisionWithObject(this.players[1].position)
+            && !this.sortOtherObjects()) // Игрока можно обрабатывать отдельно
         {
             this.position.x += incrementX;
             this.position.y += incrementY;
@@ -273,8 +274,8 @@ export default class NpcTank extends Tank
         let incrementY = this.dirY * lag * this.speed;
 
         if (this.sortOtherTanks() 
-            || this.checkCollisionWithTank(this.players[0])
-            || this.checkCollisionWithTank(this.players[1]))
+            || this.checkCollisionWithObject(this.players[0])
+            || this.checkCollisionWithObject(this.players[1]))
         {
             this.timerOfJamming += lag;
             if (this.timerOfJamming >= 1500) // Если мы застряли дольше определенного времени

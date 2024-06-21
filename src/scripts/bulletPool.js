@@ -29,6 +29,13 @@ export default class BulletPool
             this.bullets[i].players.push(...tanks);
         }
     }
+    setOtherCollisionObject(obj)
+    {
+        for (let i = 0; i < this.bullets.length; i++) 
+        {
+            this.bullets[i].setOtherCollisionObject(obj);
+        }
+    }
 
     init(currentMap, basePos)
     {

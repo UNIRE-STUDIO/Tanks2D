@@ -36,6 +36,8 @@ export default class Game
         switch (screen) {
             case GameScreens.MENU:
                 this.currentScreen = GameScreens.MENU;
+                if (this.levelManager !== undefined)
+                    this.levelManager.uiFields.currentLevel = 0;
             break;
             case GameScreens.PLAY:
                 if (parameter == 1) this.levelManager.start(secondParam);

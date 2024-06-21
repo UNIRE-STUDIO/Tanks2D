@@ -8,12 +8,12 @@ export default class PlayerTank extends Tank
     {
         super(config, spawnBullet);
 
-        this.image_up.src = "/Tanks2D/sprites/Tank_Up.png";
-        this.image_down.src = "/Tanks2D/sprites/Tank_Down.png";
-        this.image_right.src = "/Tanks2D/sprites/Tank_Right.png";
-        this.image_left.src = "/Tanks2D/sprites/Tank_Left.png";
+        this.image_up.src = playerId === 0 ? "/Tanks2D/sprites/Tank_Up.png" : "/Tanks2D/sprites/Tank2_Up.png";
+        this.image_down.src = playerId === 0 ? "/Tanks2D/sprites/Tank_Down.png" : "/Tanks2D/sprites/Tank2_Down.png";
+        this.image_right.src = playerId === 0 ? "/Tanks2D/sprites/Tank_Right.png" : "/Tanks2D/sprites/Tank2_Right.png";
+        this.image_left.src = playerId === 0 ? "/Tanks2D/sprites/Tank_Left.png" : "/Tanks2D/sprites/Tank2_Left.png";
 
-        this.speed = 0.1;
+        this.speed = 0.005 * config.grid;
 
         this.isCooldown = false;
         this.cooldownTime = 1;
@@ -73,7 +73,8 @@ export default class PlayerTank extends Tank
         let incrementY = this.moveY * lag * this.speed;
         if ((this.moveX == 0 && this.moveY == 0)
             || this.checkCollisionWithObstacle()
-            || this.sortOtherTanks()) return; // Если выходим за границы карты
+            || this.sortOtherTanks()
+            || this.sortOtherObjects()) return; // Если выходим за границы карты
         
         this.position.x += incrementX;
         this.position.y += incrementY;

@@ -58,13 +58,13 @@ export default {
                     <div class="content-center-wrapper">
                         <MainScreen v-if="game.currentScreen === 0" :game="game" />
                         <PauseScreen v-if="game.currentScreen === 2" :game="game" />
-                        <GameOverScreen v-if="game.currentScreen === 4" :game="game" />
+                        <GameOverScreen v-if="game.currentScreen === 4" :game="game" :uiFields="uiFields" />
                         <WinScreen v-if="game.currentScreen === 3" :game="game" />
                     </div>
                 </div>
             </div>
             <div class="right-part">
-                <PlayScreen_Right v-if="game.currentScreen === 1 || game.currentScreen === 2" :uiFields="uiFields" />
+                <PlayScreen_Right v-if="game.currentScreen === 1 || game.currentScreen === 2" :uiFields="uiFields" :config="config" />
             </div>
         </div>
     </div>
@@ -104,6 +104,8 @@ export default {
 
 #current-level{
     color: aliceblue;
+    grid-column-start: 2;
+    grid-column-end: 3;
 }
 
 .canvas-wrapper {

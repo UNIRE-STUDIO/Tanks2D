@@ -22,7 +22,7 @@ export default class Bullet
         this.image_left = new Image();
         this.image_left.src = "/Tanks2D/sprites/Bullet_Left.png";
         
-        this.speed = 0.2;
+        this.speed = 0.01 * config.grid;;
         this.damage = 1;
         this.bulletsPlayer = false;
 
@@ -30,7 +30,7 @@ export default class Bullet
         this.destructionOfTheBaseEvent = destructionOfTheBaseEvent;
         this.tanks = [];    // bulletPool
         this.players = []   // bulletPool
-
+        this.otherCollisionObject = [];
     }
 
     create(pos, dir, bulletsPlayer)
@@ -41,6 +41,12 @@ export default class Bullet
         this.dirX = dir.x;
         this.isUse = true;
         this.bulletsPlayer = bulletsPlayer;
+        this.otherCollisionObject = [];
+    }
+
+    setOtherCollisionObject(obj)
+    {
+        this.otherCollisionObject.push(obj);
     }
 
     checkCollisionWithObstacle()
@@ -83,7 +89,7 @@ export default class Bullet
         {
             if (this.tanks[i].isUse)
             {
-                if (this.checkCollisionWithTank(this.tanks[i].position))
+                if (this.checkCollisionWithObject(this.tanks[i].position))
                 {
                     if (this.bulletsPlayer) this.tanks[i].setDamage(this.damage);
 
@@ -95,7 +101,7 @@ export default class Bullet
         {
             if (this.players[i].isUse)
             {
-                if (this.checkCollisionWithTank(this.players[i].position))
+                if (this.checkCollisionWithObject(this.players[i].position))
                 {
                     if (!this.bulletsPlayer) this.players[i].setDamage(this.damage);
 
@@ -106,13 +112,13 @@ export default class Bullet
         return false;
     }
 
-    checkCollisionWithTank(tankPos)
+    checkCollisionWithObject(obj)
     {
         let tX = Math.round((this.posX + this.config.grid/2 * this.dirX) / this.config.grid);
         let tY = Math.round((this.posY + this.config.grid/2 * this.dirY) / this.config.grid);
 
-        let oX = Math.round(tankPos.x / this.config.grid);
-        let oY = Math.round(tankPos.y / this.config.grid);
+        let oX = Math.round(obj.x / this.config.grid);
+        let oY = Math.round(obj.y / this.config.grid);
 
         if (this.dirY > 0)  // Двигаясь вниз
         {
@@ -150,7 +156,7 @@ export default class Bullet
             this.isUse = false;
             return;
         }
-        if (this.checkCollisionWithTank(this.basePos))
+        if (this.checkCollisionWithObject(this.basePos))
         {
             this.isUse = false;
             this.destructionOfTheBaseEvent();
