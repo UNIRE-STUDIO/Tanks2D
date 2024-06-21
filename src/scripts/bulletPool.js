@@ -2,17 +2,16 @@ import Bullet from "./bullet.js";
 
 export default class BulletPool
 {
-    constructor(config, removeTile)
+    constructor(config, removeTile, destructionOfTheBaseEvent)
     {
         this.config = config;
-        this.currentMap;
 
         const pool_size = 12;
         this.bullets = [];
 
         for (let i = 0; i < pool_size; i++) 
         {
-            this.bullets[i] = new Bullet(this.config, removeTile);
+            this.bullets[i] = new Bullet(this.config, removeTile, destructionOfTheBaseEvent);
         }
     }
 
@@ -31,12 +30,12 @@ export default class BulletPool
         }
     }
 
-    init(currentMap)
+    init(currentMap, basePos)
     {
-        this.currentMap = currentMap;
         for (let i = 0; i < this.bullets.length; i++) 
         {
             this.bullets[i].currentMap = currentMap;
+            this.bullets[i].basePos = basePos;
         }
     }
 

@@ -25,6 +25,10 @@ export default class PlayerTank extends Tank
 
     setReset()
     {
+        this.dirX = 0;
+        this.dirY = -1;
+        this.moveX = 0;
+        this.moveY = 0;
         this.isUse = false;
         this.isCooldown = false;
         this.timerShoot.stop();

@@ -2,7 +2,7 @@ import { drawImage, drawRect } from "./general.js";
 
 export default class Bullet
 {
-    constructor(config, removeTile)
+    constructor(config, removeTile, destructionOfTheBaseEvent)
     {
         this.config = config;
         this.posX = 0;
@@ -10,6 +10,7 @@ export default class Bullet
         this.dirY = 0;
         this.dirX = 0;
         this.currentMap;
+        this.basePos;
         this.isUse = false;
 
         this.image_up = new Image();
@@ -21,14 +22,15 @@ export default class Bullet
         this.image_left = new Image();
         this.image_left.src = "/Tanks2D/sprites/Bullet_Left.png";
         
-        this.speed = 0.15;
+        this.speed = 0.2;
         this.damage = 1;
         this.bulletsPlayer = false;
 
         this.removeTile = removeTile;
-        this.tanks = []; // bulletPool
-        this.players = [] // bulletPool
-        
+        this.destructionOfTheBaseEvent = destructionOfTheBaseEvent;
+        this.tanks = [];    // bulletPool
+        this.players = []   // bulletPool
+
     }
 
     create(pos, dir, bulletsPlayer)
@@ -53,21 +55,21 @@ export default class Bullet
         }
         
         let isCollision = false;
-        if (this.currentMap[tileY][tileX] == 2) // Проверяем основным датчиком
+        if (this.currentMap[tileY][tileX] === 5) // Проверяем основным датчиком
         {
             this.removeTile(tileX, tileY);
             isCollision = true;
         }
         if (this.dirY != 0 
             && this.currentMap[0][tileX - 1] !== undefined
-            && this.currentMap[tileY][tileX - 1] == 2) // Проверяем соседний блок по горизонтале
+            && this.currentMap[tileY][tileX - 1] === 5) // Проверяем соседний блок по горизонтале
         {
             this.removeTile(tileX - 1, tileY);
             isCollision = true;
         }
         else if (this.dirX != 0 
             && this.currentMap[tileY - 1] !== undefined
-            && this.currentMap[tileY - 1][tileX] == 2) // Проверяем соседний блок по вертикали
+            && this.currentMap[tileY - 1][tileX] === 5) // Проверяем соседний блок по вертикали
         {
             this.removeTile(tileX, tileY - 1);
             isCollision = true;
@@ -81,7 +83,7 @@ export default class Bullet
         {
             if (this.tanks[i].isUse)
             {
-                if (this.checkCollisionWithTank(this.tanks[i]))
+                if (this.checkCollisionWithTank(this.tanks[i].position))
                 {
                     if (this.bulletsPlayer) this.tanks[i].setDamage(this.damage);
 
@@ -93,7 +95,7 @@ export default class Bullet
         {
             if (this.players[i].isUse)
             {
-                if (this.checkCollisionWithTank(this.players[i]))
+                if (this.checkCollisionWithTank(this.players[i].position))
                 {
                     if (!this.bulletsPlayer) this.players[i].setDamage(this.damage);
 
@@ -104,13 +106,13 @@ export default class Bullet
         return false;
     }
 
-    checkCollisionWithTank(tank)
+    checkCollisionWithTank(tankPos)
     {
         let tX = Math.round((this.posX + this.config.grid/2 * this.dirX) / this.config.grid);
         let tY = Math.round((this.posY + this.config.grid/2 * this.dirY) / this.config.grid);
 
-        let oX = Math.round(tank.position.x / this.config.grid);
-        let oY = Math.round(tank.position.y / this.config.grid);
+        let oX = Math.round(tankPos.x / this.config.grid);
+        let oY = Math.round(tankPos.y / this.config.grid);
 
         if (this.dirY > 0)  // Двигаясь вниз
         {
@@ -143,10 +145,17 @@ export default class Bullet
     update(lag)
     {
         if (this.checkCollisionWithObstacle()
-            || this.sortTanks()){
-                this.isUse = false;
-                return;
-            } 
+            || this.sortTanks())
+        {
+            this.isUse = false;
+            return;
+        }
+        if (this.checkCollisionWithTank(this.basePos))
+        {
+            this.isUse = false;
+            this.destructionOfTheBaseEvent();
+            return;
+        }
         
         this.posX += this.dirX * lag * this.speed;
         this.posY += this.dirY * lag * this.speed;

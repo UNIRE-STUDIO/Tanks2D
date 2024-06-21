@@ -237,7 +237,7 @@ export default class NpcTank extends Tank
             this.timerOfJamming += lag;
             if (this.timerOfJamming >= this.timeWaitOfJamming) // Если мы застряли дольше определенного времени
             {
-                this.timeWaitOfJamming = randomRange(100, 1500); // Время следующего застревания
+                this.timeWaitOfJamming = randomRange(100, 1000); // Время следующего застревания
                 this.timerOfJamming = 0;
                 this.tryTurn();
             }
@@ -255,7 +255,7 @@ export default class NpcTank extends Tank
 
     movingTowardsTheGoal(lag)
     {
-        let accuracy = 5; // Точность
+        let accuracy = 8; // Точность
         let posOnPath = idToCoordinates(this.path[this.currentPosOnPath], this.currentMap[0].length);
         posOnPath.x *= this.config.grid;
         posOnPath.y *= this.config.grid;
@@ -277,7 +277,7 @@ export default class NpcTank extends Tank
             || this.checkCollisionWithTank(this.players[1]))
         {
             this.timerOfJamming += lag;
-            if (this.timerOfJamming >= 2000) // Если мы застряли дольше определенного времени
+            if (this.timerOfJamming >= 1500) // Если мы застряли дольше определенного времени
             {
                 this.timerOfJamming = 0;
                 this.changeMode(); // Потенциально может быть проблема, когда после застревания

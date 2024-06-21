@@ -54,7 +54,7 @@ export default class Game
             case GameScreens.WIN:
                 setTimeout( () => {
                     this.levelManager.nextLevel();
-                    this.changeScreen(1, 1);
+                    this.changeScreen(1, 1, this.levelManager.uiFields.playersMode);
                 }, 2000);
                 this.currentScreen = GameScreens.WIN;
             break;
