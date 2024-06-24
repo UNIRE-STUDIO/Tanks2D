@@ -1,4 +1,4 @@
-import { drawRect, drawText, randomRange, coordinatesToId, idToCoordinates } from "./general.js";
+import { randomRange, coordinatesToId, idToCoordinates } from "./general.js";
 import Tank from "./tank.js";
 import Timer from "./timer.js";
 
@@ -233,7 +233,8 @@ export default class NpcTank extends Tank
             this.position.x += incrementX;
             this.position.y += incrementY;
         }
-        else
+        if(this.checkCollisionWithObstacle()
+            || this.sortOtherTanks()) // Только когда танк упирается в эти сущности мы считаем застревание и меняем направление танка
         {
             this.timerOfJamming += lag;
             if (this.timerOfJamming >= this.timeWaitOfJamming) // Если мы застряли дольше определенного времени
@@ -246,7 +247,8 @@ export default class NpcTank extends Tank
         }
 
         if (Math.floor((this.position.x - incrementX) / this.config.grid2) != Math.floor(this.position.x / this.config.grid2)
-            || Math.floor((this.position.y - incrementY) / this.config.grid2) != Math.floor(this.position.y / this.config.grid2))
+            || Math.floor((this.position.y - incrementY) / this.config.grid2) != Math.floor(this.position.y / this.config.grid2)
+            && !this.isBlockTurn)
         {
             if (randomRange(0, 7) == 0) this.tryTurnAnywhere();
             this.isBlockTurn = true;
@@ -273,18 +275,23 @@ export default class NpcTank extends Tank
         let incrementX = this.dirX * lag * this.speed;
         let incrementY = this.dirY * lag * this.speed;
 
-        if (this.sortOtherTanks() 
-            || this.checkCollisionWithObject(this.players[0])
-            || this.checkCollisionWithObject(this.players[1]))
+        if (this.sortOtherTanks())
         {
-            this.timerOfJamming += lag;
-            if (this.timerOfJamming >= 1500) // Если мы застряли дольше определенного времени
-            {
-                this.timerOfJamming = 0;
-                this.changeMode(); // Потенциально может быть проблема, когда после застревания
-            }                      // в режим преследования игрока мы переходим к следованию на базу, т.е. будем мяться на месте
             return;
         }
+
+        if (this.checkCollisionWithObject(this.players[0])
+            || this.checkCollisionWithObject(this.players[1]))
+            {
+                this.timerOfJamming += lag;
+                if (this.timerOfJamming >= 1500) this.randomShoot(); // Если мы застряли дольше определенного времени
+                if (this.timerOfJamming >= 2000) // Если мы застряли дольше определенного времени
+                {
+                    this.timerOfJamming = 0;
+                    this.changeMode(); // Потенциально может быть проблема, когда после застревания
+                }     
+                return;                 // в режим преследования игрока мы переходим к следованию на базу, т.е. будем мяться на месте
+            }
         this.position.x += incrementX;
         this.position.y += incrementY;
 
