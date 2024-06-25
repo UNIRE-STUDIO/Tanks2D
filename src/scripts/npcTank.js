@@ -112,7 +112,7 @@ export default class NpcTank extends Tank
             let leftX = Math.ceil((this.position.x - this.config.grid) / this.config.grid);
             let leftY = rightY;
 
-            if (this.currentMap[rightY] !== undefined 
+            if (this.currentMap[rightY] !== undefined  // поворот направо
                 && this.currentMap[rightY][rightX] !== undefined 
                 && this.currentMap[rightY+1] !== undefined
                 && this.currentMap[rightY][rightX] == 0
@@ -120,7 +120,7 @@ export default class NpcTank extends Tank
             {
                 dirs.push([1,0]);
             }
-            if (this.currentMap[leftY] !== undefined 
+            if (this.currentMap[leftY] !== undefined // поворот налево
                 && this.currentMap[leftY][leftX] !== undefined 
                 && this.currentMap[leftY+1] !== undefined
                 && this.currentMap[leftY][leftX] == 0
@@ -137,7 +137,7 @@ export default class NpcTank extends Tank
             let upX = downX;
             let upY = Math.ceil((this.position.y - this.config.grid) / this.config.grid);
 
-            if (this.currentMap[downY] !== undefined 
+            if (this.currentMap[downY] !== undefined  // поворот вниз
                 && this.currentMap[downY][downX] !== undefined
                 && this.currentMap[downY][downX+1] !== undefined 
                 && this.currentMap[downY][downX] == 0
@@ -145,7 +145,7 @@ export default class NpcTank extends Tank
             {
                 dirs.push([0,1]);
             }
-            if (this.currentMap[upY] !== undefined 
+            if (this.currentMap[upY] !== undefined  // поворот вверх
                 && this.currentMap[upY][upX] !== undefined
                 && this.currentMap[upY][upX+1] !== undefined
                 && this.currentMap[upY][upY] == 0

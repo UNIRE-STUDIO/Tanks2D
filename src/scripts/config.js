@@ -4,7 +4,7 @@ export default class Config
 {
     constructor(canvas)
     {
-        this.grid = 20;
+        this.grid = 32;
         this.grid2 = this.grid * 2;
         this.viewSize = {
             x: levels[0].map[0].length,
