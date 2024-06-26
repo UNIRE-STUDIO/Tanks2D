@@ -80,8 +80,7 @@ export default class LevelManager
                 //this.players[1].setOtherCollisionObject(base);
                 this.players[1].isPause = false;
             }
-            this.npcPool.init(this.currentMap, this.uiFields.currentLevel);
-            //this.npcPool.setOtherCollisionObject(base);
+            this.npcPool.init(this.currentMap, this.uiFields.currentLevel, base);
         }, 1000);
     }
 
@@ -121,7 +120,10 @@ export default class LevelManager
     reset()
     {
         this.players[0].setReset();
-        if (this.uiFields.playersMode === 1) this.players[1].setReset();
+        if (this.uiFields.playersMode === 1){
+            this.players[1].setReset();
+            this.uiFields.playersHealth[1] = 3;
+        } 
         this.npcPool.setReset();
         this.bulletPool.setReset();
         this.uiFields.playersHealth[0] = 3;

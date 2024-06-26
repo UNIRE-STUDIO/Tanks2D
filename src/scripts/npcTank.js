@@ -1,4 +1,4 @@
-import { randomRange, coordinatesToId, idToCoordinates } from "./general.js";
+import {drawRect, randomRange, coordinatesToId, idToCoordinates } from "./general.js";
 import Tank from "./tank.js";
 import Timer from "./timer.js";
 
@@ -43,14 +43,17 @@ export default class NpcTank extends Tank
         this.minCooldownTime = 1;
         this.maxCooldownTime = 5;
         this.timerShoot = new Timer(randomRange(this.minCooldownTime, this.maxCooldownTime), this.randomShoot.bind(this));
+    
+        this.basePos; // npcPool
     }
 
-    create(currentMap, pos)
+    create(currentMap, pos, basePos)
     {
         super.create(currentMap, pos);
         this.moveX = this.dirX;
         this.moveY = this.dirY;
         this.drivingMode = 0;
+        this.basePos = basePos;
         this.timerDrivingMode.reset();
         this.timerDrivingMode.start();
         this.timerShoot.reset();
@@ -80,24 +83,21 @@ export default class NpcTank extends Tank
 
     changeMode()
     {
-        this.drivingMode = this.drivingMode + 1 > 1 ? 0 : this.drivingMode + 1;
+        this.drivingMode = (this.drivingMode + 1) > 3 ? 0 : (this.drivingMode + 1);
         this.timerOfJamming = 0;
         let id = randomRange(0,2);
         switch (this.drivingMode) {
-            case 0:
-                
-                break;
-        
             case 1:
-                this.search([Math.round(this.players[id].position.x / this.config.grid), Math.round(this.players[id].position.y / this.config.grid)], id);
+                this.search([Math.round(this.players[id].position.x / this.config.grid), Math.round(this.players[id].position.y / this.config.grid)]);
                 break;
 
-            case 2:
-                
+            case 3:
+                this.search([this.basePos.x / this.config.grid, this.basePos.y / this.config.grid]);
                 break;
         }
         this.timerDrivingMode.reset();
         this.timerDrivingMode.start();
+        console.log(this.drivingMode);
     }
 
     tryTurn()
@@ -277,6 +277,11 @@ export default class NpcTank extends Tank
 
         if (this.sortOtherTanks())
         {
+            if (this.timerOfJamming >= 2000) // Если мы застряли дольше определенного времени
+            {
+                this.timerOfJamming = 0;
+                this.changeMode();
+            }     
             return;
         }
 
@@ -288,9 +293,9 @@ export default class NpcTank extends Tank
                 if (this.timerOfJamming >= 2000) // Если мы застряли дольше определенного времени
                 {
                     this.timerOfJamming = 0;
-                    this.changeMode(); // Потенциально может быть проблема, когда после застревания
+                    this.changeMode();
                 }     
-                return;                 // в режим преследования игрока мы переходим к следованию на базу, т.е. будем мяться на месте
+                return;
             }
         this.position.x += incrementX;
         this.position.y += incrementY;
@@ -303,12 +308,13 @@ export default class NpcTank extends Tank
             if (this.currentPosOnPath >= this.path.length)
             {
                 // Завершаем путь
-                this.drivingMode = 0;
+                this.randomShoot();
+                this.changeMode();
             }
         }
     }
 
-    search(target, id)
+    search(target)
     {
         this.target = target; // Обнуление
         this.path = [];
@@ -317,14 +323,14 @@ export default class NpcTank extends Tank
         this.whereFrom.clear();
         this.currentPosOnPath = 1;
 
-        this.identifyPrioritiesSides(id); // Выбираем приоритетные направления поиска
+        this.identifyPrioritiesSides(); // Выбираем приоритетные направления поиска
         this.depthFirstSearch({ x: Math.round(this.position.x / this.config.grid), y: Math.round(this.position.y / this.config.grid)});
     }
 
-    identifyPrioritiesSides(id)
+    identifyPrioritiesSides()
     {
-        let distX = this.players[id].position.x - this.position.x;
-        let distY = this.players[id].position.y - this.position.y;
+        let distX = this.target[0] - this.position.x;
+        let distY = this.target[1] - this.position.y;
         // По горизонтали ближе
         if (Math.abs(distX) < Math.abs(distY)) 
         {
@@ -437,7 +443,7 @@ export default class NpcTank extends Tank
         if (!this.isUse) return;
         this.moveX = this.dirX;
         this.moveY = this.dirY;
-        if (this.drivingMode == 0)
+        if (this.drivingMode === 0 || this.drivingMode === 2)
         {
             this.randomMove(lag);
         }
@@ -450,7 +456,12 @@ export default class NpcTank extends Tank
     render()
     {
         super.render();
-        
+        if (this.drivingMode === 0 || this.drivingMode === 2)
+            drawRect(this.config.ctx, this.position, {x:10, y:10}, "#ffffff");
+        else if (this.drivingMode === 1)
+            drawRect(this.config.ctx, this.position, {x:10, y:10}, "#00ff00");
+        else 
+            drawRect(this.config.ctx, this.position, {x:10, y:10}, "#ff0000");
         // for (let i = 0; i < this.path.length; i++) 
         // {
         //     let pos = {
