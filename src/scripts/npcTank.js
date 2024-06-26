@@ -9,13 +9,14 @@ export default class NpcTank extends Tank
         super(config, spawnBullet);
         this.dirY = 1;
         this.speed = 0.003 * config.grid;
-        this.timeOfModeChange = 23; // Длительность режима в секундах
+        this.timeOfModeChange = 5; // 23 Длительность режима в секундах
 
         this.isBlockTurn = false;
         this.drivingMode = 0; // 0 =
 
         this.players = players;
         this.deadNpcEvent = deadNpcEvent;
+        this.playersMode; // npcPool -> Create
 
         this.image_up.src = "/Tanks2D/sprites/TankNpc_Up.png";
         this.image_down.src = "/Tanks2D/sprites/TankNpc_Down.png";
@@ -38,16 +39,16 @@ export default class NpcTank extends Tank
         this.timerDrivingMode = new Timer(this.timeOfModeChange, this.changeMode.bind(this));
 
         this.timerOfJamming = 0; // Застревание
-        this.timeWaitOfJamming = randomRange(100, 1500);
+        this.timeWaitOfJamming = randomRange(200, 1500);
 
         this.minCooldownTime = 1;
         this.maxCooldownTime = 5;
-        this.timerShoot = new Timer(randomRange(this.minCooldownTime, this.maxCooldownTime), this.randomShoot.bind(this));
-    
+        this.timerShoot = new Timer(randomRange(this.minCooldownTime, this.maxCooldownTime), this.randomShoot.bind(this), 0.1);
+
         this.basePos; // npcPool
     }
 
-    create(currentMap, pos, basePos)
+    create(currentMap, pos, basePos, playersMode)
     {
         super.create(currentMap, pos);
         this.moveX = this.dirX;
@@ -58,6 +59,7 @@ export default class NpcTank extends Tank
         this.timerDrivingMode.start();
         this.timerShoot.reset();
         this.timerShoot.start();
+        this.playersMode = playersMode;
     }
 
     setReset()
@@ -83,9 +85,12 @@ export default class NpcTank extends Tank
 
     changeMode()
     {
+        this.timerDrivingMode.reset();
+        this.timerDrivingMode.start();
         this.drivingMode = (this.drivingMode + 1) > 3 ? 0 : (this.drivingMode + 1);
         this.timerOfJamming = 0;
         let id = randomRange(0,2);
+        if (this.playersMode === 0) id = 0; // Если одиночный режим, то ищем только первого игрока
         switch (this.drivingMode) {
             case 1:
                 this.search([Math.round(this.players[id].position.x / this.config.grid), Math.round(this.players[id].position.y / this.config.grid)]);
@@ -95,8 +100,6 @@ export default class NpcTank extends Tank
                 this.search([this.basePos.x / this.config.grid, this.basePos.y / this.config.grid]);
                 break;
         }
-        this.timerDrivingMode.reset();
-        this.timerDrivingMode.start();
         console.log(this.drivingMode);
     }
 
@@ -245,6 +248,21 @@ export default class NpcTank extends Tank
             }
             return;
         }
+        if (this.checkCollisionWithObject(this.players[0].position)
+            || this.checkCollisionWithObject(this.players[1].position))
+        {
+            this.timerOfJamming += lag;
+            if (this.timerOfJamming >= 1000) // Если мы застряли дольше определенного времени
+            {
+                this.tryShoot();
+            }
+            if (this.timerOfJamming >= 1500) // Если мы застряли дольше определенного времени
+            {
+                this.timerOfJamming = 0;
+                this.tryTurn();
+            }
+            return;
+        }
 
         if (Math.floor((this.position.x - incrementX) / this.config.grid2) != Math.floor(this.position.x / this.config.grid2)
             || Math.floor((this.position.y - incrementY) / this.config.grid2) != Math.floor(this.position.y / this.config.grid2)
@@ -281,6 +299,7 @@ export default class NpcTank extends Tank
             {
                 this.timerOfJamming = 0;
                 this.changeMode();
+                console.log(3333);
             }     
             return;
         }
@@ -289,11 +308,12 @@ export default class NpcTank extends Tank
             || this.checkCollisionWithObject(this.players[1]))
             {
                 this.timerOfJamming += lag;
-                if (this.timerOfJamming >= 1500) this.randomShoot(); // Если мы застряли дольше определенного времени
+                if (this.timerOfJamming >= 1500) this.tryShoot(); // Если мы застряли дольше определенного времени
                 if (this.timerOfJamming >= 2000) // Если мы застряли дольше определенного времени
                 {
                     this.timerOfJamming = 0;
                     this.changeMode();
+                    console.log(2222);
                 }     
                 return;
             }
@@ -308,8 +328,9 @@ export default class NpcTank extends Tank
             if (this.currentPosOnPath >= this.path.length)
             {
                 // Завершаем путь
-                this.randomShoot();
+                this.tryShoot();
                 this.changeMode();
+                console.log(1111);
             }
         }
     }
@@ -422,6 +443,14 @@ export default class NpcTank extends Tank
         }
     }
 
+    tryShoot()
+    {
+        if (this.timerShoot.elapsed > 0.4) // Время с последнего выстрела
+        {
+            this.randomShoot();
+        }
+    }
+
     randomShoot()
     {
         this.shoot();
@@ -462,14 +491,13 @@ export default class NpcTank extends Tank
             drawRect(this.config.ctx, this.position, {x:10, y:10}, "#00ff00");
         else 
             drawRect(this.config.ctx, this.position, {x:10, y:10}, "#ff0000");
-        // for (let i = 0; i < this.path.length; i++) 
-        // {
-        //     let pos = {
-        //                 x: idToCoordinates(this.path[i], this.currentMap[0].length).x * this.config.grid,
-        //                 y: idToCoordinates(this.path[i], this.currentMap[0].length).y * this.config.grid
-        //             }; 
-        //     drawRect(this.config.ctx, pos, {x:this.config.grid-4, y:this.config.grid-4}, "#f7f");
-        //     drawText(this.config.ctx, pos, ""+i);
-        // }
+        for (let i = 0; i < this.path.length; i++) 
+        {
+            let pos = {
+                        x: idToCoordinates(this.path[i], this.currentMap[0].length).x * this.config.grid,
+                        y: idToCoordinates(this.path[i], this.currentMap[0].length).y * this.config.grid
+                    }; 
+            drawRect(this.config.ctx, pos, {x:this.config.grid-4, y:this.config.grid-4}, "#f7f");
+        }
     }
 }

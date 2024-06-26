@@ -66,9 +66,10 @@ export default class NpcPool
             {
                 this.uiFields.countReserveNpcTanks--;
                 let rand = randomRange(0, levels[this.currentLevel].spawnPoints.length);
-                this.tanks[i].create(this.currentMap, {x: levels[this.currentLevel].spawnPoints[rand][0], 
-                                                       y: levels[this.currentLevel].spawnPoints[rand][1]},
-                                                       this.basePos);
+                this.tanks[i].create(this.currentMap, 
+                                    {x: levels[this.currentLevel].spawnPoints[rand][0], y: levels[this.currentLevel].spawnPoints[rand][1]},
+                                    this.basePos,
+                                    this.uiFields.playersMode);
                 this.timerSpawn.reset();
                 this.timerSpawn.start();
                 return;
