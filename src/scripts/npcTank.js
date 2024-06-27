@@ -18,10 +18,10 @@ export default class NpcTank extends Tank
         this.deadNpcEvent = deadNpcEvent;
         this.playersMode; // npcPool -> Create
 
-        this.image_up.src = "/Tanks2D/sprites/TankNpc_Up.png";
-        this.image_down.src = "/Tanks2D/sprites/TankNpc_Down.png";
-        this.image_right.src = "/Tanks2D/sprites/TankNpc_Right.png";
-        this.image_left.src = "/Tanks2D/sprites/TankNpc_Left.png";
+        this.image_up.src = "/Tanks2D/sprites/tankNpc_Up.png";
+        this.image_down.src = "/Tanks2D/sprites/tankNpc_Down.png";
+        this.image_right.src = "/Tanks2D/sprites/tankNpc_Right.png";
+        this.image_left.src = "/Tanks2D/sprites/tankNpc_Left.png";
         
         // ПОИСК | Это всё нужно обнулять
         this.stack = [];
@@ -268,7 +268,7 @@ export default class NpcTank extends Tank
             || Math.floor((this.position.y - incrementY) / this.config.grid2) != Math.floor(this.position.y / this.config.grid2)
             && !this.isBlockTurn)
         {
-            if (randomRange(0, 7) == 0) this.tryTurnAnywhere();
+            if (randomRange(0, 8) === 0) this.tryTurnAnywhere();
             this.isBlockTurn = true;
             setTimeout(() => {this.isBlockTurn = false}, 600);
         }
@@ -299,13 +299,12 @@ export default class NpcTank extends Tank
             {
                 this.timerOfJamming = 0;
                 this.changeMode();
-                console.log(3333);
             }     
             return;
         }
 
-        if (this.checkCollisionWithObject(this.players[0])
-            || this.checkCollisionWithObject(this.players[1]))
+        if (this.checkCollisionWithObject(this.players[0].position)
+            || this.checkCollisionWithObject(this.players[1].position))
             {
                 this.timerOfJamming += lag;
                 if (this.timerOfJamming >= 1500) this.tryShoot(); // Если мы застряли дольше определенного времени
@@ -313,7 +312,6 @@ export default class NpcTank extends Tank
                 {
                     this.timerOfJamming = 0;
                     this.changeMode();
-                    console.log(2222);
                 }     
                 return;
             }
@@ -330,7 +328,6 @@ export default class NpcTank extends Tank
                 // Завершаем путь
                 this.tryShoot();
                 this.changeMode();
-                console.log(1111);
             }
         }
     }
@@ -465,6 +462,11 @@ export default class NpcTank extends Tank
         let centerPos = {x: this.position.x + this.config.grid/2 + (this.dirX * this.config.grid), 
         y: this.position.y + this.config.grid/2 + (this.dirY * this.config.grid)};
         this.spawnBullet(centerPos, {x: this.dirX, y: this.dirY}, false);
+    }
+
+    searchForFreeSpaceNearTheBase()
+    {
+        let dir = [[-1,0],[0,-1],[1,0],[0,1]];
     }
 
     update(lag)

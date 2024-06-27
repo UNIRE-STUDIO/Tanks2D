@@ -16,7 +16,7 @@
 <template>
     <div class="panel">
         <div id="countNpcTanks">
-            <img v-for="n in this.uiFields.countReserveNpcTanks" :key="n" class="npcTanks" :style="{ width: config.grid + 'px', height: config.grid + 'px'}" src="/sprites/TankNpc_Down.png" alt="">
+            <img v-for="n in this.uiFields.countReserveNpcTanks" :key="n" class="npcTanks" :style="{ width: config.grid + 'px', height: config.grid + 'px'}" src="/sprites/tankNpc_Down.png" alt="">
         </div>
         <div id="health">
             <div class="playerHealth">
