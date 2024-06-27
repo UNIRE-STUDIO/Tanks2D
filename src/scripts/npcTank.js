@@ -90,6 +90,7 @@ export default class NpcTank extends Tank
         this.drivingMode = (this.drivingMode + 1) > 3 ? 0 : (this.drivingMode + 1);
         this.timerOfJamming = 0;
         let id = randomRange(0,2);
+        let nearBasePos;
         if (this.playersMode === 0) id = 0; // Если одиночный режим, то ищем только первого игрока
         switch (this.drivingMode) {
             case 1:
@@ -97,7 +98,13 @@ export default class NpcTank extends Tank
                 break;
 
             case 3:
-                this.search([this.basePos.x / this.config.grid, this.basePos.y / this.config.grid]);
+                nearBasePos = this.searchForFreeSpaceNearTheBase();
+                if (nearBasePos === undefined) 
+                {
+                    this.changeMode();
+                    return;
+                }
+                this.search(nearBasePos);
                 break;
         }
         console.log(this.drivingMode);
@@ -230,7 +237,7 @@ export default class NpcTank extends Tank
         if (!this.checkCollisionWithObstacle() 
             && !this.sortOtherTanks()
             && !this.checkCollisionWithObject(this.players[0].position)
-            && !this.checkCollisionWithObject(this.players[1].position)
+            && (this.playersMode === 1 && !this.checkCollisionWithObject(this.players[1].position))
             && !this.sortOtherObjects()) // Игрока можно обрабатывать отдельно
         {
             this.position.x += incrementX;
@@ -249,7 +256,7 @@ export default class NpcTank extends Tank
             return;
         }
         if (this.checkCollisionWithObject(this.players[0].position)
-            || this.checkCollisionWithObject(this.players[1].position))
+            || (this.playersMode === 1 && this.checkCollisionWithObject(this.players[1].position)))
         {
             this.timerOfJamming += lag;
             if (this.timerOfJamming >= 1000) // Если мы застряли дольше определенного времени
@@ -304,7 +311,7 @@ export default class NpcTank extends Tank
         }
 
         if (this.checkCollisionWithObject(this.players[0].position)
-            || this.checkCollisionWithObject(this.players[1].position))
+            || (this.playersMode === 1 && this.checkCollisionWithObject(this.players[1].position)))
             {
                 this.timerOfJamming += lag;
                 if (this.timerOfJamming >= 1500) this.tryShoot(); // Если мы застряли дольше определенного времени
@@ -466,7 +473,21 @@ export default class NpcTank extends Tank
 
     searchForFreeSpaceNearTheBase()
     {
-        let dir = [[-1,0],[0,-1],[1,0],[0,1]];
+        let dir = [[-1,0],[0,-1],[2,0],[0,2]]; // лево, верх, право, низ
+        for (let i = 0; i < dir.length; i++) 
+        {
+            let posX = this.basePos.x / this.config.grid + dir[i][0];
+            let posY = this.basePos.y / this.config.grid + dir[i][1];
+
+            if (this.currentMap[posY] === undefined,
+                this.currentMap[posY][posX] === undefined,
+                this.currentMap[posY][posX] === 0,
+                this.currentMap[posY + i%2][posX + i%2] === 0)
+                {
+                    return [posX, posY];
+                }
+        }
+        return undefined;
     }
 
     update(lag)
