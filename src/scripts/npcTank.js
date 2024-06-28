@@ -527,13 +527,13 @@ export default class NpcTank extends Tank
             drawRect(this.config.ctx, this.position, {x:10, y:10}, "#00ff00");
         else 
             drawRect(this.config.ctx, this.position, {x:10, y:10}, "#ff0000");
-        for (let i = 0; i < this.path.length; i++) 
-        {
-            let pos = {
-                        x: idToCoordinates(this.path[i], this.currentMap[0].length).x * this.config.grid,
-                        y: idToCoordinates(this.path[i], this.currentMap[0].length).y * this.config.grid
-                    }; 
-            drawRect(this.config.ctx, pos, {x:this.config.grid-4, y:this.config.grid-4}, "#f7f");
-        }
+        // for (let i = 0; i < this.path.length; i++) 
+        // {
+        //     let pos = {
+        //                 x: idToCoordinates(this.path[i], this.currentMap[0].length).x * this.config.grid,
+        //                 y: idToCoordinates(this.path[i], this.currentMap[0].length).y * this.config.grid
+        //             }; 
+        //     drawRect(this.config.ctx, pos, {x:this.config.grid-4, y:this.config.grid-4}, "#f7f");
+        // }
     }
 }
