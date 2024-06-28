@@ -9,7 +9,7 @@ export default class NpcTank extends Tank
         super(config, spawnBullet);
         this.dirY = 1;
         this.speed = 0.003 * config.grid;
-        this.timeOfModeChange = 5; // 23 Длительность режима в секундах
+        this.timeOfModeChange = 15; // 23 Длительность режима в секундах
 
         this.isBlockTurn = false;
         this.drivingMode = 0; // 0 =
@@ -67,6 +67,7 @@ export default class NpcTank extends Tank
         this.isUse = false;
         this.timerDrivingMode.stop();
         this.timerDrivingMode.reset();
+        this.drivingMode = 0;
         this.timerShoot.reset();
         this.timerShoot.stop();
     }
@@ -106,6 +107,9 @@ export default class NpcTank extends Tank
                 }
                 this.search(nearBasePos);
                 break;
+            default:
+                this.path = [];
+            break;
         }
         console.log(this.drivingMode);
     }
@@ -237,7 +241,7 @@ export default class NpcTank extends Tank
         if (!this.checkCollisionWithObstacle() 
             && !this.sortOtherTanks()
             && !this.checkCollisionWithObject(this.players[0].position)
-            && (this.playersMode === 1 && !this.checkCollisionWithObject(this.players[1].position))
+            && (this.playersMode === 0 || !this.checkCollisionWithObject(this.players[1].position))
             && !this.sortOtherObjects()) // Игрока можно обрабатывать отдельно
         {
             this.position.x += incrementX;
@@ -249,7 +253,7 @@ export default class NpcTank extends Tank
             this.timerOfJamming += lag;
             if (this.timerOfJamming >= this.timeWaitOfJamming) // Если мы застряли дольше определенного времени
             {
-                this.timeWaitOfJamming = randomRange(100, 1000); // Время следующего застревания
+                this.timeWaitOfJamming = randomRange(100, 800); // Время следующего застревания
                 this.timerOfJamming = 0;
                 this.tryTurn();
             }
@@ -259,11 +263,11 @@ export default class NpcTank extends Tank
             || (this.playersMode === 1 && this.checkCollisionWithObject(this.players[1].position)))
         {
             this.timerOfJamming += lag;
-            if (this.timerOfJamming >= 1000) // Если мы застряли дольше определенного времени
+            if (this.timerOfJamming >= 800) // Если мы застряли дольше определенного времени
             {
                 this.tryShoot();
             }
-            if (this.timerOfJamming >= 1500) // Если мы застряли дольше определенного времени
+            if (this.timerOfJamming >= 1000) // Если мы застряли дольше определенного времени
             {
                 this.timerOfJamming = 0;
                 this.tryTurn();
@@ -354,15 +358,15 @@ export default class NpcTank extends Tank
 
     identifyPrioritiesSides()
     {
-        let distX = this.target[0] - this.position.x;
-        let distY = this.target[1] - this.position.y;
+        let distX = this.target[0]*this.config.grid - this.position.x;
+        let distY = this.target[1]*this.config.grid - this.position.y;
         // По горизонтали ближе
         if (Math.abs(distX) < Math.abs(distY)) 
         {
             
-            this.sides[3] = [distX < 0 ? -1 : 1, 0];
-            this.sides[2] = [0, distY < 0 ? -1 : 1];
-            this.sides[1] = [distX < 0 ? 1 : -1, 0];
+            this.sides[3] = [distX < 0 ? -1 : 1, 0]; // Приоритеты должный идти с конца
+            this.sides[2] = [0, distY < 0 ? -1 : 1]; // так как при поиске соседних клеток
+            this.sides[1] = [distX < 0 ? 1 : -1, 0]; // выбор начинается с последней
             this.sides[0] = [0, distY < 0 ? 1 : -1];
         }
         else // По вертикали ближе
@@ -473,19 +477,28 @@ export default class NpcTank extends Tank
 
     searchForFreeSpaceNearTheBase()
     {
-        let dir = [[-1,0],[0,-1],[2,0],[0,2]]; // лево, верх, право, низ
-        for (let i = 0; i < dir.length; i++) 
+        for (let i = 0; i < 3; i++) 
         {
-            let posX = this.basePos.x / this.config.grid + dir[i][0];
-            let posY = this.basePos.y / this.config.grid + dir[i][1];
+            let dir = [[-2-i,0],[0,-2-i],[2+i,0],[0,2+i]]; // лево, верх, право, низ
+            for (let j = 0; j < dir.length; j++) 
+            {
+                let posX = this.basePos.x / this.config.grid + dir[j][0];
+                let posY = this.basePos.y / this.config.grid + dir[j][1];
 
-            if (this.currentMap[posY] === undefined,
-                this.currentMap[posY][posX] === undefined,
-                this.currentMap[posY][posX] === 0,
-                this.currentMap[posY + i%2][posX + i%2] === 0)
-                {
-                    return [posX, posY];
-                }
+                console.log([posX, posY]);
+    
+                if (this.currentMap[posY] !== undefined
+                    && this.currentMap[posY+1] !== undefined
+                    && this.currentMap[posY][posX] !== undefined
+                    && this.currentMap[posY][posX+1] !== undefined
+                    && this.currentMap[posY][posX] === 0
+                    && this.currentMap[posY][posX+1] === 0
+                    && this.currentMap[posY+1][posX] === 0
+                    && this.currentMap[posY+1][posX+1] === 0)
+                    {
+                        return [posX, posY];
+                    }
+            }
         }
         return undefined;
     }
