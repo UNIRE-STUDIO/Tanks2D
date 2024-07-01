@@ -63,23 +63,24 @@ export default class Bullet
         }
         
         let isCollision = false;
-        if (this.currentMap[tileY][tileX] === 5) // Проверяем основным датчиком
+        let tile = this.currentMap[tileY][tileX];
+        if (tile === 1 || tile === 2) // Проверяем основным датчиком
         {
-            this.removeTile(tileX, tileY);
+            if (tile === 1) this.removeTile(tileX, tileY);
             isCollision = true;
         }
         if (this.dirY != 0 
             && this.currentMap[0][tileX - 1] !== undefined
-            && this.currentMap[tileY][tileX - 1] === 5) // Проверяем соседний блок по горизонтале
+            && (this.currentMap[tileY][tileX - 1] === 1 || this.currentMap[tileY][tileX - 1] === 2)) // Проверяем соседний блок по горизонтале
         {
-            this.removeTile(tileX - 1, tileY);
+            if (this.currentMap[tileY][tileX - 1] === 1) this.removeTile(tileX - 1, tileY);
             isCollision = true;
         }
         else if (this.dirX != 0 
             && this.currentMap[tileY - 1] !== undefined
-            && this.currentMap[tileY - 1][tileX] === 5) // Проверяем соседний блок по вертикали
+            && (this.currentMap[tileY - 1][tileX] === 1 || this.currentMap[tileY - 1][tileX] === 2)) // Проверяем соседний блок по вертикали
         {
-            this.removeTile(tileX, tileY - 1);
+            if (this.currentMap[tileY - 1][tileX] === 1) this.removeTile(tileX, tileY - 1);
             isCollision = true;
         }
         return isCollision;

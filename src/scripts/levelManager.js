@@ -24,14 +24,16 @@ export default class LevelManager
         this.uiFields.currentLevel = 0;
         this.currentMap = null;
         
-        this.tiles = [new Image(), new Image(), new Image(),new Image(), new Image(), new Image(), new Image()];
-        this.tiles[0].src = "/Tanks2D/sprites/block03-1.png";
-        this.tiles[1].src = "/Tanks2D/sprites/block03-2.png";
-        this.tiles[2].src = "/Tanks2D/sprites/block03-3.png";
-        this.tiles[3].src = "/Tanks2D/sprites/block03-4.png";
-        this.tiles[4].src = "/Tanks2D/sprites/Water.png";
-        this.tiles[5].src = "/Tanks2D/sprites/brick.png";
-        this.tiles[6].src = "/Tanks2D/sprites/base.png";
+        this.tilesBackground = [new Image(), new Image(), new Image(),new Image()];
+        this.tilesBackground[0].src = "/Tanks2D/sprites/block03-1.png";
+        this.tilesBackground[1].src = "/Tanks2D/sprites/block03-2.png";
+        this.tilesBackground[2].src = "/Tanks2D/sprites/block03-3.png";
+        this.tilesBackground[3].src = "/Tanks2D/sprites/block03-4.png";
+        this.tiles = [new Image(), new Image(), new Image(),new Image()];
+        this.tiles[0].src = "/Tanks2D/sprites/brick.png";
+        this.tiles[1].src = "/Tanks2D/sprites/block04.png";
+        this.tiles[2].src = "/Tanks2D/sprites/water01.png";
+        this.tiles[3].src = "/Tanks2D/sprites/base.png";
         
         this.config = config;
 
@@ -171,12 +173,12 @@ export default class LevelManager
         for (let i = 0; i < this.config.viewSize.y; i++) {
             for (let j = 0; j < this.config.viewSize.x; j++) 
             {
-                if (this.currentMap[i][j] === 0 || this.currentMap[i][j] === 9) tile = this.tiles[j%2+(i%2 * 2)];
-                else tile = this.tiles[this.currentMap[i][j]];
+                if (this.currentMap[i][j] === 0 || this.currentMap[i][j] === 9) tile = this.tilesBackground[j%2+(i%2 * 2)];
+                else tile = this.tiles[this.currentMap[i][j]-1];
                 drawImage(this.config.ctx, tile, {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid});
             }
         }
-        drawImage(this.config.ctx, this.tiles[6], {x: levels[this.uiFields.currentLevel].basePos.x * this.config.grid, y:levels[this.uiFields.currentLevel].basePos.y * this.config.grid}, {x:this.config.grid2, y:this.config.grid2});
+        drawImage(this.config.ctx, this.tiles[3], {x: levels[this.uiFields.currentLevel].basePos.x * this.config.grid, y:levels[this.uiFields.currentLevel].basePos.y * this.config.grid}, {x:this.config.grid2, y:this.config.grid2});
         this.players[0].render();
         if (this.uiFields.playersMode === 1) this.players[1].render();
 

@@ -88,7 +88,7 @@ export default class NpcTank extends Tank
     {
         this.timerDrivingMode.reset();
         this.timerDrivingMode.start();
-        this.drivingMode = (this.drivingMode + 1) > 3 ? 0 : (this.drivingMode + 1);
+        this.drivingMode = this.drivingMode === 0 ? randomRange(1,3) : 0; // Если предыдущий режим был случайным перемещением, то включаем поиск и наоборот
         this.timerOfJamming = 0;
         let id = randomRange(0,2);
         let nearBasePos;
@@ -98,7 +98,7 @@ export default class NpcTank extends Tank
                 this.search([Math.round(this.players[id].position.x / this.config.grid), Math.round(this.players[id].position.y / this.config.grid)]);
                 break;
 
-            case 3:
+            case 2:
                 nearBasePos = this.searchForFreeSpaceNearTheBase();
                 if (nearBasePos === undefined) 
                 {
@@ -508,7 +508,7 @@ export default class NpcTank extends Tank
         if (!this.isUse) return;
         this.moveX = this.dirX;
         this.moveY = this.dirY;
-        if (this.drivingMode === 0 || this.drivingMode === 2)
+        if (this.drivingMode === 0)
         {
             this.randomMove(lag);
         }
@@ -521,7 +521,7 @@ export default class NpcTank extends Tank
     render()
     {
         super.render();
-        if (this.drivingMode === 0 || this.drivingMode === 2)
+        if (this.drivingMode === 0)
             drawRect(this.config.ctx, this.position, {x:10, y:10}, "#ffffff");
         else if (this.drivingMode === 1)
             drawRect(this.config.ctx, this.position, {x:10, y:10}, "#00ff00");
