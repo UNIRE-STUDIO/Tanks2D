@@ -23,7 +23,7 @@ export default class Bullet
         this.image_left = new Image();
         this.image_left.src = "/Tanks2D/sprites/Bullet_Left.png";
         
-        this.speed = 0.01 * config.grid;;
+        this.speed = 0.01 * config.grid;
         this.damage = 1;
         this.bulletsPlayer = false;
 
@@ -128,6 +128,7 @@ export default class Bullet
 
             if (tX === oX && tY === oY)
             {
+                this.bullets[i].isUse = false;
                 return true;
             }
         }
@@ -192,15 +193,15 @@ export default class Bullet
 
     render()
     {
-        let pos = {x: this.posX, y: this.posY};
+        let pos = {x: this.posX + (this.dirY * this.config.grid/4), y: this.posY + (this.dirX * this.config.grid/4)};
         if (this.dirX == 1)
-            drawImage(this.config.ctx, this.image_right, pos, {x:this.config.grid, y:this.config.grid});
+            drawImage(this.config.ctx, this.image_right, pos, {x:this.config.grid/2, y:this.config.grid/2});
         else if (this.dirX == -1)
-            drawImage(this.config.ctx, this.image_left, pos, {x:this.config.grid, y:this.config.grid});
+            drawImage(this.config.ctx, this.image_left, pos, {x:this.config.grid/2, y:this.config.grid/2});
         else if (this.dirY == 1)
-            drawImage(this.config.ctx, this.image_down, pos, {x:this.config.grid, y:this.config.grid});
+            drawImage(this.config.ctx, this.image_down, pos, {x:this.config.grid/2, y:this.config.grid/2});
         else if (this.dirY == -1)
-            drawImage(this.config.ctx, this.image_up, pos, {x:this.config.grid, y:this.config.grid});
+            drawImage(this.config.ctx, this.image_up, pos, {x:this.config.grid/2, y:this.config.grid/2});
         
         // pos = {x: Math.round((this.posX - (this.dirX * this.config.grid/2)) / this.config.grid) * this.config.grid,
         //          y: Math.round((this.posY - (this.dirY * this.config.grid/2)) / this.config.grid) * this.config.grid};

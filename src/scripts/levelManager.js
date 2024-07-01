@@ -32,7 +32,7 @@ export default class LevelManager
         this.tiles = [new Image(), new Image(), new Image(),new Image()];
         this.tiles[0].src = "/Tanks2D/sprites/brick.png";
         this.tiles[1].src = "/Tanks2D/sprites/block04.png";
-        this.tiles[2].src = "/Tanks2D/sprites/water01.png";
+        this.tiles[2].src = "/Tanks2D/sprites/water04.png";
         this.tiles[3].src = "/Tanks2D/sprites/base.png";
         
         this.config = config;
