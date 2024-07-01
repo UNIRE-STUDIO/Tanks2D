@@ -133,8 +133,8 @@ export default class LevelManager
     playerDead(playerId)
     {
         this.uiFields.playersHealth[playerId]--;
-        if (this.uiFields.playersHealth[0] === 0 && 
-            this.uiFields.playersHealth[1] === 0)
+        if (this.uiFields.playersHealth[0] === 0 
+            && (this.uiFields.playersHealth[1] === 0 || this.uiFields.playersMode === 0))
         {
             this.gameOver();
             return;
