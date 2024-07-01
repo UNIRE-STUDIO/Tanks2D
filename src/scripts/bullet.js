@@ -1,4 +1,4 @@
-import { drawImage, drawRect } from "./general.js";
+import { drawImage, drawRect, isInside } from "./general.js";
 
 export default class Bullet
 {
@@ -169,6 +169,10 @@ export default class Bullet
         }
 
         return false;
+    }
+    checkCollisionWithTank(pos, size)
+    {
+        isInside({x: this.posX, y:this.posY}, pos, this.config.grid)
     }
 
     update(lag)

@@ -5,10 +5,10 @@ export function randomRange(min, max) {
 }
 
 // Функция проверяет попадает ли точка в область прямоугольника
-export function isInside(pos, rect) {
+export function isInside(pos, rect, width, height) {
 
     // За левой гранью     и      перед правой гранью    и  за нижней гренью              и  перед верхней гранью
-    return pos.x > rect.x && pos.x < rect.x + rect.width && pos.y < rect.y + rect.height && pos.y > rect.y;
+    return pos.x > rect.x && pos.x < rect.x + width && pos.y < rect.y + height && pos.y > rect.y;
 }
 
 export function drawRect(ctx, pos, scale, color) {
