@@ -11,7 +11,11 @@ export default class BulletPool
 
         for (let i = 0; i < pool_size; i++) 
         {
-            this.bullets[i] = new Bullet(this.config, removeTile, destructionOfTheBaseEvent);
+            this.bullets[i] = new Bullet(this.config, removeTile, destructionOfTheBaseEvent, i);
+        }
+        for (let i = 0; i < pool_size; i++) 
+        {
+            this.bullets[i].bullets = this.bullets;
         }
     }
 

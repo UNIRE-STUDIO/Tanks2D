@@ -111,7 +111,6 @@ export default class NpcTank extends Tank
                 this.path = [];
             break;
         }
-        console.log(this.drivingMode);
     }
 
     tryTurn()
@@ -306,7 +305,8 @@ export default class NpcTank extends Tank
 
         if (this.sortOtherTanks())
         {
-            if (this.timerOfJamming >= 2000) // Если мы застряли дольше определенного времени
+            this.timerOfJamming += lag;
+            if (this.timerOfJamming >= 1000) // Если мы застряли дольше определенного времени
             {
                 this.timerOfJamming = 0;
                 this.changeMode();
@@ -446,7 +446,9 @@ export default class NpcTank extends Tank
         this.health = this.health - damage <= 0 ? 0 : this.health - damage;
         if (this.health === 0)
         {
+            
             this.setReset();
+            console.log("Dead " + this.isUse);
             this.deadNpcEvent();
         }
     }
@@ -484,8 +486,6 @@ export default class NpcTank extends Tank
             {
                 let posX = this.basePos.x / this.config.grid + dir[j][0];
                 let posY = this.basePos.y / this.config.grid + dir[j][1];
-
-                console.log([posX, posY]);
     
                 if (this.currentMap[posY] !== undefined
                     && this.currentMap[posY+1] !== undefined

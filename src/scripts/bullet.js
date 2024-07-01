@@ -2,7 +2,7 @@ import { drawImage, drawRect } from "./general.js";
 
 export default class Bullet
 {
-    constructor(config, removeTile, destructionOfTheBaseEvent)
+    constructor(config, removeTile, destructionOfTheBaseEvent, id)
     {
         this.config = config;
         this.posX = 0;
@@ -12,6 +12,7 @@ export default class Bullet
         this.currentMap;
         this.basePos;
         this.isUse = false;
+        this.id = id;
 
         this.image_up = new Image();
         this.image_up.src = "/Tanks2D/sprites/Bullet_Up.png";
@@ -29,7 +30,8 @@ export default class Bullet
         this.removeTile = removeTile;
         this.destructionOfTheBaseEvent = destructionOfTheBaseEvent;
         this.tanks = [];    // bulletPool
-        this.players = []   // bulletPool
+        this.players = [];   // bulletPool
+        this.bullets = [];  // bulletPool
         this.otherCollisionObject = [];
     }
 
@@ -112,6 +114,25 @@ export default class Bullet
         return false;
     }
 
+    checkCollisionWithBullets()
+    {
+        for (let i = 0; i < this.bullets.length; i++) 
+        {
+            if (i === this.id || !this.bullets[i].isUse) continue;
+            let tX = Math.round((this.posX + this.config.grid/2 * this.dirX) / this.config.grid);
+            let tY = Math.round((this.posY + this.config.grid/2 * this.dirY) / this.config.grid);
+
+            let oX = Math.round((this.bullets[i].posX + this.config.grid/2 * this.bullets[i].dirX) / this.config.grid);
+            let oY = Math.round((this.bullets[i].posY + this.config.grid/2 * this.bullets[i].dirY) / this.config.grid);
+
+            if (tX === oX && tY === oY)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     checkCollisionWithObject(obj)
     {
         let tX = Math.round((this.posX + this.config.grid/2 * this.dirX) / this.config.grid);
@@ -151,7 +172,8 @@ export default class Bullet
     update(lag)
     {
         if (this.checkCollisionWithObstacle()
-            || this.sortTanks())
+            || this.sortTanks()
+            || this.checkCollisionWithBullets())
         {
             this.isUse = false;
             return;
