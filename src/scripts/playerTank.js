@@ -59,8 +59,9 @@ export default class PlayerTank extends Tank
     shoot()
     {
         if (this.isCooldown || this.isPause || !this.isUse) return;
-        let centerPos = {x: this.position.x + this.config.grid + (this.dirX * this.config.grid), 
-        y: this.position.y + this.config.grid + (this.dirY * this.config.grid)};
+                        // Смещаем на середину танка                                    
+        let centerPos = {x: this.position.x + this.config.grid2/2 + (this.config.grid2/2 * this.dirX), 
+        y: this.position.y + this.config.grid2/2 + (this.config.grid2/2 * this.dirY)};
         this.spawnBullet(centerPos, {x: this.dirX, y: this.dirY}, true);
         this.isCooldown = true;
         this.timerShoot.reset();

@@ -472,8 +472,8 @@ export default class NpcTank extends Tank
     shoot()
     {
         if (this.isPause || !this.isUse) return;
-        let centerPos = {x: this.position.x + this.config.grid/2 + (this.dirX * this.config.grid), 
-        y: this.position.y + this.config.grid/2 + (this.dirY * this.config.grid)};
+        let centerPos = {x: this.position.x + this.config.grid2/2 + (this.config.grid2/2 * this.dirX), 
+        y: this.position.y + this.config.grid2/2 + (this.config.grid2/2 * this.dirY)};
         this.spawnBullet(centerPos, {x: this.dirX, y: this.dirY}, false);
     }
 

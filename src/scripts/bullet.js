@@ -92,7 +92,7 @@ export default class Bullet
         {
             if (this.tanks[i].isUse)
             {
-                if (this.checkCollisionWithObject(this.tanks[i].position))
+                if (this.checkCollisionWithTank(this.tanks[i].position, this.config.grid2-2)) // магические числа
                 {
                     if (this.bulletsPlayer) this.tanks[i].setDamage(this.damage);
 
@@ -104,7 +104,7 @@ export default class Bullet
         {
             if (this.players[i].isUse)
             {
-                if (this.checkCollisionWithObject(this.players[i].position))
+                if (this.checkCollisionWithTank(this.players[i].position, this.config.grid2-2)) // магические числа
                 {
                     if (!this.bulletsPlayer) this.players[i].setDamage(this.damage);
 
@@ -172,7 +172,7 @@ export default class Bullet
     }
     checkCollisionWithTank(pos, size)
     {
-        isInside({x: this.posX, y:this.posY}, pos, this.config.grid)
+        return isInside({x: this.posX, y:this.posY}, pos, size, size);
     }
 
     update(lag)
@@ -197,7 +197,7 @@ export default class Bullet
 
     render()
     {
-        let pos = {x: this.posX + (this.dirY * this.config.grid/4), y: this.posY + (this.dirX * this.config.grid/4)};
+        let pos = {x: this.posX + this.config.grid/4 * -Math.abs(this.dirY), y: this.posY + this.config.grid/4 * -Math.abs(this.dirX)};
         if (this.dirX == 1)
             drawImage(this.config.ctx, this.image_right, pos, {x:this.config.grid/2, y:this.config.grid/2});
         else if (this.dirX == -1)
