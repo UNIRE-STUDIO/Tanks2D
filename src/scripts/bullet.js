@@ -33,17 +33,20 @@ export default class Bullet
         this.players = [];   // bulletPool
         this.bullets = [];  // bulletPool
         this.otherCollisionObject = [];
+        this.tankId;
+        this.size = this.config.grid/2;
     }
 
-    create(pos, dir, bulletsPlayer)
+    create(pos, dir, bulletsPlayer, tankId)
     {
-        this.posX = pos.x;
-        this.posY = pos.y;
+        this.posX = pos.x - this.size/2;
+        this.posY = pos.y - this.size/2;
         this.dirY = dir.y;
         this.dirX = dir.x;
         this.isUse = true;
         this.bulletsPlayer = bulletsPlayer;
         this.otherCollisionObject = [];
+        this.tankId = tankId;
     }
 
     setOtherCollisionObject(obj)
@@ -53,8 +56,8 @@ export default class Bullet
 
     checkCollisionWithObstacle()
     {
-        let tileX = Math.round((this.posX + (this.dirX * this.config.grid / 2)) / this.config.grid);
-        let tileY = Math.round((this.posY + (this.dirY * this.config.grid / 2)) / this.config.grid);
+        let tileX = Math.round((this.posX + this.size/2 * this.dirX) / this.config.grid);
+        let tileY = Math.round((this.posY + this.size/2 * this.dirY) / this.config.grid);
         
         if (this.currentMap[tileY] === undefined
             || this.currentMap[tileY][tileX] === undefined)
@@ -92,10 +95,10 @@ export default class Bullet
         {
             if (this.tanks[i].isUse)
             {
+                if (!this.bulletsPlayer && i === this.tankId) continue;
                 if (this.checkCollisionWithTank(this.tanks[i].position, this.config.grid2-2)) // магические числа
                 {
                     if (this.bulletsPlayer) this.tanks[i].setDamage(this.damage);
-
                     return true;
                 }
             }
@@ -104,10 +107,10 @@ export default class Bullet
         {
             if (this.players[i].isUse)
             {
+                if (this.bulletsPlayer && i === this.tankId) continue;
                 if (this.checkCollisionWithTank(this.players[i].position, this.config.grid2-2)) // магические числа
                 {
                     if (!this.bulletsPlayer) this.players[i].setDamage(this.damage);
-
                     return true;
                 }
             }
@@ -120,11 +123,11 @@ export default class Bullet
         for (let i = 0; i < this.bullets.length; i++) 
         {
             if (i === this.id || !this.bullets[i].isUse) continue;
-            let tX = Math.round((this.posX + this.config.grid/2 * this.dirX) / this.config.grid);
-            let tY = Math.round((this.posY + this.config.grid/2 * this.dirY) / this.config.grid);
+            let tX = Math.round((this.posX + this.size * this.dirX) / this.config.grid);
+            let tY = Math.round((this.posY + this.size * this.dirY) / this.config.grid);
 
-            let oX = Math.round((this.bullets[i].posX + this.config.grid/2 * this.bullets[i].dirX) / this.config.grid);
-            let oY = Math.round((this.bullets[i].posY + this.config.grid/2 * this.bullets[i].dirY) / this.config.grid);
+            let oX = Math.round((this.bullets[i].posX + this.size * this.bullets[i].dirX) / this.config.grid);
+            let oY = Math.round((this.bullets[i].posY + this.size * this.bullets[i].dirY) / this.config.grid);
 
             if (tX === oX && tY === oY)
             {
@@ -135,44 +138,19 @@ export default class Bullet
         return false;
     }
 
-    checkCollisionWithObject(obj)
-    {
-        let tX = Math.round((this.posX + this.config.grid/2 * this.dirX) / this.config.grid);
-        let tY = Math.round((this.posY + this.config.grid/2 * this.dirY) / this.config.grid);
-
-        let oX = Math.round(obj.x / this.config.grid);
-        let oY = Math.round(obj.y / this.config.grid);
-
-        if (this.dirY > 0)  // Двигаясь вниз
-        {
-            if (tX-1 === oX + 1 && tY === oY // Сравниваем левую часть пули с правым верхним углом танка
-             || tX === oX    && tY === oY // правую часть пули с левым верхним углом танка
-             || tX-1 === oX  && tY === oY) return true; // левую часть пули с левым верхним углом танка
-        }
-        else if (this.dirY < 0) // Двигаясь вверх
-        {
-            if (tX-1 === oX + 1 && tY === oY + 1 // Сравниваем левую часть пули с правым нижним углом танка
-             || tX === oX     && tY === oY + 1 // правую часть пули с левым нижним углом танка
-             || tX-1 === oX && tY === oY + 1) return true; // левую часть пули с левым верхним углом танка
-        }
-        else if (this.dirX > 0) // Двигаясь вправо
-        {
-            if (tX === oX && tY-1 === oY + 1 // Сравниваем верхнюю часть пули с левым нижним углом танка
-             || tX === oX && tY === oY // нижнюю часть пули с левым верхним углом танка
-             || tX === oX && tY-1 === oY) return true; // верхнюю часть пули с левым верхним углом танка
-        }
-        else if (this.dirX < 0) // Двигаясь влево
-        {
-            if (tX === oX + 1 && tY-1 === oY + 1 // Сравниваем верхнюю часть пули с правым нижним углом танка
-             || tX === oX + 1 && tY === oY // нижнюю часть пули с правым верхним углом танка
-             || tX === oX + 1 && tY-1 === oY) return true; // верхнюю часть пули с правым верхним углом танка
-        }
-
-        return false;
-    }
     checkCollisionWithTank(pos, size)
     {
-        return isInside({x: this.posX, y:this.posY}, pos, size, size);
+        if (this.dirX !== 0) 
+        {
+            return isInside({x: this.posX, y:this.posY}, pos, size, size) 
+            || isInside({x: this.posX, y:this.posY + this.size/2}, pos, size, size);
+        }
+        else
+        {
+            return isInside({x: this.posX , y:this.posY}, pos, size, size)
+            || isInside({x: this.posX + this.size/2, y:this.posY}, pos, size, size);
+        }
+            
     }
 
     update(lag)
@@ -184,7 +162,9 @@ export default class Bullet
             this.isUse = false;
             return;
         }
-        if (this.checkCollisionWithObject(this.basePos))
+        // Левый верхний угол пули и правый нижний угл
+        if (isInside({x: this.posX, y:this.posY}, {x: this.basePos.x, y:this.basePos.y}, this.config.grid2, this.config.grid2) || 
+            isInside({x: this.posX + this.size, y:this.posY + this.size}, {x: this.basePos.x, y:this.basePos.y}, this.config.grid2, this.config.grid2))
         {
             this.isUse = false;
             this.destructionOfTheBaseEvent();
@@ -197,15 +177,15 @@ export default class Bullet
 
     render()
     {
-        let pos = {x: this.posX + this.config.grid/4 * -Math.abs(this.dirY), y: this.posY + this.config.grid/4 * -Math.abs(this.dirX)};
+        let pos = {x: this.posX, y: this.posY};
         if (this.dirX == 1)
-            drawImage(this.config.ctx, this.image_right, pos, {x:this.config.grid/2, y:this.config.grid/2});
+            drawImage(this.config.ctx, this.image_right, pos, {x:this.size, y:this.size});
         else if (this.dirX == -1)
-            drawImage(this.config.ctx, this.image_left, pos, {x:this.config.grid/2, y:this.config.grid/2});
+            drawImage(this.config.ctx, this.image_left, pos, {x:this.size, y:this.size});
         else if (this.dirY == 1)
-            drawImage(this.config.ctx, this.image_down, pos, {x:this.config.grid/2, y:this.config.grid/2});
+            drawImage(this.config.ctx, this.image_down, pos, {x:this.size, y:this.size});
         else if (this.dirY == -1)
-            drawImage(this.config.ctx, this.image_up, pos, {x:this.config.grid/2, y:this.config.grid/2});
+            drawImage(this.config.ctx, this.image_up, pos, {x:this.size, y:this.size});
         
         // pos = {x: Math.round((this.posX - (this.dirX * this.config.grid/2)) / this.config.grid) * this.config.grid,
         //          y: Math.round((this.posY - (this.dirY * this.config.grid/2)) / this.config.grid) * this.config.grid};
@@ -221,7 +201,5 @@ export default class Bullet
         //     pos = {x: pos.x, y: pos.y - this.config.grid};
         //     drawRect(this.config.ctx, pos, {x:this.config.grid, y:this.config.grid}, "#000");
         // }
-
-
     }
 }

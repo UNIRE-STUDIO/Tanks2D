@@ -19,7 +19,7 @@ export default class NpcPool
 
         for (let i = 0; i < pool_size; i++) 
         {
-            this.tanks[i] = new NpcTank(this.config, bulletPool, players, this.deadNpcEvent.bind(this));
+            this.tanks[i] = new NpcTank(this.config, bulletPool, players, this.deadNpcEvent.bind(this), i);
         }
         for (let i = 0; i < pool_size; i++) 
         {

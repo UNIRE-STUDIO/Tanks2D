@@ -48,7 +48,7 @@ export default class PlayerTank extends Tank
 
     setDamage(damage)
     {
-        this.health = this.health - damage <= 0 ? 0 : this.health - damage;
+        //this.health = this.health - damage <= 0 ? 0 : this.health - damage;
         if (this.health === 0)
         {
             this.setReset();
@@ -59,10 +59,10 @@ export default class PlayerTank extends Tank
     shoot()
     {
         if (this.isCooldown || this.isPause || !this.isUse) return;
-                        // Смещаем на середину танка                                    
+                        // Смещаем на середину танка                 // Смещаем в сторону ствола от центра танка                   
         let centerPos = {x: this.position.x + this.config.grid2/2 + (this.config.grid2/2 * this.dirX), 
         y: this.position.y + this.config.grid2/2 + (this.config.grid2/2 * this.dirY)};
-        this.spawnBullet(centerPos, {x: this.dirX, y: this.dirY}, true);
+        this.spawnBullet(centerPos, {x: this.dirX, y: this.dirY}, true, this.playerId);
         this.isCooldown = true;
         this.timerShoot.reset();
         this.timerShoot.start();

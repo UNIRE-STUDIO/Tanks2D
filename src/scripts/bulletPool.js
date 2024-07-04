@@ -50,12 +50,12 @@ export default class BulletPool
         }
     }
 
-    create(pos, dir, playersBullet)
+    create(pos, dir, playersBullet, tankId)
     {
         for (let i = 0; i < this.bullets.length; i++) {
             if (!this.bullets[i].isUse)
             {
-                this.bullets[i].create(pos, dir, playersBullet);
+                this.bullets[i].create(pos, dir, playersBullet, tankId);
                 return;
             }
         }

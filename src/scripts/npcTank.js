@@ -4,9 +4,10 @@ import Timer from "./timer.js";
 
 export default class NpcTank extends Tank 
 {
-    constructor(config, spawnBullet, players, deadNpcEvent)
+    constructor(config, spawnBullet, players, deadNpcEvent, id)
     {
         super(config, spawnBullet);
+        this.npcId = id;
         this.dirY = 1;
         this.speed = 0.003 * config.grid;
         this.timeOfModeChange = 15; // 23 Длительность режима в секундах
@@ -474,7 +475,7 @@ export default class NpcTank extends Tank
         if (this.isPause || !this.isUse) return;
         let centerPos = {x: this.position.x + this.config.grid2/2 + (this.config.grid2/2 * this.dirX), 
         y: this.position.y + this.config.grid2/2 + (this.config.grid2/2 * this.dirY)};
-        this.spawnBullet(centerPos, {x: this.dirX, y: this.dirY}, false);
+        this.spawnBullet(centerPos, {x: this.dirX, y: this.dirY}, false, this.npcId);
     }
 
     searchForFreeSpaceNearTheBase()

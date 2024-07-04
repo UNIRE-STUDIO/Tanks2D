@@ -167,7 +167,7 @@ export default class LevelManager
         this.npcPool.update(lag);
     }
 
-    render()
+    render(lag)
     {
         let tile;
         for (let i = 0; i < this.config.viewSize.y; i++) {

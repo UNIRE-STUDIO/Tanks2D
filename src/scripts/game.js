@@ -73,7 +73,7 @@ export default class Game
         this.levelManager.update(lag);
     }   
 
-    render()
+    render(lag)
     {
         this.config.ctx.clearRect(0, 0, this.config.canvas.width, this.config.canvas.height);
         if (this.currentScreen == GameScreens.MENU){
