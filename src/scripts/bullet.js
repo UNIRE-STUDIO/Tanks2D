@@ -2,7 +2,7 @@ import { drawImage, drawRect, isInside } from "./general.js";
 
 export default class Bullet
 {
-    constructor(config, removeTile, destructionOfTheBaseEvent, id)
+    constructor(config, removeTile, destructionOfTheBaseEvent, id, bangCreateEvent)
     {
         this.config = config;
         this.posX = 0;
@@ -35,6 +35,7 @@ export default class Bullet
         this.otherCollisionObject = [];
         this.tankId;
         this.size = this.config.grid/2;
+        this.bangCreateEvent = bangCreateEvent;
     }
 
     create(pos, dir, bulletsPlayer, tankId)
@@ -56,8 +57,8 @@ export default class Bullet
 
     checkCollisionWithObstacle()
     {
-        let tileX = Math.round((this.posX + this.size/2 * this.dirX) / this.config.grid);
-        let tileY = Math.round((this.posY + this.size/2 * this.dirY) / this.config.grid);
+        let tileX = Math.round((this.posX + this.size * this.dirX) / this.config.grid);
+        let tileY = Math.round((this.posY + this.size * this.dirY) / this.config.grid);
         
         if (this.currentMap[tileY] === undefined
             || this.currentMap[tileY][tileX] === undefined)
@@ -123,11 +124,11 @@ export default class Bullet
         for (let i = 0; i < this.bullets.length; i++) 
         {
             if (i === this.id || !this.bullets[i].isUse) continue;
-            let tX = Math.round((this.posX + this.size * this.dirX) / this.config.grid);
-            let tY = Math.round((this.posY + this.size * this.dirY) / this.config.grid);
+            let tX = Math.round((this.posX) / this.config.grid);
+            let tY = Math.round((this.posY) / this.config.grid);
 
-            let oX = Math.round((this.bullets[i].posX + this.size * this.bullets[i].dirX) / this.config.grid);
-            let oY = Math.round((this.bullets[i].posY + this.size * this.bullets[i].dirY) / this.config.grid);
+            let oX = Math.round((this.bullets[i].posX) / this.config.grid);
+            let oY = Math.round((this.bullets[i].posY) / this.config.grid);
 
             if (tX === oX && tY === oY)
             {
@@ -143,23 +144,34 @@ export default class Bullet
         if (this.dirX !== 0) 
         {
             return isInside({x: this.posX, y:this.posY}, pos, size, size) 
-            || isInside({x: this.posX, y:this.posY + this.size/2}, pos, size, size);
+            || isInside({x: this.posX, y:this.posY + this.size}, pos, size, size);
         }
-        else
+        if (this.dirY !== 0)
         {
             return isInside({x: this.posX , y:this.posY}, pos, size, size)
-            || isInside({x: this.posX + this.size/2, y:this.posY}, pos, size, size);
-        }
-            
+            || isInside({x: this.posX + this.size, y:this.posY}, pos, size, size);
+        }       
+    }
+
+    checkCollisionWithBorders()
+    {
+        let pX = Math.round((this.posX + this.size*2 * this.dirX) / this.config.grid);
+        let pY = Math.round((this.posY + this.size*2 * this.dirY) / this.config.grid);
+        
+        if (pX < 0 || pX > this.config.canvas.width
+         || pY < 0 || pY > this.config.canvas.height) return true;
+        return false;
     }
 
     update(lag)
     {
         if (this.checkCollisionWithObstacle()
             || this.sortTanks()
-            || this.checkCollisionWithBullets())
+            || this.checkCollisionWithBullets()
+            || this.checkCollisionWithBorders())
         {
-            this.isUse = false;
+            this.isUse = false;     // Спауним на середине пули // Смещаем по направлению
+            this.bangCreateEvent({x: this.posX + this.size/2 + this.size * this.dirX, y: this.posY + this.size/2 + this.size * this.dirY});
             return;
         }
         // Левый верхний угол пули и правый нижний угл

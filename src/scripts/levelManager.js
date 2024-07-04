@@ -4,6 +4,7 @@ import { drawImage } from "./general.js";
 import levels from "./levels.json";
 import NpcPool from "./npcPool.js";
 import PlayerTank from "./playerTank.js";
+import BangPool from "./bangPool.js";
 
 export default class LevelManager
 {
@@ -37,7 +38,8 @@ export default class LevelManager
         
         this.config = config;
 
-        this.bulletPool = new BulletPool(this.config, this.removeTile.bind(this), this.destructionOfTheBase.bind(this));
+        this.bangPool = new BangPool(this.config);
+        this.bulletPool = new BulletPool(this.config, this.removeTile.bind(this), this.destructionOfTheBase.bind(this), this.bangPool.create.bind(this.bangPool));
         this.players = [];
         this.players[0] = new PlayerTank(this.config, this.bulletPool.create.bind(this.bulletPool), this.playerDead.bind(this), 0);
         this.players[1] = new PlayerTank(this.config, this.bulletPool.create.bind(this.bulletPool), this.playerDead.bind(this), 1);
@@ -165,9 +167,10 @@ export default class LevelManager
         if (this.uiFields.playersMode === 1) this.players[1].update(lag);
         this.bulletPool.update(lag);
         this.npcPool.update(lag);
+        this.bangPool.update(lag);
     }
 
-    render(lag)
+    render()
     {
         let tile;
         for (let i = 0; i < this.config.viewSize.y; i++) {
@@ -184,5 +187,6 @@ export default class LevelManager
 
         this.bulletPool.render();
         this.npcPool.render();
+        this.bangPool.render();
     }
 }

@@ -24,7 +24,7 @@ export default class BangPool
                 return;
             }
         }
-        console.log("BulletPool переполнен");
+        console.log("BangPool переполнен");
     }
 
     setReset()
@@ -35,12 +35,22 @@ export default class BangPool
         }
     }
 
-    render(lag)
+    update(lag)
     {
         for (let i = 0; i < this.bangs.length; i++) {
             if (this.bangs[i].isUse)
             {
-                this.bangs[i].render(lag);
+                this.bangs[i].update(lag);
+            }
+        }
+    }
+
+    render()
+    {
+        for (let i = 0; i < this.bangs.length; i++) {
+            if (this.bangs[i].isUse)
+            {
+                this.bangs[i].render();
             }
         }
     }
