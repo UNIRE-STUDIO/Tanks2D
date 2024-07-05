@@ -69,7 +69,7 @@ export default class NpcPool
                                     {x: levels[this.currentLevel].spawnPoints[rand][0], y: levels[this.currentLevel].spawnPoints[rand][1]},
                                     this.basePos,
                                     this.uiFields.playersMode,
-                                    levels[this.currentLevel].npc[this.uiFields.countReserveNpcTanks]);
+                                    this.uiFields.npc[0]);
                 
                 this.uiFields.countReserveNpcTanks--;
                 this.uiFields.npc.splice(0,1);

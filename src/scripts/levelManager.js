@@ -65,7 +65,6 @@ export default class LevelManager
     start(playersMode = 0)
     {
         this.uiFields.playersMode = playersMode;
-        this.uiFields.npc = levels[this.uiFields.currentLevel].npc;
         this.reset();
         this.currentMap = [];
 
@@ -125,6 +124,7 @@ export default class LevelManager
 
     reset()
     {
+        this.uiFields.npc = levels[this.uiFields.currentLevel].npc.slice();
         this.players[0].setReset();
         if (this.uiFields.playersMode === 1){
             this.players[1].setReset();

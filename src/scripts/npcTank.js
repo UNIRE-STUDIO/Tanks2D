@@ -36,13 +36,17 @@ export default class NpcTank extends Tank
         this.timerDrivingMode = new Timer(this.timeOfModeChange, this.changeMode.bind(this));
 
         this.timerOfJamming = 0; // Застревание
-        this.timeWaitOfJamming = randomRange(200, 1500);
+        this.minTimeWaitOfJamming = 100;
+        this.maxTimeWaitOfJamming = 800;
+        this.timeWaitOfJamming = randomRange(this.minTimeWaitOfJamming, this.maxTimeWaitOfJamming);
+
 
         this.minCooldownTime = 1;
         this.maxCooldownTime = 5;
         this.timerShoot = new Timer(randomRange(this.minCooldownTime, this.maxCooldownTime), this.randomShoot.bind(this), 0.1);
 
         this.basePos; // npcPool
+        
     }
 
     create(currentMap, pos, basePos, playersMode, type)
@@ -51,6 +55,7 @@ export default class NpcTank extends Tank
 
         if (type === 0)
         {
+            this.maxTimeWaitOfJamming = 300;
             this.speed = 0.003 * this.config.grid;
             this.image_up.src = "/Tanks2D/sprites/tankNpc_Up.png";
             this.image_down.src = "/Tanks2D/sprites/tankNpc_Down.png";
@@ -59,6 +64,7 @@ export default class NpcTank extends Tank
         }
         else
         {
+            this.maxTimeWaitOfJamming = 800;
             this.speed = 0.0045 * this.config.grid;
             this.image_up.src = "/Tanks2D/sprites/tankNpc1_Up.png";
             this.image_down.src = "/Tanks2D/sprites/tankNpc1_Down.png";
@@ -129,13 +135,13 @@ export default class NpcTank extends Tank
         }
     }
 
-    tryTurn()
+    getAvailableDirections()
     {
         let dirs = [];
 
         if (this.dirY != 0) 
         {
-            let rightX = Math.ceil((this.position.x + this.config.grid * 2) / this.config.grid);
+            let rightX = Math.ceil((this.position.x + this.config.grid2) / this.config.grid);
             let rightY = Math.ceil(this.position.y / this.config.grid);
 
             let leftX = Math.ceil((this.position.x - this.config.grid) / this.config.grid);
@@ -161,7 +167,7 @@ export default class NpcTank extends Tank
         else if (this.dirX != 0)
         {
             let downX = Math.ceil(this.position.x / this.config.grid);
-            let downY = Math.ceil((this.position.y + this.config.grid * 2) / this.config.grid);
+            let downY = Math.ceil((this.position.y + this.config.grid2) / this.config.grid);
 
             let upX = downX;
             let upY = Math.ceil((this.position.y - this.config.grid) / this.config.grid);
@@ -183,7 +189,14 @@ export default class NpcTank extends Tank
                 dirs.push([0,-1]);
             }  
         }
-        if (randomRange(0, 6) == 0 || dirs.length == 0) // разворачиваемся по вероятности или при отсутствии доступного пространства
+
+        return dirs;
+    }
+
+    tryTurn()
+    {
+        let dirs = this.getAvailableDirections();
+        if (randomRange(0, 7) === 0 || dirs.length === 0) // разворачиваемся по вероятности или при отсутствии доступного пространства
         {
             this.setDirection(-this.dirX, -this.dirY);
             return;
@@ -221,7 +234,7 @@ export default class NpcTank extends Tank
         else if (this.dirX != 0)
         {
             let downX = Math.round(this.position.x / this.config.grid);
-            let downY = Math.round((this.position.y + this.config.grid * 2) / this.config.grid);
+            let downY = Math.round((this.position.y + this.config.grid2) / this.config.grid);
 
             let upX = downX;
             let upY = Math.round((this.position.y - this.config.grid) / this.config.grid);
@@ -268,7 +281,7 @@ export default class NpcTank extends Tank
             this.timerOfJamming += lag;
             if (this.timerOfJamming >= this.timeWaitOfJamming) // Если мы застряли дольше определенного времени
             {
-                this.timeWaitOfJamming = randomRange(100, 800); // Время следующего застревания
+                this.timeWaitOfJamming = randomRange(this.minTimeWaitOfJamming, this.maxTimeWaitOfJamming); // Время следующего застревания
                 this.timerOfJamming = 0;
                 this.tryTurn();
             }
@@ -278,11 +291,11 @@ export default class NpcTank extends Tank
             || (this.playersMode === 1 && this.checkCollisionWithObject(this.players[1].position)))
         {
             this.timerOfJamming += lag;
-            if (this.timerOfJamming >= 800) // Если мы застряли дольше определенного времени
+            if (this.timerOfJamming >= 700) // Если мы застряли дольше определенного времени
             {
                 this.tryShoot();
             }
-            if (this.timerOfJamming >= 1000) // Если мы застряли дольше определенного времени
+            if (this.timerOfJamming >= 900) // Если мы застряли дольше определенного времени
             {
                 this.timerOfJamming = 0;
                 this.tryTurn();
@@ -294,9 +307,21 @@ export default class NpcTank extends Tank
             || Math.floor((this.position.y - incrementY) / this.config.grid2) != Math.floor(this.position.y / this.config.grid2)
             && !this.isBlockTurn)
         {
-            if (randomRange(0, 8) === 0) this.tryTurnAnywhere();
+            if (randomRange(0, 8) === 0)
+            {
+                this.tryTurnAnywhere();
+            }
+            else
+            {
+                let dirs = this.getAvailableDirections();
+                if (dirs.length > 0 && randomRange(0, 3) === 0){
+                    let rand = randomRange(0, dirs.length);
+                    this.setDirection(dirs[rand][0], dirs[rand][1]);
+                }
+            }
+
             this.isBlockTurn = true;
-            setTimeout(() => {this.isBlockTurn = false}, 600);
+            setTimeout(() => {this.isBlockTurn = false}, 1000);
         }
     }
 
@@ -488,7 +513,7 @@ export default class NpcTank extends Tank
 
     shoot()
     {
-        if (this.isPause || !this.isUse) return;
+        if (this.isPause || !this.isUse || this.isDead) return;
         let centerPos = {x: this.position.x + this.config.grid2/2 + (this.config.grid2/2 * this.dirX), 
         y: this.position.y + this.config.grid2/2 + (this.config.grid2/2 * this.dirY)};
         this.spawnBullet(centerPos, {x: this.dirX, y: this.dirY}, false, this.npcId);

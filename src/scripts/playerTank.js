@@ -47,7 +47,7 @@ export default class PlayerTank extends Tank
 
     setDamage(damage)
     {
-        //this.health = this.health - damage <= 0 ? 0 : this.health - damage;
+        this.health = this.health - damage <= 0 ? 0 : this.health - damage;
         if (this.health === 0)
         {
             this.setReset();

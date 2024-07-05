@@ -29,7 +29,7 @@ import type1img from "/sprites/tankNpc1_Down.png";
 <template>
     <div class="panel">
         <div id="countNpcTanks">
-            <img v-for="(item, i) in this.uiFields.npc" :key="(item, i)" class="npcTanks" :style="{ width: config.grid + 'px', height: config.grid + 'px'}" :src="item == 0 ? type0 : type1" alt="">
+            <img v-for="(item, i) in this.uiFields.npc.slice().reverse()" :key="(item, i)" class="npcTanks" :style="{ width: config.grid + 'px', height: config.grid + 'px'}" :src="item == 0 ? type0 : type1" alt="">
         </div>
         <div id="health">
             <div class="playerHealth">
