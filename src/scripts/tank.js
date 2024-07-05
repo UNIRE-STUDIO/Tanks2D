@@ -1,4 +1,4 @@
-import { drawImage, drawRect } from "./general.js";
+import { drawImage } from "./general.js";
 
 export default class Tank
 {
@@ -68,16 +68,17 @@ export default class Tank
     {
         let tileX = Math.ceil((this.position.x + this.config.grid * this.moveX) / this.config.grid);
         let tileY = Math.ceil((this.position.y + this.config.grid * this.moveY) / this.config.grid);
+        let extraX = tileX;
+        let extraY = tileY;
+
         if (this.currentMap[tileY] === undefined 
             || this.currentMap[tileY][tileX] === undefined) return true;
-        if (this.moveY != 0) 
-        {
-            return (this.currentMap[tileY][tileX] != 0 || this.currentMap[tileY][tileX+1] != 0);
-        }
-        else if (this.moveX != 0)
-        {
-            return (this.currentMap[tileY][tileX] != 0 || this.currentMap[tileY+1][tileX] != 0);
-        } 
+
+        if (this.moveY != 0) extraX += 1;
+        else if (this.moveX != 0) extraY += 1;
+
+        return (this.currentMap[tileY][tileX] !== 0 && this.currentMap[tileY][tileX] !== 4 || 
+            this.currentMap[extraY][extraX] !== 0 && this.currentMap[extraY][extraX] !== 4);
     }
 
     sortOtherObjects()

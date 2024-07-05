@@ -1,4 +1,7 @@
+
 <script>
+import type0img from "/sprites/tankNpc_Down.png";
+import type1img from "/sprites/tankNpc1_Down.png";
   export default {
     props: {
         uiFields: {
@@ -10,13 +13,23 @@
             required: true
         }
     },
+
+    data() {
+        return {
+            type0: type0img,
+            type1: type1img
+        }
+    },
+    methods: {
+
+    }
   }
 </script>
 
 <template>
     <div class="panel">
         <div id="countNpcTanks">
-            <img v-for="n in this.uiFields.countReserveNpcTanks" :key="n" class="npcTanks" :style="{ width: config.grid + 'px', height: config.grid + 'px'}" src="/sprites/tankNpc_Down.png" alt="">
+            <img v-for="(item, i) in this.uiFields.npc" :key="(item, i)" class="npcTanks" :style="{ width: config.grid + 'px', height: config.grid + 'px'}" :src="item == 0 ? type0 : type1" alt="">
         </div>
         <div id="health">
             <div class="playerHealth">

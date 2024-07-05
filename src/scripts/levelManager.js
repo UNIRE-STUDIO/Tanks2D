@@ -30,11 +30,12 @@ export default class LevelManager
         this.tilesBackground[1].src = "/Tanks2D/sprites/block03-2.png";
         this.tilesBackground[2].src = "/Tanks2D/sprites/block03-3.png";
         this.tilesBackground[3].src = "/Tanks2D/sprites/block03-4.png";
-        this.tiles = [new Image(), new Image(), new Image(),new Image()];
+        this.tiles = [new Image(), new Image(), new Image(), new Image(), new Image()];
         this.tiles[0].src = "/Tanks2D/sprites/brick.png";
         this.tiles[1].src = "/Tanks2D/sprites/block04.png";
         this.tiles[2].src = "/Tanks2D/sprites/water04.png";
-        this.tiles[3].src = "/Tanks2D/sprites/base.png";
+        this.tiles[3].src = "/Tanks2D/sprites/cover0.png";
+        this.tiles[4].src = "/Tanks2D/sprites/base.png";
         
         this.config = config;
 
@@ -64,6 +65,7 @@ export default class LevelManager
     start(playersMode = 0)
     {
         this.uiFields.playersMode = playersMode;
+        this.uiFields.npc = levels[this.uiFields.currentLevel].npc;
         this.reset();
         this.currentMap = [];
 
@@ -173,20 +175,31 @@ export default class LevelManager
     render()
     {
         let tile;
+        let coversPos = [];
         for (let i = 0; i < this.config.viewSize.y; i++) {
             for (let j = 0; j < this.config.viewSize.x; j++) 
             {
                 if (this.currentMap[i][j] === 0 || this.currentMap[i][j] === 9) tile = this.tilesBackground[j%2+(i%2 * 2)];
+                else if (this.currentMap[i][j] === 4)
+                {
+                    tile = this.tilesBackground[j%2+(i%2 * 2)];
+                    coversPos.push({x: j * this.config.grid, y: i * this.config.grid});
+                }
                 else tile = this.tiles[this.currentMap[i][j]-1];
                 drawImage(this.config.ctx, tile, {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid});
             }
         }
-        drawImage(this.config.ctx, this.tiles[3], {x: levels[this.uiFields.currentLevel].basePos.x * this.config.grid, y:levels[this.uiFields.currentLevel].basePos.y * this.config.grid}, {x:this.config.grid2, y:this.config.grid2});
+        drawImage(this.config.ctx, this.tiles[4], {x: levels[this.uiFields.currentLevel].basePos.x * this.config.grid, y:levels[this.uiFields.currentLevel].basePos.y * this.config.grid}, {x:this.config.grid2, y:this.config.grid2});
         this.players[0].render();
         if (this.uiFields.playersMode === 1) this.players[1].render();
 
         this.bulletPool.render();
         this.npcPool.render();
         this.bangPool.render();
+
+        for (let i = 0; i < coversPos.length; i++) 
+        {
+            drawImage(this.config.ctx, this.tiles[3], {x:coversPos[i].x, y:coversPos[i].y}, {x:this.config.grid, y:this.config.grid});
+        }
     }
 }

@@ -1,4 +1,3 @@
-import { drawRect, drawText, randomRange, coordinatesToId, idToCoordinates } from "./general.js";
 import Tank from "./tank.js";
 import Timer from "./timer.js";
 

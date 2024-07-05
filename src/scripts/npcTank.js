@@ -10,6 +10,7 @@ export default class NpcTank extends Tank
         this.npcId = id;
         this.dirY = 1;
         this.speed = 0.003 * config.grid;
+        this.isDead = false;
         this.timeOfModeChange = 15; // 23 Длительность режима в секундах
 
         this.isBlockTurn = false;
@@ -18,11 +19,6 @@ export default class NpcTank extends Tank
         this.players = players;
         this.deadNpcEvent = deadNpcEvent;
         this.playersMode; // npcPool -> Create
-
-        this.image_up.src = "/Tanks2D/sprites/tankNpc_Up.png";
-        this.image_down.src = "/Tanks2D/sprites/tankNpc_Down.png";
-        this.image_right.src = "/Tanks2D/sprites/tankNpc_Right.png";
-        this.image_left.src = "/Tanks2D/sprites/tankNpc_Left.png";
         
         // ПОИСК | Это всё нужно обнулять
         this.stack = [];
@@ -49,9 +45,27 @@ export default class NpcTank extends Tank
         this.basePos; // npcPool
     }
 
-    create(currentMap, pos, basePos, playersMode)
+    create(currentMap, pos, basePos, playersMode, type)
     {
         super.create(currentMap, pos);
+
+        if (type === 0)
+        {
+            this.speed = 0.003 * this.config.grid;
+            this.image_up.src = "/Tanks2D/sprites/tankNpc_Up.png";
+            this.image_down.src = "/Tanks2D/sprites/tankNpc_Down.png";
+            this.image_right.src = "/Tanks2D/sprites/tankNpc_Right.png";
+            this.image_left.src = "/Tanks2D/sprites/tankNpc_Left.png";
+        }
+        else
+        {
+            this.speed = 0.0045 * this.config.grid;
+            this.image_up.src = "/Tanks2D/sprites/tankNpc1_Up.png";
+            this.image_down.src = "/Tanks2D/sprites/tankNpc1_Down.png";
+            this.image_right.src = "/Tanks2D/sprites/tankNpc1_Right.png";
+            this.image_left.src = "/Tanks2D/sprites/tankNpc1_Left.png";
+        }
+
         this.moveX = this.dirX;
         this.moveY = this.dirY;
         this.drivingMode = 0;
@@ -61,6 +75,7 @@ export default class NpcTank extends Tank
         this.timerShoot.reset();
         this.timerShoot.start();
         this.playersMode = playersMode;
+        this.isDead = false;
     }
 
     setReset()
@@ -129,16 +144,16 @@ export default class NpcTank extends Tank
             if (this.currentMap[rightY] !== undefined  // поворот направо
                 && this.currentMap[rightY][rightX] !== undefined 
                 && this.currentMap[rightY+1] !== undefined
-                && this.currentMap[rightY][rightX] == 0
-                && this.currentMap[rightY+1][rightX] == 0) 
+                && (this.currentMap[rightY][rightX] === 0 || this.currentMap[rightY][rightX] === 4)
+                && (this.currentMap[rightY+1][rightX] === 0 || this.currentMap[rightY+1][rightX] == 4))
             {
                 dirs.push([1,0]);
             }
             if (this.currentMap[leftY] !== undefined // поворот налево
                 && this.currentMap[leftY][leftX] !== undefined 
                 && this.currentMap[leftY+1] !== undefined
-                && this.currentMap[leftY][leftX] == 0
-                && this.currentMap[leftY+1][leftX] == 0) 
+                && (this.currentMap[leftY][leftX] === 0 || this.currentMap[leftY][leftX] === 4)
+                && (this.currentMap[leftY+1][leftX] === 0 || this.currentMap[leftY+1][leftX] === 4)) 
             {
                 dirs.push([-1,0]);
             }
@@ -154,16 +169,16 @@ export default class NpcTank extends Tank
             if (this.currentMap[downY] !== undefined  // поворот вниз
                 && this.currentMap[downY][downX] !== undefined
                 && this.currentMap[downY][downX+1] !== undefined 
-                && this.currentMap[downY][downX] == 0
-                && this.currentMap[downY][downX+1] == 0) 
+                && (this.currentMap[downY][downX] === 0 || this.currentMap[downY][downX] === 4)
+                && (this.currentMap[downY][downX+1] === 0 || this.currentMap[downY][downX+1] === 4)) 
             {
                 dirs.push([0,1]);
             }
             if (this.currentMap[upY] !== undefined  // поворот вверх
                 && this.currentMap[upY][upX] !== undefined
                 && this.currentMap[upY][upX+1] !== undefined
-                && this.currentMap[upY][upY] == 0
-                && this.currentMap[upY][upY+1] == 0) 
+                && (this.currentMap[upY][upY] === 0 || this.currentMap[upY][upY] === 4)
+                && (this.currentMap[upY][upY+1] === 0 || this.currentMap[upY][upY+1] === 4))
             {
                 dirs.push([0,-1]);
             }  
@@ -417,10 +432,10 @@ export default class NpcTank extends Tank
             && this.currentMap[y][x] !== undefined
             && this.currentMap[y + 1] !== undefined
             && this.currentMap[y + 1][x + 1] !== undefined
-            && this.currentMap[y][x] == 0
-            && this.currentMap[y][x + 1] == 0
-            && this.currentMap[y + 1][x] == 0
-            && this.currentMap[y + 1][x + 1] == 0
+            && (this.currentMap[y][x] === 0         || this.currentMap[y][x] == 4) // Можно изменять карту саму карту для NPC 4 = 0
+            && (this.currentMap[y][x + 1] === 0     || this.currentMap[y][x + 1] === 4)
+            && (this.currentMap[y + 1][x] === 0     || this.currentMap[y + 1][x] === 4)
+            && (this.currentMap[y + 1][x + 1] === 0 || this.currentMap[y + 1][x + 1] === 4)
             && !this.visited.includes(getId))
             {
                 if (!this.stack.includes(getId)) // Если клетка НЕ находится в очереди ставим её в приоритет
@@ -447,10 +462,11 @@ export default class NpcTank extends Tank
         this.health = this.health - damage <= 0 ? 0 : this.health - damage;
         if (this.health === 0)
         {
-            
-            this.setReset();
-            console.log("Dead " + this.isUse);
-            this.deadNpcEvent();
+            this.isDead = true;
+            setTimeout(() => { // Уничтожение с задержкой
+                this.setReset();
+                this.deadNpcEvent();
+            }, 300);
         }
     }
 
@@ -492,10 +508,10 @@ export default class NpcTank extends Tank
                     && this.currentMap[posY+1] !== undefined
                     && this.currentMap[posY][posX] !== undefined
                     && this.currentMap[posY][posX+1] !== undefined
-                    && this.currentMap[posY][posX] === 0
-                    && this.currentMap[posY][posX+1] === 0
-                    && this.currentMap[posY+1][posX] === 0
-                    && this.currentMap[posY+1][posX+1] === 0)
+                    && (this.currentMap[posY][posX] === 0     || this.currentMap[posY][posX] === 4)
+                    && (this.currentMap[posY][posX+1] === 0   || this.currentMap[posY][posX+1] === 4)
+                    && (this.currentMap[posY+1][posX] === 0   || this.currentMap[posY+1][posX] === 4)
+                    && (this.currentMap[posY+1][posX+1] === 0 || this.currentMap[posY+1][posX+1] === 4))
                     {
                         return [posX, posY];
                     }
@@ -506,7 +522,7 @@ export default class NpcTank extends Tank
 
     update(lag)
     {
-        if (!this.isUse) return;
+        if (!this.isUse || this.isDead) return;
         this.moveX = this.dirX;
         this.moveY = this.dirY;
         if (this.drivingMode === 0)

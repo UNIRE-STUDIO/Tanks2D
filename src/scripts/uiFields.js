@@ -1,3 +1,5 @@
+import levels from "./levels.json";
+
 export default class UIFields
 {
     constructor()
@@ -5,6 +7,7 @@ export default class UIFields
         this.playersHealth = [0,0];
         this.countReserveNpcTanks = 0;  // Количество вражеских танков в резерве
         this.currentLevel = 0;
+        this.npc = levels[this.currentLevel].npc;
         this.playersMode = 0;           // 0 - 1 игрок // 1 - 2 игрока
     }
 }
