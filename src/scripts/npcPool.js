@@ -39,8 +39,8 @@ export default class NpcPool
         this.currentMap = currentMap;
         this.currentLevel = currentLevel;
         this.basePos = basePos;
-        this.uiFields.countReserveNpcTanks = levels[currentLevel].countNpc;
-        this.countNpcTanks = levels[currentLevel].countNpc;
+        this.uiFields.countReserveNpcTanks = levels[currentLevel].npc.length;
+        this.countNpcTanks = levels[currentLevel].npc.length;
         this.timerSpawn.reset();
         this.timerSpawn.start();
     }
