@@ -49,7 +49,7 @@ export default class Input
 
     setKeydown(e)
     {   
-        if (e.code === "ControlRight")
+        if (e.code === "Slash")
         {
             this.shootPlayer1Event();
         }
