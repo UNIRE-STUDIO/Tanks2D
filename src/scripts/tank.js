@@ -33,8 +33,8 @@ export default class Tank
     create(currentMap, pos)
     {
         this.currentMap = currentMap;
-        this.position.x = pos.x * this.config.grid2;
-        this.position.y = pos.y * this.config.grid2;
+        this.position.x = pos.x * this.config.grid;
+        this.position.y = pos.y * this.config.grid;
         this.otherCollisionObject = [];
         this.isUse = true;
     }

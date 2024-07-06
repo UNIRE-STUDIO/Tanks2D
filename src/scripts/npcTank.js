@@ -378,6 +378,13 @@ export default class NpcTank extends Tank
             if (this.currentPosOnPath >= this.path.length)
             {
                 // Завершаем путь
+                if (this.drivingMode === 2) // Поворачиваем в сторону базы
+                {
+                    let distX = Math.floor((this.basePos.x - this.position.x)/this.config.grid2);
+                    let distY = Math.floor((this.basePos.y - this.position.y)/this.config.grid2);
+
+                    this.setDirection(distX === 0 ? 0 : distX > 0 ? 1 : -1, distY === 0 ? 0 : distY > 0 ? 1 : -1);
+                }
                 this.tryShoot();
                 this.changeMode();
             }
@@ -521,6 +528,7 @@ export default class NpcTank extends Tank
 
     searchForFreeSpaceNearTheBase()
     {
+        let dirs = [];
         for (let i = 0; i < 3; i++) 
         {
             let dir = [[-2-i,0],[0,-2-i],[2+i,0],[0,2+i]]; // лево, верх, право, низ
@@ -538,11 +546,14 @@ export default class NpcTank extends Tank
                     && (this.currentMap[posY+1][posX] === 0   || this.currentMap[posY+1][posX] === 4)
                     && (this.currentMap[posY+1][posX+1] === 0 || this.currentMap[posY+1][posX+1] === 4))
                     {
-                        return [posX, posY];
+                        dirs.push([posX, posY]);
                     }
             }
         }
-        return undefined;
+
+        if (dirs.length === 0) return undefined;
+
+        return dirs[randomRange(0, dirs.length)];
     }
 
     update(lag)
@@ -563,12 +574,12 @@ export default class NpcTank extends Tank
     render()
     {
         super.render();
-        if (this.drivingMode === 0)
-            drawRect(this.config.ctx, this.position, {x:10, y:10}, "#ffffff");
-        else if (this.drivingMode === 1)
-            drawRect(this.config.ctx, this.position, {x:10, y:10}, "#00ff00");
-        else 
-            drawRect(this.config.ctx, this.position, {x:10, y:10}, "#ff0000");
+        // if (this.drivingMode === 0)
+        //     drawRect(this.config.ctx, this.position, {x:10, y:10}, "#ffffff");
+        // else if (this.drivingMode === 1)
+        //     drawRect(this.config.ctx, this.position, {x:10, y:10}, "#00ff00");
+        // else 
+        //     drawRect(this.config.ctx, this.position, {x:10, y:10}, "#ff0000");
         // for (let i = 0; i < this.path.length; i++) 
         // {
         //     let pos = {
