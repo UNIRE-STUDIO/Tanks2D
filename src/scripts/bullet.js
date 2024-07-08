@@ -102,7 +102,7 @@ export default class Bullet
                 {
                     if (this.bulletsPlayer) {
                         this.tanks[i].setDamage(this.damage);
-                        if (!this.tanks[i].isUse) {
+                        if (this.tanks[i].isDead) {
                             if (this.tanks[i].type === 1)
                                 this.uiFields.numDestroyedType1[this.tankId]++;
                             else

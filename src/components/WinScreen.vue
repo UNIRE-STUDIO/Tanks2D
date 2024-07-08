@@ -10,6 +10,19 @@ export default {
             required: true
         },
     },
+
+    data() {
+        return {
+            scoreType0p0: this.uiFields.numDestroyedType0[0] * 100,
+            scoreType1p0: this.uiFields.numDestroyedType1[0] * 150,
+
+            scoreType0p1: this.uiFields.numDestroyedType0[1] * 100,
+            scoreType1p1: this.uiFields.numDestroyedType1[1] * 150,
+
+            sumDestroyedP0: this.uiFields.numDestroyedType1[0] + this.uiFields.numDestroyedType0[0],
+            sumDestroyedP1: this.uiFields.numDestroyedType1[1] + this.uiFields.numDestroyedType0[1],
+        }
+    }
 }
 </script>
 
@@ -18,21 +31,47 @@ export default {
         <div class="panel">
             <div class="stat">
                 <div id="player1">
-                    <p class="header">Игрок-1</p>
+                    <p class="header">Игрок 1</p>
                     <table>
                         <tr><th>Очки</th><th>Уничтожено</th><th>Тип</th></tr>
-                        <tr><td>{{this.uiFields.numDestroyedType0[0] * 100}}</td><td>{{this.uiFields.numDestroyedType0[0]}}</td><td><img src="/sprites/tankNpc_Up.png" alt="" srcset=""></td></tr>
-                        <tr><td>{{this.uiFields.numDestroyedType1[0] * 150}}</td><td>{{this.uiFields.numDestroyedType1[0]}}</td><td><img src="/sprites/tankNpc1_Up.png" alt="" srcset=""></td></tr>
-                        <tr><td>{{this.uiFields.numDestroyedType1[0] * 150 + this.uiFields.numDestroyedType0[0] * 100}}</td><td>{{this.uiFields.numDestroyedType1[0] + this.uiFields.numDestroyedType0[0]}}</td><td></td></tr>
+                        <tr>
+                            <td :class="[uiFields.playersMode === 1 && scoreType0p1 <= scoreType0p0 ? 'best' : '']">{{scoreType0p0}}</td>
+                            <td :class="[uiFields.playersMode === 1 && uiFields.numDestroyedType0[1] <= uiFields.numDestroyedType0[0] ? 'best' : '']">{{uiFields.numDestroyedType0[0]}}</td>
+                            <td><img src="/sprites/tankNpc_Up.png" alt="" srcset=""></td>
+                        </tr>
+                        <tr>
+                            <td :class="[uiFields.playersMode === 1 && scoreType1p1 <= scoreType1p0 ? 'best' : '']">{{scoreType1p0}}</td>
+                            <td :class="[uiFields.playersMode === 1 && uiFields.numDestroyedType1[1] <= uiFields.numDestroyedType1[0] ? 'best' : '']">{{uiFields.numDestroyedType1[0]}}</td>
+                            <td><img src="/sprites/tankNpc1_Up.png" alt="" srcset=""></td>
+                        </tr>
+                        <tr><td colspan="3"><hr noshade="true" size="1"/></td></tr>
+                        <tr>
+                            <td class="sum" :class="[uiFields.playersMode === 1 && scoreType0p1 + scoreType1p1 <= scoreType0p0 + scoreType1p0 ? 'best' : '']">{{scoreType0p0 + scoreType1p0}}</td>
+                            <td :class="[uiFields.playersMode === 1 && sumDestroyedP1 <= sumDestroyedP0 ? 'best' : '']">{{sumDestroyedP0}}</td>
+                            <td></td>
+                        </tr>
                     </table>
                 </div>
-                <div id="player2">
-                    <p class="header">Игрок-2</p>
+                <div id="player2" v-if="uiFields.playersMode === 1">
+                    <p class="header">Игрок 2</p>
                     <table>
                         <tr><th>Очки</th><th>Уничтожено</th><th>Тип</th></tr>
-                        <tr><td>{{this.uiFields.numDestroyedType0[1] * 100}}</td><td>{{this.uiFields.numDestroyedType0[1]}}</td><td><img src="/sprites/tankNpc_Up.png" alt="" srcset=""></td></tr>
-                        <tr><td>{{this.uiFields.numDestroyedType1[1] * 150}}</td><td>{{this.uiFields.numDestroyedType1[1]}}</td><td><img src="/sprites/tankNpc1_Up.png" alt="" srcset=""></td></tr>
-                        <tr><td>{{this.uiFields.numDestroyedType1[1] * 150 + this.uiFields.numDestroyedType0[1] * 100}}</td><td>{{this.uiFields.numDestroyedType1[1] + this.uiFields.numDestroyedType0[1]}}</td><td></td></tr>
+                        <tr>
+                            <td :class="[uiFields.playersMode === 1 && scoreType0p0 <= scoreType0p1 ? 'best' : '']">{{scoreType0p1}}</td>
+                            <td :class="[uiFields.playersMode === 1 && uiFields.numDestroyedType0[0] <= uiFields.numDestroyedType0[1] ? 'best' : '']">{{uiFields.numDestroyedType0[1]}}</td>
+                            <td><img src="/sprites/tankNpc_Up.png" alt="" srcset=""></td>
+                        </tr>
+                        <tr>
+                            <td :class="[uiFields.playersMode === 1 && scoreType1p0 <= scoreType1p1 ? 'best' : '']">{{scoreType1p1}}</td>
+                            <td :class="[uiFields.playersMode === 1 && uiFields.numDestroyedType1[0] <= uiFields.numDestroyedType1[1] ? 'best' : '']">{{uiFields.numDestroyedType1[1]}}</td>
+                            <td><img src="/sprites/tankNpc1_Up.png" alt="" srcset=""></td>
+                        </tr>
+                        <tr><td colspan="3"><hr noshade="true" size="1"/></td></tr>
+                        <tr>
+                            <td class="sum" :class="[uiFields.playersMode === 1 && scoreType0p0 + scoreType1p0 <= scoreType0p1 + scoreType1p1 ? 'best' : '']">{{scoreType0p1 + scoreType1p1}}</td>
+                            <td :class="[uiFields.playersMode === 1 && sumDestroyedP0 <= sumDestroyedP1 ? 'best' : '']">{{sumDestroyedP1}}</td>
+                            <td></td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -41,6 +80,15 @@ export default {
 </template>
 
 <style scoped>
+
+.best{
+    color: gold;
+    font-weight: 900;
+}
+
+.sum{
+    height: 30px;
+}
 
 .header{
     color: aliceblue;

@@ -59,7 +59,7 @@ export default class Game
                 setTimeout( () => {
                     this.levelManager.nextLevel();
                     this.changeScreen(1, 1, this.levelManager.uiFields.playersMode);
-                }, 4000);
+                }, 50000);
                 this.currentScreen = GameScreens.WIN;
             break;
             case -1: // Если нажата кнопка назад
