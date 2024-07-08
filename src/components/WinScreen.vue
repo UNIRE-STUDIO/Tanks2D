@@ -121,7 +121,7 @@ table{
 .panel {
     display: flex;
     padding: 30px 30px;
-    background-color: rgba(27, 27, 27, 0.808);
+    background-color: rgba(27, 27, 27, 0.877);
     border-radius: 8px;
 }
 
