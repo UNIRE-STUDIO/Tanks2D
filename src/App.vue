@@ -59,7 +59,7 @@ export default {
                         <MainScreen v-if="game.currentScreen === 0" :game="game" />
                         <PauseScreen v-if="game.currentScreen === 2" :game="game" />
                         <GameOverScreen v-if="game.currentScreen === 4" :game="game" :uiFields="uiFields" />
-                        <WinScreen v-if="game.currentScreen === 3" :game="game" />
+                        <WinScreen v-if="game.currentScreen === 3" :game="game" :uiFields="uiFields"/>
                     </div>
                 </div>
             </div>

@@ -2,7 +2,7 @@ import Bullet from "./bullet.js";
 
 export default class BulletPool
 {
-    constructor(config, removeTile, destructionOfTheBaseEvent, bangCreateEvent)
+    constructor(config, removeTile, destructionOfTheBaseEvent, bangCreateEvent, uiFields)
     {
         this.config = config;
 
@@ -11,7 +11,7 @@ export default class BulletPool
 
         for (let i = 0; i < pool_size; i++) 
         {
-            this.bullets[i] = new Bullet(this.config, removeTile, destructionOfTheBaseEvent, i, bangCreateEvent);
+            this.bullets[i] = new Bullet(this.config, removeTile, destructionOfTheBaseEvent, i, bangCreateEvent, uiFields);
         }
         for (let i = 0; i < pool_size; i++) 
         {

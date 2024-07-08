@@ -46,13 +46,13 @@ export default class NpcTank extends Tank
         this.timerShoot = new Timer(randomRange(this.minCooldownTime, this.maxCooldownTime), this.randomShoot.bind(this), 0.1);
 
         this.basePos; // npcPool
-        
+        this.type = 0;
     }
 
     create(currentMap, pos, basePos, playersMode, type)
     {
         super.create(currentMap, pos);
-
+        this.type = type;
         if (type === 0)
         {
             this.maxTimeWaitOfJamming = 300;

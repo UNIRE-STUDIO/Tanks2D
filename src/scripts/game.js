@@ -27,6 +27,8 @@ export default class Game
         this.levelManager.gameOverEvent = this.changeScreen.bind(this, GameScreens.GAMEOVER);
         this.levelManager.winEvent = this.changeScreen.bind(this, GameScreens.WIN);
         this.levelManager.saveManager = this.saveManager;
+
+        //this.changeScreen(3); // Тут можно проверять интерфейс
     }
 
     // изменить экран игры на указанный + дополнительный параметр для уточнения поведения
@@ -57,7 +59,7 @@ export default class Game
                 setTimeout( () => {
                     this.levelManager.nextLevel();
                     this.changeScreen(1, 1, this.levelManager.uiFields.playersMode);
-                }, 2000);
+                }, 4000);
                 this.currentScreen = GameScreens.WIN;
             break;
             case -1: // Если нажата кнопка назад

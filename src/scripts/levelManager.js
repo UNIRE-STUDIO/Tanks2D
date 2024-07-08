@@ -16,6 +16,7 @@ export default class LevelManager
         this.uiFields.playersHealth[0] = 3;
         this.uiFields.playersHealth[1] = 3;
         this.isPause = false;
+        this.isPlay = false; // Для того что-бы коректно ставить на паузу до появления игроков
 
         // Присваивает класс Game
         this.gameOverEvent;
@@ -40,7 +41,7 @@ export default class LevelManager
         this.config = config;
 
         this.bangPool = new BangPool(this.config);
-        this.bulletPool = new BulletPool(this.config, this.removeTile.bind(this), this.destructionOfTheBase.bind(this), this.bangPool.create.bind(this.bangPool));
+        this.bulletPool = new BulletPool(this.config, this.removeTile.bind(this), this.destructionOfTheBase.bind(this), this.bangPool.create.bind(this.bangPool), this.uiFields);
         this.players = [];
         this.players[0] = new PlayerTank(this.config, this.bulletPool.create.bind(this.bulletPool), this.playerDead.bind(this), 0);
         this.players[1] = new PlayerTank(this.config, this.bulletPool.create.bind(this.bulletPool), this.playerDead.bind(this), 1);
@@ -60,11 +61,17 @@ export default class LevelManager
 
         input.movePlayer2Event = this.players[1].setDirection.bind(this.players[1]);
         input.shootPlayer2Event = this.players[1].shoot.bind(this.players[1]);
+
+        this.timerStart;
     }
 
     start(playersMode = 0)
     {
         this.uiFields.playersMode = playersMode;
+        this.uiFields.numDestroyedType0[0] = 0;
+        this.uiFields.numDestroyedType0[1] = 0;
+        this.uiFields.numDestroyedType1[0] = 0;
+        this.uiFields.numDestroyedType1[1] = 0;
         this.reset();
         this.currentMap = [];
 
@@ -72,21 +79,27 @@ export default class LevelManager
         for (let i = 0; i < levels[this.uiFields.currentLevel].map.length; i++) {
             this.currentMap.push(levels[this.uiFields.currentLevel].map[i].slice());
         }
-        setTimeout(() => {        
-            let base = {x: levels[this.uiFields.currentLevel].basePos.x * this.config.grid, y: levels[this.uiFields.currentLevel].basePos.y * this.config.grid};
-            this.bulletPool.init(this.currentMap, base);
-            this.isPause = false;
-            this.players[0].create(this.currentMap, levels[this.uiFields.currentLevel].playerSpawnsPos[0]);
-            //this.players[0].setOtherCollisionObject(base);
-            this.players[0].isPause = false;
-            if (playersMode === 1)
-            {
-                this.players[1].create(this.currentMap, levels[this.uiFields.currentLevel].playerSpawnsPos[1]);
-                //this.players[1].setOtherCollisionObject(base);
-                this.players[1].isPause = false;
-            }
-            this.npcPool.init(this.currentMap, this.uiFields.currentLevel, base);
+        this.timerStart = setTimeout(() => {        
+            this.delayedSpawn();
         }, 1000);
+    }
+
+    delayedSpawn()
+    {
+        let base = {x: levels[this.uiFields.currentLevel].basePos.x * this.config.grid, y: levels[this.uiFields.currentLevel].basePos.y * this.config.grid};
+        this.bulletPool.init(this.currentMap, base);
+        this.isPause = false;
+        this.players[0].create(this.currentMap, levels[this.uiFields.currentLevel].playerSpawnsPos[0]);
+        //this.players[0].setOtherCollisionObject(base);
+        this.players[0].isPause = false;
+        if (this.uiFields.playersMode === 1)
+        {
+            this.players[1].create(this.currentMap, levels[this.uiFields.currentLevel].playerSpawnsPos[1]);
+            //this.players[1].setOtherCollisionObject(base);
+            this.players[1].isPause = false;
+        }
+        this.npcPool.init(this.currentMap, this.uiFields.currentLevel, base);
+        this.isPlay = true; // Для того что-бы коректно ставить на паузу до появления игроков
     }
 
     removeTile(posX, posY)
@@ -97,6 +110,11 @@ export default class LevelManager
     setPause()
     {
         this.isPause = true;
+        if (!this.isPlay)
+        {
+            clearTimeout(this.timerStart);
+            return;
+        }
         this.players[0].setPause();
         if (this.uiFields.playersMode === 1) this.players[1].setPause();
         this.npcPool.setPause();
@@ -105,6 +123,11 @@ export default class LevelManager
     setResume()
     {
         this.isPause = false;
+        if (!this.isPlay)
+        {
+            this.delayedSpawn();
+            return;
+        }
         this.players[0].isPause = false;
         if (this.uiFields.playersMode === 1) this.players[1].isPause = false;
         this.npcPool.setResume();

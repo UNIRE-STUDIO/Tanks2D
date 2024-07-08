@@ -9,5 +9,7 @@ export default class UIFields
         this.currentLevel = 0;
         this.npc = levels[this.currentLevel].npc;
         this.playersMode = 0;           // 0 - 1 игрок // 1 - 2 игрока
+        this.numDestroyedType0 = [0,0];
+        this.numDestroyedType1 = [0,0];
     }
 }

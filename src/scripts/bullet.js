@@ -2,7 +2,7 @@ import { drawImage, drawRect, isInside } from "./general.js";
 
 export default class Bullet
 {
-    constructor(config, removeTile, destructionOfTheBaseEvent, id, bangCreateEvent)
+    constructor(config, removeTile, destructionOfTheBaseEvent, id, bangCreateEvent, uiFields)
     {
         this.config = config;
         this.posX = 0;
@@ -13,6 +13,7 @@ export default class Bullet
         this.basePos;
         this.isUse = false;
         this.id = id;
+        this.uiFields = uiFields;
 
         this.image_up = new Image();
         this.image_up.src = "/Tanks2D/sprites/Bullet_Up.png";
@@ -99,7 +100,15 @@ export default class Bullet
                 if (!this.bulletsPlayer && i === this.tankId) continue;
                 if (this.checkCollisionWithTank(this.tanks[i].position, this.config.grid2-2)) // магические числа
                 {
-                    if (this.bulletsPlayer) this.tanks[i].setDamage(this.damage);
+                    if (this.bulletsPlayer) {
+                        this.tanks[i].setDamage(this.damage);
+                        if (!this.tanks[i].isUse) {
+                            if (this.tanks[i].type === 1)
+                                this.uiFields.numDestroyedType1[this.tankId]++;
+                            else
+                                this.uiFields.numDestroyedType0[this.tankId]++;
+                        }
+                    }
                     return true;
                 }
             }
