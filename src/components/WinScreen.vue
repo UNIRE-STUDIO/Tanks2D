@@ -27,11 +27,11 @@ export default {
 </script>
 
 <template>
-    <div class="wrapper">
-        <div class="panel">
+    <div class="wrapper" >
+        <div class="panel" @click="game.nextLevel()">
             <div class="stat">
                 <div id="player1">
-                    <p class="header">Игрок 1</p>
+                    <p class="header" id="p1">Игрок 1</p>
                     <table>
                         <tr><th>Очки</th><th>Уничтожено</th><th>Тип</th></tr>
                         <tr>
@@ -52,8 +52,8 @@ export default {
                         </tr>
                     </table>
                 </div>
-                <div id="player2" v-if="uiFields.playersMode === 1">
-                    <p class="header">Игрок 2</p>
+                <div id="player2" v-if="uiFields.playersMode === 0">
+                    <p class="header" id="p2">Игрок 2</p>
                     <table>
                         <tr><th>Очки</th><th>Уничтожено</th><th>Тип</th></tr>
                         <tr>
@@ -75,11 +75,21 @@ export default {
                     </table>
                 </div>
             </div>
+            <div id="button-wrapper">
+                <button class="btn" type="button">СЛЕДУЮЩИЙ УРОВЕНЬ</button>
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+#p1{
+    color: #18a8cc;
+}
+
+#p2{
+    color: #ee644f;
+}
 
 .best{
     color: gold;
@@ -119,13 +129,13 @@ table{
 }
 
 .panel {
-    display: flex;
     padding: 30px 30px;
-    background-color: rgba(27, 27, 27, 0.877);
+    background-color: rgba(27, 27, 27, 0.89);
     border-radius: 8px;
 }
 
 .btn {
+    margin-top: 20px;
     width: 165px;
 }
 </style>

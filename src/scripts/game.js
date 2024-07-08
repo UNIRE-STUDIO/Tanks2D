@@ -51,15 +51,11 @@ export default class Game
 
                 this.currentScreen = GameScreens.PAUSE;
             break;
-            case GameScreens.GAMEOVER:
+            case GameScreens.GAMEOVER:  
 
                 this.currentScreen = GameScreens.GAMEOVER;
             break;
             case GameScreens.WIN:
-                setTimeout( () => {
-                    this.levelManager.nextLevel();
-                    this.changeScreen(1, 1, this.levelManager.uiFields.playersMode);
-                }, 50000);
                 this.currentScreen = GameScreens.WIN;
             break;
             case -1: // Если нажата кнопка назад
@@ -67,6 +63,12 @@ export default class Game
                 if (this.currentScreen == GameScreens.GAMEOVER) this.changeScreen(GameScreens.MENU);
             break;
         }
+    }
+
+    nextLevel()
+    {
+        this.levelManager.nextLevel();
+        this.changeScreen(1, 1, this.levelManager.uiFields.playersMode);
     }
 
     update(lag)
