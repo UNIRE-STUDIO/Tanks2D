@@ -52,6 +52,7 @@ export default {
                     <PlayScreen_Top v-if="game.currentScreen === 1" :game="game" />
                     <PauseScreen_Top v-if="game.currentScreen === 2" :game="game" />
                     <p id="current-level" v-if="game.currentScreen !== 0">Уровень: {{ uiFields.currentLevel+1 }}</p>
+                    <p id="version">v1.0</p>
                 </div>
                 <div class="canvas-wrapper">
                     <canvas ref="myCanvas" id="myCanvas"></canvas>
@@ -106,6 +107,14 @@ export default {
     color: aliceblue;
     grid-column-start: 2;
     grid-column-end: 3;
+}
+
+#version{
+    grid-column-start: 3;
+    grid-column-end: 4;
+    text-align: right;
+    align-self: flex-end;
+    color: #0e0e0f;
 }
 
 .canvas-wrapper {
