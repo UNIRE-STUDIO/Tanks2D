@@ -52,7 +52,7 @@ export default {
                         </tr>
                     </table>
                 </div>
-                <div id="player2" v-if="uiFields.playersMode === 0">
+                <div id="player2" v-if="uiFields.playersMode === 1">
                     <p class="header" id="p2">Игрок 2</p>
                     <table>
                         <tr><th>Очки</th><th>Уничтожено</th><th>Тип</th></tr>
