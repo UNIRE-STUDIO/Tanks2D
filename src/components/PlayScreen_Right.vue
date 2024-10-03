@@ -53,10 +53,8 @@ import type1img from "/sprites/tankNpc1_Down.png";
         align-items: center;
     }
     #countNpcTanks{
-        width: 80px;
-
         display: grid;
-        grid-template-rows: repeat(7, 30px);
+        grid-template-rows: repeat(7, 1fr);
         grid-template-columns: repeat(2, 1fr);
         align-items: start;
         justify-items: center;

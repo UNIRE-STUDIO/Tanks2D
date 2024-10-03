@@ -49,7 +49,8 @@ export default class Input
 
     setKeydown(e)
     {   
-        if (e.code === "Slash")
+        console.log(e.code)
+        if (e.code === "Slash" || e.code === "Numpad0")
         {
             this.shootPlayer1Event();
         }

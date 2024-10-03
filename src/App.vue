@@ -29,15 +29,27 @@ export default {
             config: null,
             uiFields: new UIFields(),
             game: new Game(),
+            widthRightPart: 0
         }
     },
     mounted() {
         this.config = new Config(this.$refs.myCanvas);
+        if (window.innerWidth < 1600){
+            this.config.grid = 16;
+            this.config.updateParams();
+            // this.config.scaleMultiplier = 0.75;
+            // this.config.updateParams();
+            // this.config.ctx.scale(0.75, 0.75);
+        }
+        this.widthRightPart = (this.config.grid * 3 - this.config.grid/2) + 'px';
+        console.log(this.widthRightPart);
         this.game.init(this.config, this.uiFields);
         this.canvasWidth = (this.config.viewSize.x * this.config.grid) + 'px';
         this.canvasHeight = (this.config.viewSize.y * this.config.grid) + 'px';
     },
     methods: {
+        calc(){
+        }
     }
 }
 </script>
@@ -78,7 +90,7 @@ export default {
 }
 
 .h1 {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .game {
@@ -86,11 +98,12 @@ export default {
     flex-direction: row;
     background-color: #161618;
     border-radius: 8px;
-    padding: 20px;
+    padding: 15px;
 }
 
 .right-part {
-    width: 100px;
+    width: v-bind(widthRightPart);
+    margin-left: 8px;
     border-color: dimgray;
     border-left: 2px;
 }
@@ -99,8 +112,8 @@ export default {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     align-items: center;
-    height: 50px;
-    margin-bottom: 10px;
+    height: 40px;
+    margin-bottom: 8px;
 }
 
 #current-level{
@@ -114,7 +127,7 @@ export default {
     grid-column-end: 4;
     text-align: right;
     align-self: flex-end;
-    color: #0e0e0f;
+    color: #404041;
 }
 
 .canvas-wrapper {
@@ -134,5 +147,6 @@ export default {
     position: absolute;
     background-color: #2d2d2d;
     border-radius: 4px;
+    image-rendering: pixelated;
 }
 </style>

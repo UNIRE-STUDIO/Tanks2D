@@ -6,8 +6,25 @@
 body {
     width: 100%;
     min-height: 100vh;
-    background: rgb(71,71,71);
-    background: linear-gradient(315deg, rgba(71,71,71,1) 27%, rgba(42,67,140,1) 100%);
+    background:radial-gradient(50% 100%, rgba(255,255,255,.2), rgba(255,255,255,0)),
+    
+    linear-gradient(90deg, rgba(24, 49, 85, 0.7) 1px, transparent 0),
+    linear-gradient(180deg, rgba(24, 49, 85, 0.7) 1px, transparent 0);
+
+    background-color:#0a223d;
+
+    background-size:100% 100%, 
+
+            50px 50px,
+            50px 50px,
+
+            25px 25px,
+            25px 25px,
+
+            100px 100px, 
+            100px 100px;
+
+    background-attachment: local;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,7 +32,7 @@ body {
 
 .btn {
     color: #161618;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     padding: 10px 40px;
     background-color: rgb(219, 202, 46);
@@ -32,9 +49,9 @@ body {
 
 .btn-mini {
     color: #161618;
-    font-size: 25px;
-    height: 50px;
-    width: 50px;
+    font-size: 20px;
+    height: 40px;
+    width: 40px;
     background-color: rgb(219, 202, 46);
     border-radius: 6px;
     border-style: none;
@@ -47,3 +64,14 @@ body {
 .btn-mini:hover {
     background-color: rgb(163, 150, 31);
 }
+
+.lbl {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: aliceblue;
+    text-shadow:2px 0 0 rgb(26, 26, 26),
+                0 2px 0 rgb(26, 26, 26),
+                -2px 0 0 rgb(26, 26, 26),
+                0 -2px 0 rgb(26, 26, 26);
+  }
