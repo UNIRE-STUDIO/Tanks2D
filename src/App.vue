@@ -42,7 +42,7 @@ export default {
             // this.config.ctx.scale(0.75, 0.75);
         }
         this.widthRightPart = (this.config.grid * 3 - this.config.grid/2) + 'px';
-        console.log(this.widthRightPart);
+        //console.log(this.widthRightPart);
         this.game.init(this.config, this.uiFields);
         this.canvasWidth = (this.config.viewSize.x * this.config.grid) + 'px';
         this.canvasHeight = (this.config.viewSize.y * this.config.grid) + 'px';

@@ -18,13 +18,16 @@ export default class Tank
         this.currentMap;
         this.isUse = false;
 
-        this.image_up = new Image();
-        this.image_down = new Image();
-        this.image_right = new Image();
-        this.image_left = new Image();
+        this.frames_up = [new Image(), new Image(), new Image()];
+        this.frames_down = [new Image(), new Image(), new Image()];
+        this.frames_right = [new Image(), new Image(), new Image()];
+        this.frames_left = [new Image(), new Image(), new Image()];
         
         this.speed = 0;
         this.health = 1;
+
+        this.durationAnim = 200; // ms
+        this.timeCounter = 0;
 
         this.otherTanks = []; // Присваивает Level Manager или npcPool
         this.otherCollisionObject = [];
@@ -139,19 +142,26 @@ export default class Tank
         return false;
     }
 
+    update(lag)
+    {
+        this.timeCounter += lag;
+        let idle = (this.moveX === 0 && this.moveY === 0); // Стоим на месте
+        if (this.timeCounter >= this.durationAnim || idle) this.timeCounter = 0;
+    }
+
     render()
     {
         if (!this.isUse) return;
 
         let pos = {x: this.position.x, y: this.position.y};
         if (this.dirX == 1)
-            drawImage(this.config.ctx, this.image_right, pos, {x:this.config.grid2, y:this.config.grid2});
+            drawImage(this.config.ctx, this.frames_right[Math.floor(this.timeCounter/(this.durationAnim/this.frames_right.length))], pos, {x:this.config.grid2, y:this.config.grid2});
         else if (this.dirX == -1)
-            drawImage(this.config.ctx, this.image_left, pos, {x:this.config.grid2, y:this.config.grid2});
+            drawImage(this.config.ctx, this.frames_left[Math.floor(this.timeCounter/(this.durationAnim/this.frames_left.length))], pos, {x:this.config.grid2, y:this.config.grid2});
         else if (this.dirY == 1)
-            drawImage(this.config.ctx, this.image_down, pos, {x:this.config.grid2, y:this.config.grid2});
+            drawImage(this.config.ctx, this.frames_down[Math.floor(this.timeCounter/(this.durationAnim/this.frames_down.length))], pos, {x:this.config.grid2, y:this.config.grid2});
         else if (this.dirY == -1)
-            drawImage(this.config.ctx, this.image_up, pos, {x:this.config.grid2, y:this.config.grid2});
+            drawImage(this.config.ctx, this.frames_up[Math.floor(this.timeCounter/(this.durationAnim/this.frames_up.length))], pos, {x:this.config.grid2, y:this.config.grid2});
 
         //   pos = {x: Math.ceil((this.position.x + this.config.grid) / this.config.grid) * this.config.grid,
         //          y: Math.ceil((this.position.y + this.config.grid * this.moveY) / this.config.grid) * this.config.grid};

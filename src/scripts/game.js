@@ -19,12 +19,12 @@ export default class Game
         this.input.changeScreenEvent = this.changeScreen.bind(this);
 
         // Если теряем фокус окна то ставим паузу
-        window.onblur = () => {
-            if (this.uiFields.currentScreen === GameScreens.PLAY)
-            {
-                this.changeScreen(2);
-            }
-        }
+        // window.onblur = () => {
+        //     if (this.currentScreen === GameScreens.PLAY)
+        //     {
+        //         this.changeScreen(2);
+        //     }
+        // }
     }
     init(config, uiFields)
     {

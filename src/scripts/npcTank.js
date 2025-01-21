@@ -53,23 +53,32 @@ export default class NpcTank extends Tank
     {
         super.create(currentMap, pos);
         this.type = type;
+
+        // Временно =============================================================================
+        this.frames_up = [new Image()];
+        this.frames_down = [new Image()];
+        this.frames_right = [new Image()];
+        this.frames_left = [new Image()];
+
         if (type === 0)
         {
             this.maxTimeWaitOfJamming = 300;
             this.speed = 0.003 * this.config.grid;
-            this.image_up.src = "/Tanks2D/sprites/tankNpc_Up.png";
-            this.image_down.src = "/Tanks2D/sprites/tankNpc_Down.png";
-            this.image_right.src = "/Tanks2D/sprites/tankNpc_Right.png";
-            this.image_left.src = "/Tanks2D/sprites/tankNpc_Left.png";
+
+            this.frames_up[0].src = "/Tanks2D/sprites/tankNpc_Up.png";
+            this.frames_down[0].src = "/Tanks2D/sprites/tankNpc_Down.png";
+            this.frames_right[0].src = "/Tanks2D/sprites/tankNpc_Right.png";
+            this.frames_left[0].src = "/Tanks2D/sprites/tankNpc_Left.png";
         }
         else
         {
+            
             this.maxTimeWaitOfJamming = 800;
             this.speed = 0.0045 * this.config.grid;
-            this.image_up.src = "/Tanks2D/sprites/tankNpc1_Up.png";
-            this.image_down.src = "/Tanks2D/sprites/tankNpc1_Down.png";
-            this.image_right.src = "/Tanks2D/sprites/tankNpc1_Right.png";
-            this.image_left.src = "/Tanks2D/sprites/tankNpc1_Left.png";
+            this.frames_up[0].src = "/Tanks2D/sprites/tankNpc1_Up.png";
+            this.frames_down[0].src = "/Tanks2D/sprites/tankNpc1_Down.png";
+            this.frames_right[0].src = "/Tanks2D/sprites/tankNpc1_Right.png";
+            this.frames_left[0].src = "/Tanks2D/sprites/tankNpc1_Left.png";
         }
 
         this.moveX = this.dirX;
@@ -559,6 +568,7 @@ export default class NpcTank extends Tank
     update(lag)
     {
         if (!this.isUse || this.isDead) return;
+        super.update(lag);
         this.moveX = this.dirX;
         this.moveY = this.dirY;
         if (this.drivingMode === 0)

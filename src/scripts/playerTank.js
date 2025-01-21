@@ -7,10 +7,18 @@ export default class PlayerTank extends Tank
     {
         super(config, spawnBullet);
 
-        this.image_up.src = playerId === 0 ? "/Tanks2D/sprites/tank_Up.png" : "/Tanks2D/sprites/tank2_Up.png";
-        this.image_down.src = playerId === 0 ? "/Tanks2D/sprites/tank_Down.png" : "/Tanks2D/sprites/tank2_Down.png";
-        this.image_right.src = playerId === 0 ? "/Tanks2D/sprites/tank_Right.png" : "/Tanks2D/sprites/tank2_Right.png";
-        this.image_left.src = playerId === 0 ? "/Tanks2D/sprites/tank_Left.png" : "/Tanks2D/sprites/tank2_Left.png";
+        this.frames_up[2].src = playerId === 0 ?    "/Tanks2D/sprites/tank_Up.png"      : "/Tanks2D/sprites/tank2_Up.png";
+        this.frames_up[1].src = playerId === 0 ?    "/Tanks2D/sprites/tank_Up2.png"     : "/Tanks2D/sprites/tank2_Up2.png";
+        this.frames_up[0].src = playerId === 0 ?    "/Tanks2D/sprites/tank_Up3.png"     : "/Tanks2D/sprites/tank2_Up3.png";
+        this.frames_down[2].src = playerId === 0 ?  "/Tanks2D/sprites/tank_Down.png"    : "/Tanks2D/sprites/tank2_Down.png";
+        this.frames_down[1].src = playerId === 0 ?  "/Tanks2D/sprites/tank_Down2.png"   : "/Tanks2D/sprites/tank2_Down2.png";
+        this.frames_down[0].src = playerId === 0 ?  "/Tanks2D/sprites/tank_Down3.png"   : "/Tanks2D/sprites/tank2_Down3.png";
+        this.frames_right[2].src = playerId === 0 ? "/Tanks2D/sprites/tank_Right.png"   : "/Tanks2D/sprites/tank2_Right.png";
+        this.frames_right[1].src = playerId === 0 ? "/Tanks2D/sprites/tank_Right2.png"  : "/Tanks2D/sprites/tank2_Right2.png";
+        this.frames_right[0].src = playerId === 0 ? "/Tanks2D/sprites/tank_Right3.png"  : "/Tanks2D/sprites/tank2_Right3.png";
+        this.frames_left[2].src = playerId === 0 ?  "/Tanks2D/sprites/tank_Left.png"    : "/Tanks2D/sprites/tank2_Left.png";
+        this.frames_left[1].src = playerId === 0 ?  "/Tanks2D/sprites/tank_Left2.png"   : "/Tanks2D/sprites/tank2_Left2.png";
+        this.frames_left[0].src = playerId === 0 ?  "/Tanks2D/sprites/tank_Left3.png"   : "/Tanks2D/sprites/tank2_Left3.png";
 
         this.speed = 0.005 * config.grid;
 
@@ -83,6 +91,7 @@ export default class PlayerTank extends Tank
     update(lag)
     {
         if (!this.isUse) return;
+        super.update(lag);
         this.move(lag);
     }
 }
