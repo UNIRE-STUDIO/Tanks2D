@@ -10,25 +10,23 @@ export default class Game
     constructor()
     {
         this.config;
-        this.currentScreen;
+        this.uiFields;
         this.levelManager;
-        
-        this.changeScreen(0);
-
         this.input = new Input();
         this.input.changeScreenEvent = this.changeScreen.bind(this);
 
         // Если теряем фокус окна то ставим паузу
-        // window.onblur = () => {
-        //     if (this.currentScreen === GameScreens.PLAY)
-        //     {
-        //         this.changeScreen(2);
-        //     }
-        // }
+        window.onblur = () => {
+            if (this.uiFields.currentScreen === GameScreens.PLAY)
+            {
+                this.changeScreen(2);
+            }
+        }
     }
     init(config, uiFields)
     {
         this.config = config;
+        this.uiFields = uiFields;
         this.saveManager = new SaveManager(); 
         new GameLoop(this.update.bind(this), this.render.bind(this));
         this.levelManager = new LevelManager(this.input, this.config, uiFields);
@@ -45,30 +43,30 @@ export default class Game
         // Если нажата НЕ кнопка назад
         switch (screen) {
             case GameScreens.MENU:
-                this.currentScreen = GameScreens.MENU;
+                this.uiFields.currentScreen = GameScreens.MENU;
                 if (this.levelManager !== undefined)
                     this.levelManager.uiFields.currentLevel = 0;
             break;
             case GameScreens.PLAY:
                 if (parameter == 1) this.levelManager.start(secondParam);
                 else if (parameter == 2) this.levelManager.setResume();
-                this.currentScreen = GameScreens.PLAY;
+                this.uiFields.currentScreen = GameScreens.PLAY;
             break;
             case GameScreens.PAUSE:
                 this.levelManager.setPause();
 
-                this.currentScreen = GameScreens.PAUSE;
+                this.uiFields.currentScreen = GameScreens.PAUSE;
             break;
             case GameScreens.GAMEOVER:  
 
-                this.currentScreen = GameScreens.GAMEOVER;
+                this.uiFields.currentScreen = GameScreens.GAMEOVER;
             break;
             case GameScreens.WIN:
-                this.currentScreen = GameScreens.WIN;
+                this.uiFields.currentScreen = GameScreens.WIN;
             break;
             case -1: // Если нажата кнопка назад
-                if (this.currentScreen == GameScreens.PAUSE) this.changeScreen(GameScreens.MENU);
-                if (this.currentScreen == GameScreens.GAMEOVER) this.changeScreen(GameScreens.MENU);
+                if (this.uiFields.currentScreen == GameScreens.PAUSE) this.changeScreen(GameScreens.MENU);
+                if (this.uiFields.currentScreen == GameScreens.GAMEOVER) this.changeScreen(GameScreens.MENU);
             break;
         }
     }
@@ -81,14 +79,14 @@ export default class Game
 
     update(lag)
     {   
-        if (this.currentScreen != GameScreens.PLAY) return;
+        if (this.uiFields.currentScreen != GameScreens.PLAY) return;
         this.levelManager.update(lag);
     }   
 
     render()
     {
         this.config.ctx.clearRect(0, 0, this.config.canvas.width, this.config.canvas.height);
-        if (this.currentScreen == GameScreens.MENU){
+        if (this.uiFields.currentScreen == GameScreens.MENU){
             return;
         }
         this.config.ctx.imageSmoothingEnabled = false; // Отключить размытие

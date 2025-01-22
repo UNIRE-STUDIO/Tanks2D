@@ -13,6 +13,9 @@ export default class Config
         this.canvas = canvas;
         this.ctx = this.canvas.getContext('2d');
         this.updateParams();
+
+        this.atlas = new Image();
+        this.atlas.src = "/Tanks2D/sprites/atlas.png";
     }
 
     updateParams(){

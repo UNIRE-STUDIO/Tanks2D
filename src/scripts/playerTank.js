@@ -7,16 +7,16 @@ export default class PlayerTank extends Tank
     {
         super(config, spawnBullet);
 
-        this.frames_up[0].src = playerId === 0 ?    "/Tanks2D/sprites/tank_up.png"      : "/Tanks2D/sprites/tank2_up.png";
+        this.frames_up[0].src = playerId === 0 ?    "/Tanks2D/sprites/tank_up1.png"      : "/Tanks2D/sprites/tank2_up1.png";
         this.frames_up[1].src = playerId === 0 ?    "/Tanks2D/sprites/tank_up2.png"     : "/Tanks2D/sprites/tank2_up2.png";
         this.frames_up[2].src = playerId === 0 ?    "/Tanks2D/sprites/tank_up3.png"     : "/Tanks2D/sprites/tank2_up3.png";
-        this.frames_down[0].src = playerId === 0 ?  "/Tanks2D/sprites/tank_down.png"    : "/Tanks2D/sprites/tank2_down.png";
+        this.frames_down[0].src = playerId === 0 ?  "/Tanks2D/sprites/tank_down1.png"    : "/Tanks2D/sprites/tank2_down1.png";
         this.frames_down[1].src = playerId === 0 ?  "/Tanks2D/sprites/tank_down2.png"   : "/Tanks2D/sprites/tank2_down2.png";
         this.frames_down[2].src = playerId === 0 ?  "/Tanks2D/sprites/tank_down3.png"   : "/Tanks2D/sprites/tank2_down3.png";
-        this.frames_right[0].src = playerId === 0 ? "/Tanks2D/sprites/tank_right.png"   : "/Tanks2D/sprites/tank2_right.png";
+        this.frames_right[0].src = playerId === 0 ? "/Tanks2D/sprites/tank_right1.png"   : "/Tanks2D/sprites/tank2_right1.png";
         this.frames_right[1].src = playerId === 0 ? "/Tanks2D/sprites/tank_right2.png"  : "/Tanks2D/sprites/tank2_right2.png";
         this.frames_right[2].src = playerId === 0 ? "/Tanks2D/sprites/tank_right3.png"  : "/Tanks2D/sprites/tank2_right3.png";
-        this.frames_left[0].src = playerId === 0 ?  "/Tanks2D/sprites/tank_left.png"    : "/Tanks2D/sprites/tank2_left.png";
+        this.frames_left[0].src = playerId === 0 ?  "/Tanks2D/sprites/tank_left1.png"    : "/Tanks2D/sprites/tank2_left1.png";
         this.frames_left[1].src = playerId === 0 ?  "/Tanks2D/sprites/tank_left2.png"   : "/Tanks2D/sprites/tank2_left2.png";
         this.frames_left[2].src = playerId === 0 ?  "/Tanks2D/sprites/tank_left3.png"   : "/Tanks2D/sprites/tank2_left3.png";
 

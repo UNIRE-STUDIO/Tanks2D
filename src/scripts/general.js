@@ -68,9 +68,14 @@ export function getTimeFormat(seconds)
     return Math.floor(seconds / 60) + ":" + Math.round(seconds % 60);
 }
 
-export function drawImage(ctx, image, pos, scale)
+export function drawImage(ctx, image, pos, size)
 {
-    ctx.drawImage(image, pos.x, pos.y, scale.x, scale.y);
+    ctx.drawImage(image, pos.x, pos.y, size.x, size.y);
+}
+
+export function drawSliceImage(ctx, image, pos, size, slicePos, sliceSize)
+{
+    ctx.drawImage(image, slicePos.x, slicePos.y, sliceSize.x, sliceSize.y, pos.x, pos.y, size.x, size.y, );
 }
 
 export function coordinatesToId(x, y, length)

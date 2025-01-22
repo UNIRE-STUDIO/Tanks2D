@@ -4,6 +4,7 @@ export default class UIFields
 {
     constructor()
     {
+        this.currentScreen = 0;
         this.playersHealth = [0,0];
         this.countReserveNpcTanks = 0;  // Количество вражеских танков в резерве
         this.currentLevel = 0;

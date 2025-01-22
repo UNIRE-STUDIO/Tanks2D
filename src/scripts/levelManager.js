@@ -1,5 +1,5 @@
 import BulletPool from "./bulletPool.js";
-import { drawImage } from "./general.js";
+import { drawImage, drawSliceImage } from "./general.js";
 //import SaveManager from "./saveManager.js";
 import levels from "./levels.json";
 import NpcPool from "./npcPool.js";
@@ -210,7 +210,7 @@ export default class LevelManager
                     coversPos.push({x: j * this.config.grid, y: i * this.config.grid});
                 }
                 else tile = this.tiles[this.currentMap[i][j]-1];
-                drawImage(this.config.ctx, tile, {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid});
+                drawSliceImage(this.config.ctx, this.config.atlas, {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid}, {x:16*2,y:0}, {x:16,y:16});
             }
         }
         drawImage(this.config.ctx, this.tiles[4], {x: levels[this.uiFields.currentLevel].basePos.x * this.config.grid, y:levels[this.uiFields.currentLevel].basePos.y * this.config.grid}, {x:this.config.grid2, y:this.config.grid2});

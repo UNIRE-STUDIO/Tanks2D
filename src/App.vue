@@ -11,6 +11,8 @@ import GameOverScreen from "./components/GameOverScreen.vue";
 import PlayScreen_Right from "./components/PlayScreen_Right.vue";
 import WinScreen from "./components/WinScreen.vue";
 
+let game = new Game();
+
 export default {
     components: {
         MainScreen,
@@ -28,7 +30,7 @@ export default {
             canvasHeight: '',
             config: null,
             uiFields: new UIFields(),
-            game: new Game(),
+            gameLink: game,
             widthRightPart: 0
         }
     },
@@ -43,7 +45,7 @@ export default {
         }
         this.widthRightPart = (this.config.grid * 3 - this.config.grid/2) + 'px';
         //console.log(this.widthRightPart);
-        this.game.init(this.config, this.uiFields);
+        this.gameLink.init(this.config, this.uiFields);
         this.canvasWidth = (this.config.viewSize.x * this.config.grid) + 'px';
         this.canvasHeight = (this.config.viewSize.y * this.config.grid) + 'px';
     },
@@ -60,24 +62,24 @@ export default {
         <div class="game">
             <div class="left-part">
                 <div class="top-wrapper">
-                    <MainScreen_Top v-if="game.currentScreen === 0" />
-                    <PlayScreen_Top v-if="game.currentScreen === 1" :game="game" />
-                    <PauseScreen_Top v-if="game.currentScreen === 2" :game="game" />
-                    <p id="current-level" v-if="game.currentScreen !== 0">Уровень: {{ uiFields.currentLevel+1 }}</p>
+                    <MainScreen_Top v-if="uiFields.currentScreen === 0" />
+                    <PlayScreen_Top v-if="uiFields.currentScreen === 1" :game="gameLink" />
+                    <PauseScreen_Top v-if="uiFields.currentScreen === 2" :game="gameLink" />
+                    <p id="current-level" v-if="uiFields.currentScreen !== 0">Уровень: {{ uiFields.currentLevel+1 }}</p>
                     <p id="version">v1.1</p>
                 </div>
                 <div class="canvas-wrapper">
                     <canvas ref="myCanvas" id="myCanvas"></canvas>
                     <div class="content-center-wrapper">
-                        <MainScreen v-if="game.currentScreen === 0" :game="game" />
-                        <PauseScreen v-if="game.currentScreen === 2" :game="game" />
-                        <GameOverScreen v-if="game.currentScreen === 4" :game="game" :uiFields="uiFields" />
-                        <WinScreen v-if="game.currentScreen === 3" :game="game" :uiFields="uiFields"/>
+                        <MainScreen v-if="uiFields.currentScreen === 0" :game="gameLink" />
+                        <PauseScreen v-if="uiFields.currentScreen === 2" :game="gameLink" />
+                        <GameOverScreen v-if="uiFields.currentScreen === 4" :game="gameLink" :uiFields="uiFields" />
+                        <WinScreen v-if="uiFields.currentScreen === 3" :game="gameLink" :uiFields="uiFields"/>
                     </div>
                 </div>
             </div>
             <div class="right-part">
-                <PlayScreen_Right v-if="game.currentScreen === 1 || game.currentScreen === 2" :uiFields="uiFields" :config="config" />
+                <PlayScreen_Right v-if="uiFields.currentScreen === 1 || uiFields.currentScreen === 2" :uiFields="uiFields" :config="config" />
             </div>
         </div>
     </div>
