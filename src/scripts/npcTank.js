@@ -65,20 +65,20 @@ export default class NpcTank extends Tank
             this.maxTimeWaitOfJamming = 300;
             this.speed = 0.003 * this.config.grid;
 
-            this.frames_up[0].src = "/Tanks2D/sprites/tankNpc_Up.png";
-            this.frames_down[0].src = "/Tanks2D/sprites/tankNpc_Down.png";
-            this.frames_right[0].src = "/Tanks2D/sprites/tankNpc_Right.png";
-            this.frames_left[0].src = "/Tanks2D/sprites/tankNpc_Left.png";
+            this.frames_up[0].src = "/Tanks2D/sprites/tankNpc_up.png";
+            this.frames_down[0].src = "/Tanks2D/sprites/tankNpc_down.png";
+            this.frames_right[0].src = "/Tanks2D/sprites/tankNpc_right.png";
+            this.frames_left[0].src = "/Tanks2D/sprites/tankNpc_left.png";
         }
         else
         {
             
             this.maxTimeWaitOfJamming = 800;
             this.speed = 0.0045 * this.config.grid;
-            this.frames_up[0].src = "/Tanks2D/sprites/tankNpc1_Up.png";
-            this.frames_down[0].src = "/Tanks2D/sprites/tankNpc1_Down.png";
-            this.frames_right[0].src = "/Tanks2D/sprites/tankNpc1_Right.png";
-            this.frames_left[0].src = "/Tanks2D/sprites/tankNpc1_Left.png";
+            this.frames_up[0].src = "/Tanks2D/sprites/tankNpc1_up.png";
+            this.frames_down[0].src = "/Tanks2D/sprites/tankNpc1_down.png";
+            this.frames_right[0].src = "/Tanks2D/sprites/tankNpc1_right.png";
+            this.frames_left[0].src = "/Tanks2D/sprites/tankNpc1_left.png";
         }
 
         this.moveX = this.dirX;

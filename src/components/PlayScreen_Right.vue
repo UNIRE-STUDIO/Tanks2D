@@ -1,7 +1,7 @@
 
 <script>
-import type0img from "/sprites/tankNpc_Down.png";
-import type1img from "/sprites/tankNpc1_Down.png";
+import type0img from "/sprites/tankNpc_down.png";
+import type1img from "/sprites/tankNpc1_down.png";
   export default {
     props: {
         uiFields: {
@@ -33,11 +33,11 @@ import type1img from "/sprites/tankNpc1_Down.png";
         </div>
         <div id="health">
             <div class="playerHealth">
-                <img :style="{ width: config.grid2 + 'px', height: config.grid2 + 'px'}" src="/sprites/tank_Up.png" alt="">
+                <img :style="{ width: config.grid2 + 'px', height: config.grid2 + 'px'}" src="/sprites/tank_up.png" alt="">
                 <p class="lbl">{{ this.uiFields.playersHealth[0] }}</p>
             </div>
             <div class="playerHealth" v-if="this.uiFields.playersMode === 1">
-                <img :style="{ width: config.grid2 + 'px', height: config.grid2 + 'px'}" src="/sprites/tank2_Up.png" alt="">
+                <img :style="{ width: config.grid2 + 'px', height: config.grid2 + 'px'}" src="/sprites/tank2_up.png" alt="">
                 <p class="lbl">{{ this.uiFields.playersHealth[1] }}</p>
             </div>
         </div>

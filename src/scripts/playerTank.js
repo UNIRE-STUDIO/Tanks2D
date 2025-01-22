@@ -7,18 +7,18 @@ export default class PlayerTank extends Tank
     {
         super(config, spawnBullet);
 
-        this.frames_up[2].src = playerId === 0 ?    "/Tanks2D/sprites/tank_Up.png"      : "/Tanks2D/sprites/tank2_Up.png";
-        this.frames_up[1].src = playerId === 0 ?    "/Tanks2D/sprites/tank_Up2.png"     : "/Tanks2D/sprites/tank2_Up2.png";
-        this.frames_up[0].src = playerId === 0 ?    "/Tanks2D/sprites/tank_Up3.png"     : "/Tanks2D/sprites/tank2_Up3.png";
-        this.frames_down[2].src = playerId === 0 ?  "/Tanks2D/sprites/tank_Down.png"    : "/Tanks2D/sprites/tank2_Down.png";
-        this.frames_down[1].src = playerId === 0 ?  "/Tanks2D/sprites/tank_Down2.png"   : "/Tanks2D/sprites/tank2_Down2.png";
-        this.frames_down[0].src = playerId === 0 ?  "/Tanks2D/sprites/tank_Down3.png"   : "/Tanks2D/sprites/tank2_Down3.png";
-        this.frames_right[2].src = playerId === 0 ? "/Tanks2D/sprites/tank_Right.png"   : "/Tanks2D/sprites/tank2_Right.png";
-        this.frames_right[1].src = playerId === 0 ? "/Tanks2D/sprites/tank_Right2.png"  : "/Tanks2D/sprites/tank2_Right2.png";
-        this.frames_right[0].src = playerId === 0 ? "/Tanks2D/sprites/tank_Right3.png"  : "/Tanks2D/sprites/tank2_Right3.png";
-        this.frames_left[2].src = playerId === 0 ?  "/Tanks2D/sprites/tank_Left.png"    : "/Tanks2D/sprites/tank2_Left.png";
-        this.frames_left[1].src = playerId === 0 ?  "/Tanks2D/sprites/tank_Left2.png"   : "/Tanks2D/sprites/tank2_Left2.png";
-        this.frames_left[0].src = playerId === 0 ?  "/Tanks2D/sprites/tank_Left3.png"   : "/Tanks2D/sprites/tank2_Left3.png";
+        this.frames_up[0].src = playerId === 0 ?    "/Tanks2D/sprites/tank_up.png"      : "/Tanks2D/sprites/tank2_up.png";
+        this.frames_up[1].src = playerId === 0 ?    "/Tanks2D/sprites/tank_up2.png"     : "/Tanks2D/sprites/tank2_up2.png";
+        this.frames_up[2].src = playerId === 0 ?    "/Tanks2D/sprites/tank_up3.png"     : "/Tanks2D/sprites/tank2_up3.png";
+        this.frames_down[0].src = playerId === 0 ?  "/Tanks2D/sprites/tank_down.png"    : "/Tanks2D/sprites/tank2_down.png";
+        this.frames_down[1].src = playerId === 0 ?  "/Tanks2D/sprites/tank_down2.png"   : "/Tanks2D/sprites/tank2_down2.png";
+        this.frames_down[2].src = playerId === 0 ?  "/Tanks2D/sprites/tank_down3.png"   : "/Tanks2D/sprites/tank2_down3.png";
+        this.frames_right[0].src = playerId === 0 ? "/Tanks2D/sprites/tank_right.png"   : "/Tanks2D/sprites/tank2_right.png";
+        this.frames_right[1].src = playerId === 0 ? "/Tanks2D/sprites/tank_right2.png"  : "/Tanks2D/sprites/tank2_right2.png";
+        this.frames_right[2].src = playerId === 0 ? "/Tanks2D/sprites/tank_right3.png"  : "/Tanks2D/sprites/tank2_right3.png";
+        this.frames_left[0].src = playerId === 0 ?  "/Tanks2D/sprites/tank_left.png"    : "/Tanks2D/sprites/tank2_left.png";
+        this.frames_left[1].src = playerId === 0 ?  "/Tanks2D/sprites/tank_left2.png"   : "/Tanks2D/sprites/tank2_left2.png";
+        this.frames_left[2].src = playerId === 0 ?  "/Tanks2D/sprites/tank_left3.png"   : "/Tanks2D/sprites/tank2_left3.png";
 
         this.speed = 0.005 * config.grid;
 
