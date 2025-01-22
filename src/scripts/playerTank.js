@@ -1,5 +1,6 @@
 import Tank from "./tank.js";
 import Timer from "./timer.js";
+import { getPosOnSliceImage } from "./general.js";
 
 export default class PlayerTank extends Tank 
 {
@@ -7,18 +8,18 @@ export default class PlayerTank extends Tank
     {
         super(config, spawnBullet);
 
-        this.frames_up[0].src = playerId === 0 ?    "/Tanks2D/sprites/tank_up1.png"      : "/Tanks2D/sprites/tank2_up1.png";
-        this.frames_up[1].src = playerId === 0 ?    "/Tanks2D/sprites/tank_up2.png"     : "/Tanks2D/sprites/tank2_up2.png";
-        this.frames_up[2].src = playerId === 0 ?    "/Tanks2D/sprites/tank_up3.png"     : "/Tanks2D/sprites/tank2_up3.png";
-        this.frames_down[0].src = playerId === 0 ?  "/Tanks2D/sprites/tank_down1.png"    : "/Tanks2D/sprites/tank2_down1.png";
-        this.frames_down[1].src = playerId === 0 ?  "/Tanks2D/sprites/tank_down2.png"   : "/Tanks2D/sprites/tank2_down2.png";
-        this.frames_down[2].src = playerId === 0 ?  "/Tanks2D/sprites/tank_down3.png"   : "/Tanks2D/sprites/tank2_down3.png";
-        this.frames_right[0].src = playerId === 0 ? "/Tanks2D/sprites/tank_right1.png"   : "/Tanks2D/sprites/tank2_right1.png";
-        this.frames_right[1].src = playerId === 0 ? "/Tanks2D/sprites/tank_right2.png"  : "/Tanks2D/sprites/tank2_right2.png";
-        this.frames_right[2].src = playerId === 0 ? "/Tanks2D/sprites/tank_right3.png"  : "/Tanks2D/sprites/tank2_right3.png";
-        this.frames_left[0].src = playerId === 0 ?  "/Tanks2D/sprites/tank_left1.png"    : "/Tanks2D/sprites/tank2_left1.png";
-        this.frames_left[1].src = playerId === 0 ?  "/Tanks2D/sprites/tank_left2.png"   : "/Tanks2D/sprites/tank2_left2.png";
-        this.frames_left[2].src = playerId === 0 ?  "/Tanks2D/sprites/tank_left3.png"   : "/Tanks2D/sprites/tank2_left3.png";
+        this.frames_up[0] = playerId === 0 ? getPosOnSliceImage(9,2,32) : getPosOnSliceImage(9,3,32)
+        this.frames_up[1] = playerId === 0 ? getPosOnSliceImage(10,2,32) : getPosOnSliceImage(10,3,32)
+        this.frames_up[2] = playerId === 0 ? getPosOnSliceImage(11,2,32) : getPosOnSliceImage(11,3,32)
+        this.frames_down[0] = playerId === 0 ? getPosOnSliceImage(0,2,32) : getPosOnSliceImage(0,3,32);
+        this.frames_down[1] = playerId === 0 ? getPosOnSliceImage(1,2,32) : getPosOnSliceImage(1,3,32);
+        this.frames_down[2] = playerId === 0 ? getPosOnSliceImage(2,2,32) : getPosOnSliceImage(2,3,32);
+        this.frames_right[0] = playerId === 0 ? getPosOnSliceImage(6,2,32) : getPosOnSliceImage(6,3,32);
+        this.frames_right[1] = playerId === 0 ? getPosOnSliceImage(7,2,32) : getPosOnSliceImage(7,3,32);
+        this.frames_right[2] = playerId === 0 ? getPosOnSliceImage(8,2,32) : getPosOnSliceImage(8,3,32);
+        this.frames_left[0] = playerId === 0 ? getPosOnSliceImage(3,2,32) : getPosOnSliceImage(3,3,32);
+        this.frames_left[1] = playerId === 0 ? getPosOnSliceImage(4,2,32) : getPosOnSliceImage(4,3,32);
+        this.frames_left[2] = playerId === 0 ? getPosOnSliceImage(5,2,32) : getPosOnSliceImage(5,3,32);
 
         this.speed = 0.005 * config.grid;
 

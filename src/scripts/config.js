@@ -16,6 +16,7 @@ export default class Config
 
         this.atlas = new Image();
         this.atlas.src = "/Tanks2D/sprites/atlas.png";
+        this.atlasGrid = 16;
     }
 
     updateParams(){

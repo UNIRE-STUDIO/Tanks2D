@@ -1,4 +1,4 @@
-import { drawImage} from "./general.js";
+import { getPosOnSliceImage, drawSliceImage} from "./general.js";
 
 export default class Bullet
 {
@@ -11,10 +11,7 @@ export default class Bullet
         this.duration = 200; // ms
         this.timeCounter = 0;
 
-        this.frames = [new Image(), new Image(), new Image()];
-        this.frames[0].src = "/Tanks2D/sprites/bang0.png";
-        this.frames[1].src = "/Tanks2D/sprites/bang1.png";
-        this.frames[2].src = "/Tanks2D/sprites/bang2.png";
+        this.frames = [getPosOnSliceImage(4, 1), getPosOnSliceImage(5, 1), getPosOnSliceImage(6, 1)];
         this.size = this.config.grid;
     }
 
@@ -35,6 +32,6 @@ export default class Bullet
     render()
     {
         let pos = {x: this.posX, y: this.posY};
-        drawImage(this.config.ctx, this.frames[Math.floor(this.timeCounter/(this.duration/this.frames.length))], pos, {x:this.size, y:this.size});
+        drawSliceImage(this.config.ctx, this.config.atlas, pos, {x:this.size, y:this.size}, this.frames[Math.floor(this.timeCounter/(this.duration/this.frames.length))], {x: 16, y:16});
     }
 }

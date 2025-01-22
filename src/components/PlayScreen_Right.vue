@@ -33,11 +33,11 @@ import type1img from "/sprites/tankNpc1_down.png";
         </div>
         <div id="health">
             <div class="playerHealth">
-                <img :style="{ width: config.grid2 + 'px', height: config.grid2 + 'px'}" src="/sprites/tank_up1.png" alt="">
+                <img :style="{ width: config.grid2 + 'px', height: config.grid2 + 'px'}" src="/sprites/tank_up3.png" alt="">
                 <p class="lbl">{{ this.uiFields.playersHealth[0] }}</p>
             </div>
             <div class="playerHealth" v-if="this.uiFields.playersMode === 1">
-                <img :style="{ width: config.grid2 + 'px', height: config.grid2 + 'px'}" src="/sprites/tank2_up1.png" alt="">
+                <img :style="{ width: config.grid2 + 'px', height: config.grid2 + 'px'}" src="/sprites/tank2_up.png" alt="">
                 <p class="lbl">{{ this.uiFields.playersHealth[1] }}</p>
             </div>
         </div>

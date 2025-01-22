@@ -1,4 +1,4 @@
-import { drawImage, drawRect, isInside } from "./general.js";
+import {drawSliceImage, getPosOnSliceImage, isInside } from "./general.js";
 
 export default class Bullet
 {
@@ -14,15 +14,6 @@ export default class Bullet
         this.isUse = false;
         this.id = id;
         this.uiFields = uiFields;
-
-        this.image_up = new Image();
-        this.image_up.src = "/Tanks2D/sprites/bullet_up.png";
-        this.image_down = new Image();
-        this.image_down.src = "/Tanks2D/sprites/bullet_down.png";
-        this.image_right = new Image();
-        this.image_right.src = "/Tanks2D/sprites/bullet_right.png";
-        this.image_left = new Image();
-        this.image_left.src = "/Tanks2D/sprites/bullet_left.png";
         
         this.speed = 0.01 * config.grid;
         this.damage = 1;
@@ -199,14 +190,16 @@ export default class Bullet
     render()
     {
         let pos = {x: this.posX, y: this.posY};
+        let posOnSliceImage;
         if (this.dirX == 1)
-            drawImage(this.config.ctx, this.image_right, pos, {x:this.size, y:this.size});
+            posOnSliceImage = getPosOnSliceImage(0,5, 8); // Убрать на верх
         else if (this.dirX == -1)
-            drawImage(this.config.ctx, this.image_left, pos, {x:this.size, y:this.size});
+            posOnSliceImage = getPosOnSliceImage(1,4, 8);
         else if (this.dirY == 1)
-            drawImage(this.config.ctx, this.image_down, pos, {x:this.size, y:this.size});
+            posOnSliceImage = getPosOnSliceImage(0,4, 8);
         else if (this.dirY == -1)
-            drawImage(this.config.ctx, this.image_up, pos, {x:this.size, y:this.size});
+            posOnSliceImage = getPosOnSliceImage(1,5, 8);
+            drawSliceImage(this.config.ctx, this.config.atlas, pos, {x:this.size, y:this.size}, posOnSliceImage, {x:8, y:8});
         
         // pos = {x: Math.round((this.posX - (this.dirX * this.config.grid/2)) / this.config.grid) * this.config.grid,
         //          y: Math.round((this.posY - (this.dirY * this.config.grid/2)) / this.config.grid) * this.config.grid};

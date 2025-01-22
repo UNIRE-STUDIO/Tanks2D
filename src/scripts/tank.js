@@ -1,4 +1,4 @@
-import { drawImage } from "./general.js";
+import { drawSliceImage } from "./general.js";
 
 export default class Tank
 {
@@ -18,10 +18,10 @@ export default class Tank
         this.currentMap;
         this.isUse = false;
 
-        this.frames_up = [new Image(), new Image(), new Image()];
-        this.frames_down = [new Image(), new Image(), new Image()];
-        this.frames_right = [new Image(), new Image(), new Image()];
-        this.frames_left = [new Image(), new Image(), new Image()];
+        this.frames_up = [];
+        this.frames_down = [];
+        this.frames_right = [];
+        this.frames_left = [];
         
         this.speed = 0;
         this.health = 1;
@@ -152,16 +152,18 @@ export default class Tank
     render()
     {
         if (!this.isUse) return;
-
+        let posOnSliceImage;
         let pos = {x: this.position.x, y: this.position.y};
         if (this.dirX == 1)
-            drawImage(this.config.ctx, this.frames_right[Math.floor(this.timeCounter/(this.durationAnim/this.frames_right.length))], pos, {x:this.config.grid2, y:this.config.grid2});
+            posOnSliceImage = this.frames_right[Math.floor(this.timeCounter/(this.durationAnim/this.frames_right.length))];
         else if (this.dirX == -1)
-            drawImage(this.config.ctx, this.frames_left[Math.floor(this.timeCounter/(this.durationAnim/this.frames_left.length))], pos, {x:this.config.grid2, y:this.config.grid2});
+            posOnSliceImage = this.frames_left[Math.floor(this.timeCounter/(this.durationAnim/this.frames_left.length))];
         else if (this.dirY == 1)
-            drawImage(this.config.ctx, this.frames_down[Math.floor(this.timeCounter/(this.durationAnim/this.frames_down.length))], pos, {x:this.config.grid2, y:this.config.grid2});
+            posOnSliceImage = this.frames_down[Math.floor(this.timeCounter/(this.durationAnim/this.frames_down.length))];
         else if (this.dirY == -1)
-            drawImage(this.config.ctx, this.frames_up[Math.floor(this.timeCounter/(this.durationAnim/this.frames_up.length))], pos, {x:this.config.grid2, y:this.config.grid2});
+            posOnSliceImage = this.frames_up[Math.floor(this.timeCounter/(this.durationAnim/this.frames_up.length))];
+
+        drawSliceImage(this.config.ctx, this.config.atlas, pos, {x:this.config.grid2, y:this.config.grid2}, posOnSliceImage, {x: 32, y: 32});
 
         //   pos = {x: Math.ceil((this.position.x + this.config.grid) / this.config.grid) * this.config.grid,
         //          y: Math.ceil((this.position.y + this.config.grid * this.moveY) / this.config.grid) * this.config.grid};

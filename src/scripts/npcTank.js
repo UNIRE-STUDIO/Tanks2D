@@ -1,4 +1,4 @@
-import {drawRect, randomRange, coordinatesToId, idToCoordinates } from "./general.js";
+import {getPosOnSliceImage, randomRange, coordinatesToId, idToCoordinates } from "./general.js";
 import Tank from "./tank.js";
 import Timer from "./timer.js";
 
@@ -65,20 +65,20 @@ export default class NpcTank extends Tank
             this.maxTimeWaitOfJamming = 300;
             this.speed = 0.003 * this.config.grid;
 
-            this.frames_up[0].src = "/Tanks2D/sprites/tankNpc_up.png";
-            this.frames_down[0].src = "/Tanks2D/sprites/tankNpc_down.png";
-            this.frames_right[0].src = "/Tanks2D/sprites/tankNpc_right.png";
-            this.frames_left[0].src = "/Tanks2D/sprites/tankNpc_left.png";
+            this.frames_up[0] = getPosOnSliceImage(11,4,32);
+            this.frames_down[0] = getPosOnSliceImage(2,4,32);
+            this.frames_right[0] = getPosOnSliceImage(8,4,32);
+            this.frames_left[0] = getPosOnSliceImage(5,4,32);
         }
         else
         {
             
             this.maxTimeWaitOfJamming = 800;
             this.speed = 0.0045 * this.config.grid;
-            this.frames_up[0].src = "/Tanks2D/sprites/tankNpc1_up.png";
-            this.frames_down[0].src = "/Tanks2D/sprites/tankNpc1_down.png";
-            this.frames_right[0].src = "/Tanks2D/sprites/tankNpc1_right.png";
-            this.frames_left[0].src = "/Tanks2D/sprites/tankNpc1_left.png";
+            this.frames_up[0] = getPosOnSliceImage(11,5,32);
+            this.frames_down[0] = getPosOnSliceImage(2,5,32);
+            this.frames_right[0] = getPosOnSliceImage(8,5,32);
+            this.frames_left[0] = getPosOnSliceImage(5,5,32);
         }
 
         this.moveX = this.dirX;
