@@ -11,7 +11,7 @@ export default class Bullet
         this.duration = 200; // ms
         this.timeCounter = 0;
 
-        this.frames = [getPosOnSliceImage(4, 1), getPosOnSliceImage(5, 1), getPosOnSliceImage(6, 1)];
+        this.frames = [getPosOnSliceImage(4, 1, 16), getPosOnSliceImage(5, 1, 16), getPosOnSliceImage(6, 1, 16)];
         this.size = this.config.grid;
     }
 

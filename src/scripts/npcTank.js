@@ -55,30 +55,35 @@ export default class NpcTank extends Tank
         this.type = type;
 
         // Временно =============================================================================
-        this.frames_up = [new Image()];
-        this.frames_down = [new Image()];
-        this.frames_right = [new Image()];
-        this.frames_left = [new Image()];
 
         if (type === 0)
         {
             this.maxTimeWaitOfJamming = 300;
             this.speed = 0.003 * this.config.grid;
 
-            this.frames_up[0] = getPosOnSliceImage(11,4,32);
-            this.frames_down[0] = getPosOnSliceImage(2,4,32);
-            this.frames_right[0] = getPosOnSliceImage(8,4,32);
-            this.frames_left[0] = getPosOnSliceImage(5,4,32);
+            this.frames_down =  [getPosOnSliceImage(0,4,32), getPosOnSliceImage(1,4,32), getPosOnSliceImage(2,4,32)];
+            this.frames_left =  [getPosOnSliceImage(3,4,32), getPosOnSliceImage(4,4,32), getPosOnSliceImage(5,4,32)];
+            this.frames_right = [getPosOnSliceImage(6,4,32), getPosOnSliceImage(7,4,32), getPosOnSliceImage(8,4,32)];
+            this.frames_up =    [getPosOnSliceImage(9,4,32), getPosOnSliceImage(10,4,32), getPosOnSliceImage(11,4,32)];
         }
-        else
+        else if (type === 1)
         {
             
             this.maxTimeWaitOfJamming = 800;
-            this.speed = 0.0045 * this.config.grid;
-            this.frames_up[0] = getPosOnSliceImage(11,5,32);
-            this.frames_down[0] = getPosOnSliceImage(2,5,32);
-            this.frames_right[0] = getPosOnSliceImage(8,5,32);
-            this.frames_left[0] = getPosOnSliceImage(5,5,32);
+            this.speed = 0.0045 * this.config.grid; 
+            this.frames_down =  [getPosOnSliceImage(0,5,32), getPosOnSliceImage(1,5,32)];
+            this.frames_left =  [getPosOnSliceImage(2,5,32), getPosOnSliceImage(3,5,32)];
+            this.frames_right = [getPosOnSliceImage(4,5,32), getPosOnSliceImage(5,5,32)];
+            this.frames_up =    [getPosOnSliceImage(6,5,32), getPosOnSliceImage(7,5,32)];
+        }
+        else
+        {
+            this.maxTimeWaitOfJamming = 800;
+            this.speed = 0.0015 * this.config.grid; 
+            this.frames_down =  [getPosOnSliceImage(0,6,32), getPosOnSliceImage(1,6,32), getPosOnSliceImage(2,6,32)];
+            this.frames_left =  [getPosOnSliceImage(3,6,32), getPosOnSliceImage(4,6,32), getPosOnSliceImage(5,6,32)];
+            this.frames_right = [getPosOnSliceImage(6,6,32), getPosOnSliceImage(7,6,32), getPosOnSliceImage(8,6,32)];
+            this.frames_up =    [getPosOnSliceImage(9,6,32), getPosOnSliceImage(10,6,32), getPosOnSliceImage(11,6,32)];
         }
 
         this.moveX = this.dirX;
@@ -531,8 +536,8 @@ export default class NpcTank extends Tank
     {
         if (this.isPause || !this.isUse || this.isDead) return;
         let centerPos = {x: this.position.x + this.config.grid2/2 + (this.config.grid2/2 * this.dirX), 
-        y: this.position.y + this.config.grid2/2 + (this.config.grid2/2 * this.dirY)};
-        this.spawnBullet(centerPos, {x: this.dirX, y: this.dirY}, false, this.npcId);
+        y: this.position.y + this.config.grid2/2 + (this.config.grid2/2 * this.dirY)}; 
+        this.spawnBullet(centerPos, {x: this.dirX, y: this.dirY}, false, this.npcId, this.type === 2); // this.type === 2 (BulletFast)
     }
 
     searchForFreeSpaceNearTheBase()

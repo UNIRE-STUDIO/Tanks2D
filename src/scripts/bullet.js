@@ -15,7 +15,8 @@ export default class Bullet
         this.id = id;
         this.uiFields = uiFields;
         
-        this.speed = 0.01 * config.grid;
+        this.speedDefault = 0.01 * config.grid;
+        this.speed;
         this.damage = 1;
         this.bulletsPlayer = false;
 
@@ -30,7 +31,7 @@ export default class Bullet
         this.bangCreateEvent = bangCreateEvent;
     }
 
-    create(pos, dir, bulletsPlayer, tankId)
+    create(pos, dir, bulletsPlayer, tankId, bulletFast)
     {
         this.posX = pos.x - this.size/2;
         this.posY = pos.y - this.size/2;
@@ -40,6 +41,8 @@ export default class Bullet
         this.bulletsPlayer = bulletsPlayer;
         this.otherCollisionObject = [];
         this.tankId = tankId;
+        if (bulletFast) this.speed = this.speedDefault * 2;
+        else this.speed = this.speedDefault;
     }
 
     setOtherCollisionObject(obj)

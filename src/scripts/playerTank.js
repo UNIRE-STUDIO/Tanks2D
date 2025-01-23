@@ -8,18 +8,18 @@ export default class PlayerTank extends Tank
     {
         super(config, spawnBullet);
 
-        this.frames_up[0] = playerId === 0 ? getPosOnSliceImage(9,2,32) : getPosOnSliceImage(9,3,32)
-        this.frames_up[1] = playerId === 0 ? getPosOnSliceImage(10,2,32) : getPosOnSliceImage(10,3,32)
-        this.frames_up[2] = playerId === 0 ? getPosOnSliceImage(11,2,32) : getPosOnSliceImage(11,3,32)
-        this.frames_down[0] = playerId === 0 ? getPosOnSliceImage(0,2,32) : getPosOnSliceImage(0,3,32);
-        this.frames_down[1] = playerId === 0 ? getPosOnSliceImage(1,2,32) : getPosOnSliceImage(1,3,32);
-        this.frames_down[2] = playerId === 0 ? getPosOnSliceImage(2,2,32) : getPosOnSliceImage(2,3,32);
+        this.frames_up[0] = playerId === 0 ?    getPosOnSliceImage(9,2,32) : getPosOnSliceImage(9,3,32)
+        this.frames_up[1] = playerId === 0 ?    getPosOnSliceImage(10,2,32): getPosOnSliceImage(10,3,32)
+        this.frames_up[2] = playerId === 0 ?    getPosOnSliceImage(11,2,32): getPosOnSliceImage(11,3,32)
+        this.frames_down[0] = playerId === 0 ?  getPosOnSliceImage(0,2,32) : getPosOnSliceImage(0,3,32);
+        this.frames_down[1] = playerId === 0 ?  getPosOnSliceImage(1,2,32) : getPosOnSliceImage(1,3,32);
+        this.frames_down[2] = playerId === 0 ?  getPosOnSliceImage(2,2,32) : getPosOnSliceImage(2,3,32);
         this.frames_right[0] = playerId === 0 ? getPosOnSliceImage(6,2,32) : getPosOnSliceImage(6,3,32);
         this.frames_right[1] = playerId === 0 ? getPosOnSliceImage(7,2,32) : getPosOnSliceImage(7,3,32);
         this.frames_right[2] = playerId === 0 ? getPosOnSliceImage(8,2,32) : getPosOnSliceImage(8,3,32);
-        this.frames_left[0] = playerId === 0 ? getPosOnSliceImage(3,2,32) : getPosOnSliceImage(3,3,32);
-        this.frames_left[1] = playerId === 0 ? getPosOnSliceImage(4,2,32) : getPosOnSliceImage(4,3,32);
-        this.frames_left[2] = playerId === 0 ? getPosOnSliceImage(5,2,32) : getPosOnSliceImage(5,3,32);
+        this.frames_left[0] = playerId === 0 ?  getPosOnSliceImage(3,2,32) : getPosOnSliceImage(3,3,32);
+        this.frames_left[1] = playerId === 0 ?  getPosOnSliceImage(4,2,32) : getPosOnSliceImage(4,3,32);
+        this.frames_left[2] = playerId === 0 ?  getPosOnSliceImage(5,2,32) : getPosOnSliceImage(5,3,32);
 
         this.speed = 0.005 * config.grid;
 

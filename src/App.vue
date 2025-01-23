@@ -45,7 +45,8 @@ export default {
         }
         this.widthRightPart = (this.config.grid * 3 - this.config.grid/2) + 'px';
         //console.log(this.widthRightPart);
-        this.gameLink.init(this.config, this.uiFields);
+        // Если прописать this.gameLink.init(this.config, this.uiFields) то реактивность this.uiFields.currentScreen не будет работать
+        game.init(this.config, this.uiFields);
         this.canvasWidth = (this.config.viewSize.x * this.config.grid) + 'px';
         this.canvasHeight = (this.config.viewSize.y * this.config.grid) + 'px';
     },
@@ -71,8 +72,8 @@ export default {
                 <div class="canvas-wrapper">
                     <canvas ref="myCanvas" id="myCanvas"></canvas>
                     <div class="content-center-wrapper">
-                        <MainScreen v-if="uiFields.currentScreen === 0" :game="gameLink" />
-                        <PauseScreen v-if="uiFields.currentScreen === 2" :game="gameLink" />
+                        <MainScreen     v-if="uiFields.currentScreen === 0" :game="gameLink" />
+                        <PauseScreen    v-if="uiFields.currentScreen === 2" :game="gameLink" />
                         <GameOverScreen v-if="uiFields.currentScreen === 4" :game="gameLink" :uiFields="uiFields" />
                         <WinScreen v-if="uiFields.currentScreen === 3" :game="gameLink" :uiFields="uiFields"/>
                     </div>
