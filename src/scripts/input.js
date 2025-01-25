@@ -35,6 +35,7 @@ export default class Input
     pause_click()
     {
         this.changeScreenEvent(2);
+        console.log(2123123231);
     }
 
     restart_click()
@@ -110,6 +111,11 @@ export default class Input
 
         this.movePlayer2Event(this.dirX2, this.dirY2);
         this.movePlayer1Event(this.dirX1, this.dirY1);
+
+        if (e.code === "KeyP")
+        {
+            this.pause_click();
+        }
     }
 
     setKeyup(e)

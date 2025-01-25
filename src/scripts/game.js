@@ -53,9 +53,8 @@ export default class Game
         // Если нажата НЕ кнопка назад
         switch (screen) {
             case GameScreens.MENU:
+                this.levelManager.reset();
                 this.uiFields.currentScreen = GameScreens.MENU;
-                if (this.levelManager !== undefined)
-                    this.levelManager.uiFields.currentLevel = 0;
             break;
             case GameScreens.PLAY:
                 if (parameter == 1) this.levelManager.start(secondParam);
@@ -63,6 +62,10 @@ export default class Game
                 this.uiFields.currentScreen = GameScreens.PLAY;
             break;
             case GameScreens.PAUSE:
+                if (this.uiFields.currentScreen === GameScreens.PAUSE) {
+                    this.changeScreen(GameScreens.PLAY, 2);
+                    return;
+                }
                 this.levelManager.setPause();
 
                 this.uiFields.currentScreen = GameScreens.PAUSE;

@@ -148,6 +148,7 @@ export default class LevelManager
 
     reset()
     {
+        this.config.ctxBackground.clearRect(0, 0, this.config.canvasMain.width, this.config.canvasMain.height);
         this.uiFields.npc = levels[this.uiFields.currentLevel].npc.slice();
         this.players[0].setReset();
         if (this.uiFields.playersMode === 1){
