@@ -35,7 +35,7 @@ export default {
         }
     },
     mounted() {
-        this.config = new Config(this.$refs.myCanvas);
+        this.config = new Config(this.$refs.canvasMain, this.$refs.canvasBackground);
         if (window.innerWidth < 1500){
             this.config.grid = 16;
             this.config.updateParams();
@@ -69,7 +69,8 @@ export default {
                     <p id="version">v1.1</p>
                 </div>
                 <div class="canvas-wrapper">
-                    <canvas ref="myCanvas" id="myCanvas"></canvas>
+                    <canvas ref="canvasBackground" class="myCanvas" id="canvasBackground"></canvas>
+                    <canvas ref="canvasMain" class="myCanvas" id="canvasMain"></canvas>
                     <div class="content-center-wrapper">
                         <MainScreen     v-if="uiFields.currentScreen === 0" :game="gameLink" />
                         <PauseScreen    v-if="uiFields.currentScreen === 2" :game="gameLink" />
@@ -145,9 +146,8 @@ export default {
     align-items: center;
 }
 
-#myCanvas {
+.myCanvas {
     position: absolute;
-    background-color: #2d2d2d;
     border-radius: 4px;
     image-rendering: pixelated;
 }

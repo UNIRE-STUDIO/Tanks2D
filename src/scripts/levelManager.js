@@ -63,9 +63,22 @@ export default class LevelManager
         this.reset();
         this.currentMap = [];
 
+        // canvas background
+
+        this.config.ctxBackground.clearRect(0, 0, this.config.canvasMain.width, this.config.canvasMain.height);
+
         // Поскольку Object.assign делает только поверхностную копию мы присваиваем каждую полосу отдельно
         for (let i = 0; i < levels[this.uiFields.currentLevel].map.length; i++) {
             this.currentMap.push(levels[this.uiFields.currentLevel].map[i].slice());
+            for (let j = 0; j < levels[this.uiFields.currentLevel].map[i].length; j++) {
+                let tile = levels[this.uiFields.currentLevel].map[i][j];
+                let tPos = this.tilesBackgroundPos[j%2+(i%2 * 2)];
+                if (tile === 3)
+                {
+                    tPos = this.tilesPos[2];
+                }
+                drawSliceImage(this.config.ctxBackground, this.config.atlas, {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid}, tPos, {x:16,y:16});
+        }
         }
         this.timerStart = setTimeout(() => {        
             this.delayedSpawn();
@@ -188,31 +201,28 @@ export default class LevelManager
     {
         let tPos;
         let coversPos = [];
+        this.players[0].render();
+        if (this.uiFields.playersMode === 1) this.players[1].render();
+        this.bulletPool.render();
+        this.npcPool.render();
+
         let basePos = {x: levels[this.uiFields.currentLevel].basePos.x * this.config.grid, y:levels[this.uiFields.currentLevel].basePos.y * this.config.grid};
         for (let i = 0; i < this.config.viewSize.y; i++) {
-            for (let j = 0; j < this.config.viewSize.x; j++) 
+            for (let j = 0; j < this.config.viewSize.x; j++)
             {
-                if (this.currentMap[i][j] === 0 || this.currentMap[i][j] === 9) tPos = this.tilesBackgroundPos[j%2+(i%2 * 2)];
-                else if (this.currentMap[i][j] === 4)
-                {
-                    tPos = this.tilesBackgroundPos[j%2+(i%2 * 2)];
-                    coversPos.push({x: j * this.config.grid, y: i * this.config.grid});
-                }
-                else tPos = this.tilesPos[this.currentMap[i][j]-1];
+                let tile = this.currentMap[i][j];
+                if (tile === 0 || tile === 9 || tile === 3) continue;
+                tPos = this.tilesPos[this.currentMap[i][j]-1];
                 drawSliceImage(this.config.ctxMain, this.config.atlas, {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid}, tPos, {x:16,y:16});
             }
         }
         drawSliceImage(this.config.ctxMain, this.config.atlas, basePos, {x:this.config.grid2, y:this.config.grid2}, this.tilesPos[4], {x:this.config.atlasGrid*2, y:this.config.atlasGrid*2});
-        this.players[0].render();
-        if (this.uiFields.playersMode === 1) this.players[1].render();
 
-        this.bulletPool.render();
-        this.npcPool.render();
         this.bangPool.render();
 
-        for (let i = 0; i < coversPos.length; i++) 
-        {
-            drawSliceImage(this.config.ctxMain, this.config.atlas, {x:coversPos[i].x, y:coversPos[i].y}, {x:this.config.grid, y:this.config.grid}, this.tilesPos[3], {x:this.config.atlasGrid, y:this.config.atlasGrid});
-        }
+        // for (let i = 0; i < coversPos.length; i++) 
+        // {
+        //     drawSliceImage(this.config.ctxMain, this.config.atlas, {x:coversPos[i].x, y:coversPos[i].y}, {x:this.config.grid, y:this.config.grid}, this.tilesPos[3], {x:this.config.atlasGrid, y:this.config.atlasGrid});
+        // }
     }
 }

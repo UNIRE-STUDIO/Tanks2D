@@ -279,6 +279,12 @@ export default class NpcTank extends Tank
         this.setDirection(dirs[rand][0], dirs[rand][1]);
     }
 
+    checkCollisionWithPlayers()
+    {
+        return this.players[0].isUse && this.checkCollisionWithObject(this.players[0].position)
+        || (this.playersMode === 1 && this.players[1].isUse && this.checkCollisionWithObject(this.players[1].position))
+    }
+
     randomMove(lag)
     {
         let incrementX = this.dirX * lag * this.speed;
@@ -286,8 +292,7 @@ export default class NpcTank extends Tank
 
         if (!this.checkCollisionWithObstacle() 
             && !this.sortOtherTanks()
-            && !this.checkCollisionWithObject(this.players[0].position)
-            && (this.playersMode === 0 || !this.checkCollisionWithObject(this.players[1].position))
+            && !this.checkCollisionWithPlayers()
             && !this.sortOtherObjects()) // Игрока можно обрабатывать отдельно
         {
             this.position.x += incrementX;
@@ -305,8 +310,7 @@ export default class NpcTank extends Tank
             }
             return;
         }
-        if (this.checkCollisionWithObject(this.players[0].position)
-            || (this.playersMode === 1 && this.checkCollisionWithObject(this.players[1].position)))
+        if (this.checkCollisionWithPlayers())
         {
             this.timerOfJamming += lag;
             if (this.timerOfJamming >= 700) // Если мы застряли дольше определенного времени
@@ -373,8 +377,7 @@ export default class NpcTank extends Tank
             return;
         }
 
-        if (this.checkCollisionWithObject(this.players[0].position)
-            || (this.playersMode === 1 && this.checkCollisionWithObject(this.players[1].position)))
+        if (this.checkCollisionWithPlayers())
             {
                 this.timerOfJamming += lag;
                 if (this.timerOfJamming >= 1500) this.tryShoot(); // Если мы застряли дольше определенного времени

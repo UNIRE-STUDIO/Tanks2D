@@ -35,6 +35,16 @@ export default class Game
         this.levelManager.saveManager = this.saveManager;
 
         //this.changeScreen(3); // Тут можно проверять интерфейс
+
+        this.config.ctxMain.imageSmoothingEnabled = false; // Отключить размытие
+        this.config.ctxMain.mozImageSmoothingEnabled = false;
+        this.config.ctxMain.webkitImageSmoothingEnabled = false;
+        this.config.ctxMain.msImageSmoothingEnabled = false;
+
+        this.config.ctxBackground.imageSmoothingEnabled = false; // Отключить размытие
+        this.config.ctxBackground.mozImageSmoothingEnabled = false;
+        this.config.ctxBackground.webkitImageSmoothingEnabled = false;
+        this.config.ctxBackground.msImageSmoothingEnabled = false;
     }
 
     // изменить экран игры на указанный + дополнительный параметр для уточнения поведения
@@ -89,10 +99,6 @@ export default class Game
         if (this.uiFields.currentScreen == GameScreens.MENU){
             return;
         }
-        this.config.ctxMain.imageSmoothingEnabled = false; // Отключить размытие
-        this.config.ctxMain.mozImageSmoothingEnabled = false;
-        this.config.ctxMain.webkitImageSmoothingEnabled = false;
-        this.config.ctxMain.msImageSmoothingEnabled = false;
         this.levelManager.render();
     }
 }
