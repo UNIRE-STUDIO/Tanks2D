@@ -58,9 +58,10 @@ export default class NpcTank extends Tank
 
         if (type === 0)
         {
+            this.durationAnim = 200;
             this.maxTimeWaitOfJamming = 300;
             this.speed = 0.003 * this.config.grid;
-
+            this.health = 1;
             this.frames_down =  [getPosOnSliceImage(0,4,32), getPosOnSliceImage(1,4,32), getPosOnSliceImage(2,4,32)];
             this.frames_left =  [getPosOnSliceImage(3,4,32), getPosOnSliceImage(4,4,32), getPosOnSliceImage(5,4,32)];
             this.frames_right = [getPosOnSliceImage(6,4,32), getPosOnSliceImage(7,4,32), getPosOnSliceImage(8,4,32)];
@@ -68,9 +69,10 @@ export default class NpcTank extends Tank
         }
         else if (type === 1)
         {
-            
-            this.maxTimeWaitOfJamming = 800;
-            this.speed = 0.0045 * this.config.grid; 
+            this.durationAnim = 200; // Упаковать всё в объект 
+            this.maxTimeWaitOfJamming = 800; // Упаковать всё в объект 
+            this.speed = 0.0045 * this.config.grid; // Упаковать всё в объект
+            this.health = 1;
             this.frames_down =  [getPosOnSliceImage(0,5,32), getPosOnSliceImage(1,5,32)];
             this.frames_left =  [getPosOnSliceImage(2,5,32), getPosOnSliceImage(3,5,32)];
             this.frames_right = [getPosOnSliceImage(4,5,32), getPosOnSliceImage(5,5,32)];
@@ -78,8 +80,10 @@ export default class NpcTank extends Tank
         }
         else
         {
-            this.maxTimeWaitOfJamming = 800;
-            this.speed = 0.0015 * this.config.grid; 
+            this.durationAnim = 300; // Упаковать всё в объект
+            this.maxTimeWaitOfJamming = 800; // Упаковать всё в объект
+            this.speed = 0.0015 * this.config.grid;  // Упаковать всё в объект
+            this.health = 3;
             this.frames_down =  [getPosOnSliceImage(0,6,32), getPosOnSliceImage(1,6,32), getPosOnSliceImage(2,6,32)];
             this.frames_left =  [getPosOnSliceImage(3,6,32), getPosOnSliceImage(4,6,32), getPosOnSliceImage(5,6,32)];
             this.frames_right = [getPosOnSliceImage(6,6,32), getPosOnSliceImage(7,6,32), getPosOnSliceImage(8,6,32)];

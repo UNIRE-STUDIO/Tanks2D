@@ -59,10 +59,7 @@ export default class LevelManager
     start(playersMode = 0)
     {
         this.uiFields.playersMode = playersMode;
-        this.uiFields.numDestroyedType0[0] = 0;
-        this.uiFields.numDestroyedType0[1] = 0;
-        this.uiFields.numDestroyedType1[0] = 0;
-        this.uiFields.numDestroyedType1[1] = 0;
+        this.uiFields.reset();
         this.reset();
         this.currentMap = [];
 

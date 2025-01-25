@@ -13,14 +13,16 @@ export default {
 
     data() {
         return {
-            scoreType0p0: this.uiFields.numDestroyedType0[0] * 100,
-            scoreType1p0: this.uiFields.numDestroyedType1[0] * 150,
+            scoreType0p0: this.uiFields.getScoreForType(0, 0), //[0][0] === [Тип танка][Игрок]
+            scoreType1p0: this.uiFields.getScoreForType(1, 0),
+            scoreType2p0: this.uiFields.getScoreForType(2, 0),
 
-            scoreType0p1: this.uiFields.numDestroyedType0[1] * 100,
-            scoreType1p1: this.uiFields.numDestroyedType1[1] * 150,
+            scoreType0p1: this.uiFields.getScoreForType(0, 1),
+            scoreType1p1: this.uiFields.getScoreForType(1, 1),
+            scoreType2p1: this.uiFields.getScoreForType(2, 1),
 
-            sumDestroyedP0: this.uiFields.numDestroyedType1[0] + this.uiFields.numDestroyedType0[0],
-            sumDestroyedP1: this.uiFields.numDestroyedType1[1] + this.uiFields.numDestroyedType0[1],
+            sumDestroyedP0: this.uiFields.getSumScore(0),
+            sumDestroyedP1: this.uiFields.getSumScore(1),
         }
     }
 }
@@ -36,17 +38,22 @@ export default {
                         <tr><th>Очки</th><th>Уничтожено</th><th>Тип</th></tr>
                         <tr>
                             <td :class="[uiFields.playersMode === 1 && scoreType0p1 <= scoreType0p0 ? 'best' : '']">{{scoreType0p0}}</td>
-                            <td :class="[uiFields.playersMode === 1 && uiFields.numDestroyedType0[1] <= uiFields.numDestroyedType0[0] ? 'best' : '']">{{uiFields.numDestroyedType0[0]}}</td>
+                            <td :class="[uiFields.playersMode === 1 && scoreType0p1 <= scoreType0p0 ? 'best' : '']">{{uiFields.numDestroyedTypes[0][0]}}</td>
                             <td><img src="/sprites/tankNpc_up.png" alt="" srcset=""></td>
                         </tr>
                         <tr>
                             <td :class="[uiFields.playersMode === 1 && scoreType1p1 <= scoreType1p0 ? 'best' : '']">{{scoreType1p0}}</td>
-                            <td :class="[uiFields.playersMode === 1 && uiFields.numDestroyedType1[1] <= uiFields.numDestroyedType1[0] ? 'best' : '']">{{uiFields.numDestroyedType1[0]}}</td>
+                            <td :class="[uiFields.playersMode === 1 && scoreType1p1 <= scoreType1p0 ? 'best' : '']">{{uiFields.numDestroyedTypes[1][0]}}</td>
                             <td><img src="/sprites/tankNpc1_up.png" alt="" srcset=""></td>
+                        </tr>
+                        <tr>
+                            <td :class="[uiFields.playersMode === 1 && scoreType2p1 <= scoreType2p0 ? 'best' : '']">{{scoreType2p0}}</td>
+                            <td :class="[uiFields.playersMode === 1 && scoreType2p1 <= scoreType2p0 ? 'best' : '']">{{uiFields.numDestroyedTypes[2][0]}}</td>
+                            <td><img src="/sprites/tankNpc2_up.png" alt="" srcset=""></td>
                         </tr>
                         <tr><td colspan="3"><hr noshade="true" size="1"/></td></tr>
                         <tr>
-                            <td class="sum" :class="[uiFields.playersMode === 1 && scoreType0p1 + scoreType1p1 <= scoreType0p0 + scoreType1p0 ? 'best' : '']">{{scoreType0p0 + scoreType1p0}}</td>
+                            <td class="sum" :class="[uiFields.playersMode === 1 && scoreType0p1 + scoreType1p1 <= scoreType0p0 + scoreType1p0 ? 'best' : '']">{{scoreType0p0 + scoreType1p0 + scoreType2p0}}</td>
                             <td :class="[uiFields.playersMode === 1 && sumDestroyedP1 <= sumDestroyedP0 ? 'best' : '']">{{sumDestroyedP0}}</td>
                             <td></td>
                         </tr>
@@ -58,17 +65,22 @@ export default {
                         <tr><th>Очки</th><th>Уничтожено</th><th>Тип</th></tr>
                         <tr>
                             <td :class="[uiFields.playersMode === 1 && scoreType0p0 <= scoreType0p1 ? 'best' : '']">{{scoreType0p1}}</td>
-                            <td :class="[uiFields.playersMode === 1 && uiFields.numDestroyedType0[0] <= uiFields.numDestroyedType0[1] ? 'best' : '']">{{uiFields.numDestroyedType0[1]}}</td>
+                            <td :class="[uiFields.playersMode === 1 && scoreType0p0 <= scoreType0p1 ? 'best' : '']">{{uiFields.numDestroyedTypes[0][1]}}</td>
                             <td><img src="/sprites/tankNpc_up.png" alt="" srcset=""></td>
                         </tr>
                         <tr>
                             <td :class="[uiFields.playersMode === 1 && scoreType1p0 <= scoreType1p1 ? 'best' : '']">{{scoreType1p1}}</td>
-                            <td :class="[uiFields.playersMode === 1 && uiFields.numDestroyedType1[0] <= uiFields.numDestroyedType1[1] ? 'best' : '']">{{uiFields.numDestroyedType1[1]}}</td>
+                            <td :class="[uiFields.playersMode === 1 && scoreType1p0 <= scoreType1p1 ? 'best' : '']">{{uiFields.numDestroyedTypes[1][1]}}</td>
                             <td><img src="/sprites/tankNpc1_up.png" alt="" srcset=""></td>
+                        </tr>
+                        <tr>
+                            <td :class="[uiFields.playersMode === 1 && scoreType2p0 <= scoreType2p1 ? 'best' : '']">{{scoreType2p1}}</td>
+                            <td :class="[uiFields.playersMode === 1 && scoreType2p0 <= scoreType2p1 ? 'best' : '']">{{uiFields.numDestroyedTypes[2][1]}}</td>
+                            <td><img src="/sprites/tankNpc2_up.png" alt="" srcset=""></td>
                         </tr>
                         <tr><td colspan="3"><hr noshade="true" size="1"/></td></tr>
                         <tr>
-                            <td class="sum" :class="[uiFields.playersMode === 1 && scoreType0p0 + scoreType1p0 <= scoreType0p1 + scoreType1p1 ? 'best' : '']">{{scoreType0p1 + scoreType1p1}}</td>
+                            <td class="sum" :class="[uiFields.playersMode === 1 && scoreType0p0 + scoreType1p0 <= scoreType0p1 + scoreType1p1 ? 'best' : '']">{{scoreType0p1 + scoreType1p1 + scoreType2p1}}</td>
                             <td :class="[uiFields.playersMode === 1 && sumDestroyedP0 <= sumDestroyedP1 ? 'best' : '']">{{sumDestroyedP1}}</td>
                             <td></td>
                         </tr>

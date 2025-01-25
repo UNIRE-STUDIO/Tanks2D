@@ -41,7 +41,7 @@ export default class Bullet
         this.bulletsPlayer = bulletsPlayer;
         this.otherCollisionObject = [];
         this.tankId = tankId;
-        if (bulletFast) this.speed = this.speedDefault * 2;
+        if (bulletFast) this.speed = this.speedDefault * 1.3; // Ускоряем пулю
         else this.speed = this.speedDefault;
     }
 
@@ -96,11 +96,9 @@ export default class Bullet
                 {
                     if (this.bulletsPlayer) {
                         this.tanks[i].setDamage(this.damage);
-                        if (this.tanks[i].isDead) {
-                            if (this.tanks[i].type === 1)
-                                this.uiFields.numDestroyedType1[this.tankId]++;
-                            else
-                                this.uiFields.numDestroyedType0[this.tankId]++;
+                        if (this.tanks[i].isDead) 
+                        {
+                            this.uiFields.numDestroyedTypes[this.tanks[i].type][this.tankId]++;
                         }
                     }
                     return true;

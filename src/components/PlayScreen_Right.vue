@@ -2,6 +2,7 @@
 <script>
 import type0img from "/sprites/tankNpc_down.png";
 import type1img from "/sprites/tankNpc1_down.png";
+import type2img from "/sprites/tankNpc2_down.png";
   export default {
     props: {
         uiFields: {
@@ -16,8 +17,8 @@ import type1img from "/sprites/tankNpc1_down.png";
 
     data() {
         return {
-            type0: type0img,
-            type1: type1img
+            tanksNpc: [type0img, type1img, type2img],
+            fsize: this.config.grid * 0.6 + 'px'
         }
     },
     methods: {
@@ -28,17 +29,26 @@ import type1img from "/sprites/tankNpc1_down.png";
 
 <template>
     <div class="panel">
-        <div id="countNpcTanks">
-            <img v-for="(item, i) in this.uiFields.npc.slice().reverse()" :key="(item, i)" class="npcTanks" :style="{ width: config.grid + 'px', height: config.grid + 'px'}" :src="item == 0 ? type0 : type1" alt="">
+        <div id="wrapperCountNpcTanks" :style="{ height: config.grid * 10 + 8 * 10 + 'px'}">
+            <div id="countNpcTanks">
+                <img v-for="(item, i) in this.uiFields.npc.slice().reverse()" :key="(item, i)" class="npcTanks" :style="{ width: config.grid + 'px', height: config.grid + 'px'}" :src="tanksNpc[item]" alt="">
+            </div>
         </div>
         <div id="health">
-            <div class="playerHealth">
-                <img :style="{ width: config.grid2 + 'px', height: config.grid2 + 'px'}" src="/sprites/tank_up3.png" alt="">
-                <p class="lbl">{{ this.uiFields.playersHealth[0] }}</p>
+            <div class="playerStat">
+                <div class="playerHealth">
+                    <img :style="{ width: config.grid2 + 'px', height: config.grid2 + 'px'}" src="/sprites/tank_up.png" alt="">
+                    <p class="lbl health-lbl" :style="{fontSize: fsize}">{{ this.uiFields.playersHealth[0] }}</p>
+                </div>
+                <p class="lbl" :style="{fontSize: fsize}">{{ this.uiFields.getSumScore(0) }}</p>
             </div>
-            <div class="playerHealth" v-if="this.uiFields.playersMode === 1">
-                <img :style="{ width: config.grid2 + 'px', height: config.grid2 + 'px'}" src="/sprites/tank2_up.png" alt="">
-                <p class="lbl">{{ this.uiFields.playersHealth[1] }}</p>
+            
+            <div class="playerStat" v-if="this.uiFields.playersMode === 1">
+                <div class="playerHealth">
+                   <img :style="{ width: config.grid2 + 'px', height: config.grid2 + 'px'}" src="/sprites/tank2_up.png" alt="">
+                    <p class="lbl health-lbl" :style="{fontSize: fsize}">{{ this.uiFields.playersHealth[1] }}</p> 
+                </div>
+                <p class="lbl" :style="{fontSize: fsize}">{{ this.uiFields.getSumScore(0) }}</p>
             </div>
         </div>
     </div>
@@ -52,6 +62,11 @@ import type1img from "/sprites/tankNpc1_down.png";
         flex-direction: column;
         align-items: center;
     }
+    #wrapperCountNpcTanks {
+        background-color: #101011;
+        border-radius: 5px;
+        width: 100%;
+    }
     #countNpcTanks{
         display: grid;
         grid-template-rows: repeat(7, 1fr);
@@ -60,29 +75,34 @@ import type1img from "/sprites/tankNpc1_down.png";
         justify-items: center;
         gap: 8px;
     }
-    #health
+    .health-lbl
     {
-
+        color: #f37878;
     }
     .npcTanks{
         image-rendering: pixelated;
         image-rendering: -moz-crisp-edges;
         image-rendering: crisp-edges;
     }
-    .playerHealth {
+    .playerStat {
         image-rendering: pixelated;
         image-rendering: -moz-crisp-edges;
         image-rendering: crisp-edges;
+
+        background-color: #101011;
+        border-radius: 5px;
+        padding-right: 4px;
+        padding-top: 4px;
+
+        margin-bottom: 5px;
+    }
+    .playerHealth {
+        color: #722222;
         display: flex;
-        justify-content: center; 
-        width: 100%;
-        margin: 16px 0px;
     }
     .lbl{
-        color: aliceblue;
-        font-size: 20px;
         font-weight: bold;
-        margin-left: 10px;
+        margin: 0px;
     }
 
 </style>
