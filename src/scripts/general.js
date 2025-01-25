@@ -75,7 +75,7 @@ export function drawImage(ctx, image, pos, size)
 
 export function drawSliceImage(ctx, image, pos, size, slicePos, sliceSize)
 {
-    ctx.drawImage(image, slicePos.x, slicePos.y, sliceSize.x, sliceSize.y, pos.x, pos.y, size.x, size.y, );
+    ctx.drawImage(image, slicePos.x, slicePos.y, sliceSize.x, sliceSize.y, pos.x, pos.y, size.x, size.y);
 }
 
 export function coordinatesToId(x, y, length)

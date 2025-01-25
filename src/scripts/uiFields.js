@@ -20,7 +20,7 @@ export default class UIFields
 
     getScoreForType(type, playerId)
     {
-        return this.numDestroyedTypes[type][playerId] * 100 + type * 50; //type0 - 100, type1 - 150, type2 - 200
+        return this.numDestroyedTypes[type][playerId] * 100 + this.numDestroyedTypes[type][playerId] * type * 50; //type0 - 100, type1 - 150, type2 - 200
     }
 
     getSumScore(playerId)

@@ -36,12 +36,12 @@ export default {
     },
     mounted() {
         this.config = new Config(this.$refs.myCanvas);
-        if (window.innerWidth < 1600){
+        if (window.innerWidth < 1500){
             this.config.grid = 16;
             this.config.updateParams();
             // this.config.scaleMultiplier = 0.75;
             // this.config.updateParams();
-            // this.config.ctx.scale(0.75, 0.75);
+            // this.config.ctxMain.scale(0.75, 0.75);
         }
         this.widthRightPart = (this.config.grid * 3 - this.config.grid/2) + 'px';
         //console.log(this.widthRightPart);
@@ -59,7 +59,6 @@ export default {
 
 <template>
     <div class="app">
-        <h1 class="h1">TANKS 2D</h1>
         <div class="game">
             <div class="left-part">
                 <div class="top-wrapper">

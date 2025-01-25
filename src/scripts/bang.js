@@ -32,6 +32,6 @@ export default class Bullet
     render()
     {
         let pos = {x: this.posX, y: this.posY};
-        drawSliceImage(this.config.ctx, this.config.atlas, pos, {x:this.size, y:this.size}, this.frames[Math.floor(this.timeCounter/(this.duration/this.frames.length))], {x: 16, y:16});
+        drawSliceImage(this.config.ctxMain, this.config.atlas, pos, {x:this.size, y:this.size}, this.frames[Math.floor(this.timeCounter/(this.duration/this.frames.length))], {x: 16, y:16});
     }
 }

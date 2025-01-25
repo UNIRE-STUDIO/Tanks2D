@@ -199,10 +199,10 @@ export default class LevelManager
                     coversPos.push({x: j * this.config.grid, y: i * this.config.grid});
                 }
                 else tPos = this.tilesPos[this.currentMap[i][j]-1];
-                drawSliceImage(this.config.ctx, this.config.atlas, {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid}, tPos, {x:16,y:16});
+                drawSliceImage(this.config.ctxMain, this.config.atlas, {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid}, tPos, {x:16,y:16});
             }
         }
-        drawSliceImage(this.config.ctx, this.config.atlas, basePos, {x:this.config.grid2, y:this.config.grid2}, this.tilesPos[4], {x:this.config.atlasGrid*2, y:this.config.atlasGrid*2});
+        drawSliceImage(this.config.ctxMain, this.config.atlas, basePos, {x:this.config.grid2, y:this.config.grid2}, this.tilesPos[4], {x:this.config.atlasGrid*2, y:this.config.atlasGrid*2});
         this.players[0].render();
         if (this.uiFields.playersMode === 1) this.players[1].render();
 
@@ -212,7 +212,7 @@ export default class LevelManager
 
         for (let i = 0; i < coversPos.length; i++) 
         {
-            drawSliceImage(this.config.ctx, this.config.atlas, {x:coversPos[i].x, y:coversPos[i].y}, {x:this.config.grid, y:this.config.grid}, this.tilesPos[3], {x:this.config.atlasGrid, y:this.config.atlasGrid});
+            drawSliceImage(this.config.ctxMain, this.config.atlas, {x:coversPos[i].x, y:coversPos[i].y}, {x:this.config.grid, y:this.config.grid}, this.tilesPos[3], {x:this.config.atlasGrid, y:this.config.atlasGrid});
         }
     }
 }

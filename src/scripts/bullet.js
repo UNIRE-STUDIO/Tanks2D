@@ -159,8 +159,8 @@ export default class Bullet
         let pX = Math.round((this.posX + this.size*2 * this.dirX) / this.config.grid);
         let pY = Math.round((this.posY + this.size*2 * this.dirY) / this.config.grid);
         
-        if (pX < 0 || pX > this.config.canvas.width
-         || pY < 0 || pY > this.config.canvas.height) return true;
+        if (pX < 0 || pX > this.config.canvasMain.width
+         || pY < 0 || pY > this.config.canvasMain.height) return true;
         return false;
     }
 
@@ -200,21 +200,21 @@ export default class Bullet
             posOnSliceImage = getPosOnSliceImage(0,4, 8);
         else if (this.dirY == -1)
             posOnSliceImage = getPosOnSliceImage(1,5, 8);
-            drawSliceImage(this.config.ctx, this.config.atlas, pos, {x:this.size, y:this.size}, posOnSliceImage, {x:8, y:8});
+            drawSliceImage(this.config.ctxMain, this.config.atlas, pos, {x:this.size, y:this.size}, posOnSliceImage, {x:8, y:8});
         
         // pos = {x: Math.round((this.posX - (this.dirX * this.config.grid/2)) / this.config.grid) * this.config.grid,
         //          y: Math.round((this.posY - (this.dirY * this.config.grid/2)) / this.config.grid) * this.config.grid};
-        // drawRect(this.config.ctx, pos, {x:this.config.grid, y:this.config.grid}, "#fff");
+        // drawRect(this.config.ctxMain, pos, {x:this.config.grid, y:this.config.grid}, "#fff");
 
         // if (this.dirY != 0) // Проверяем соседний блок по горизонтале
         // {
         //     pos = {x: pos.x - this.config.grid, y: pos.y};
-        //     drawRect(this.config.ctx, pos, {x:this.config.grid, y:this.config.grid}, "#000");
+        //     drawRect(this.config.ctxMain, pos, {x:this.config.grid, y:this.config.grid}, "#000");
         // }
         // else if (this.dirX != 0) // Проверяем соседний блок по вертикали
         // {
         //     pos = {x: pos.x, y: pos.y - this.config.grid};
-        //     drawRect(this.config.ctx, pos, {x:this.config.grid, y:this.config.grid}, "#000");
+        //     drawRect(this.config.ctxMain, pos, {x:this.config.grid, y:this.config.grid}, "#000");
         // }
     }
 }

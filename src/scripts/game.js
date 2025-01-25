@@ -85,14 +85,14 @@ export default class Game
 
     render()
     {
-        this.config.ctx.clearRect(0, 0, this.config.canvas.width, this.config.canvas.height);
+        this.config.ctxMain.clearRect(0, 0, this.config.canvasMain.width, this.config.canvasMain.height);
         if (this.uiFields.currentScreen == GameScreens.MENU){
             return;
         }
-        this.config.ctx.imageSmoothingEnabled = false; // Отключить размытие
-        this.config.ctx.mozImageSmoothingEnabled = false;
-        this.config.ctx.webkitImageSmoothingEnabled = false;
-        this.config.ctx.msImageSmoothingEnabled = false;
+        this.config.ctxMain.imageSmoothingEnabled = false; // Отключить размытие
+        this.config.ctxMain.mozImageSmoothingEnabled = false;
+        this.config.ctxMain.webkitImageSmoothingEnabled = false;
+        this.config.ctxMain.msImageSmoothingEnabled = false;
         this.levelManager.render();
     }
 }

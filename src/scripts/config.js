@@ -10,8 +10,8 @@ export default class Config
             x: levels[0].map[0].length,
             y: levels[0].map.length
         };
-        this.canvas = canvas;
-        this.ctx = this.canvas.getContext('2d');
+        this.canvasMain = canvas;
+        this.ctxMain = this.canvasMain.getContext('2d');
         this.updateParams();
 
         this.atlas = new Image();
@@ -21,7 +21,7 @@ export default class Config
 
     updateParams(){
         this.grid2 = this.grid * 2;
-        this.canvas.width = this.viewSize.x * this.grid;
-        this.canvas.height = this.viewSize.y * this.grid;
+        this.canvasMain.width = this.viewSize.x * this.grid;
+        this.canvasMain.height = this.viewSize.y * this.grid;
     }
 }

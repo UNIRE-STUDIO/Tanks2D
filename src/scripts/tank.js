@@ -163,14 +163,14 @@ export default class Tank
         else if (this.dirY == -1)
             posOnSliceImage = this.frames_up[Math.floor(this.timeCounter/(this.durationAnim/this.frames_up.length))];
 
-        drawSliceImage(this.config.ctx, this.config.atlas, pos, {x:this.config.grid2, y:this.config.grid2}, posOnSliceImage, {x: 32, y: 32});
+        drawSliceImage(this.config.ctxMain, this.config.atlas, pos, {x:this.config.grid2, y:this.config.grid2}, posOnSliceImage, {x: 32, y: 32});
 
         //   pos = {x: Math.ceil((this.position.x + this.config.grid) / this.config.grid) * this.config.grid,
         //          y: Math.ceil((this.position.y + this.config.grid * this.moveY) / this.config.grid) * this.config.grid};
-        //   drawRect(this.config.ctx, pos, {x:this.config.grid, y:this.config.grid}, "#fff");
+        //   drawRect(this.config.ctxMain, pos, {x:this.config.grid, y:this.config.grid}, "#fff");
 
         // pos = {x: Math.ceil((this.position.x + this.config.grid * this.moveX) / this.config.grid) * this.config.grid, 
         //       y: Math.ceil((this.position.y + this.config.grid * this.moveY) / this.config.grid) * this.config.grid};
-        // drawRect(this.config.ctx, pos, {x:this.config.grid, y:this.config.grid}, "#007");
+        // drawRect(this.config.ctxMain, pos, {x:this.config.grid, y:this.config.grid}, "#007");
     }
 }

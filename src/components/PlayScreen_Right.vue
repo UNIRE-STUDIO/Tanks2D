@@ -40,7 +40,7 @@ import type2img from "/sprites/tankNpc2_down.png";
                     <img :style="{ width: config.grid2 + 'px', height: config.grid2 + 'px'}" src="/sprites/tank_up.png" alt="">
                     <p class="lbl health-lbl" :style="{fontSize: fsize}">{{ this.uiFields.playersHealth[0] }}</p>
                 </div>
-                <p class="lbl" :style="{fontSize: fsize}">{{ this.uiFields.getSumScore(0) }}</p>
+                <p class="lbl score-lbl" :style="{fontSize: fsize}">{{  '★ ' + this.uiFields.getSumScore(0) }}</p>
             </div>
             
             <div class="playerStat" v-if="this.uiFields.playersMode === 1">
@@ -48,7 +48,7 @@ import type2img from "/sprites/tankNpc2_down.png";
                    <img :style="{ width: config.grid2 + 'px', height: config.grid2 + 'px'}" src="/sprites/tank2_up.png" alt="">
                     <p class="lbl health-lbl" :style="{fontSize: fsize}">{{ this.uiFields.playersHealth[1] }}</p> 
                 </div>
-                <p class="lbl" :style="{fontSize: fsize}">{{ this.uiFields.getSumScore(0) }}</p>
+                <p class="lbl score-lbl" :style="{fontSize: fsize}">{{ '★ ' + this.uiFields.getSumScore(1) }}</p>
             </div>
         </div>
     </div>
@@ -77,7 +77,7 @@ import type2img from "/sprites/tankNpc2_down.png";
     }
     .health-lbl
     {
-        color: #f37878;
+        color: #78f37a;
     }
     .npcTanks{
         image-rendering: pixelated;
@@ -94,11 +94,13 @@ import type2img from "/sprites/tankNpc2_down.png";
         padding-right: 4px;
         padding-top: 4px;
 
-        margin-bottom: 5px;
+        margin-bottom: 10px;
     }
     .playerHealth {
-        color: #722222;
         display: flex;
+    }
+    .score-lbl{
+        color: #eeff56;
     }
     .lbl{
         font-weight: bold;
