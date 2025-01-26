@@ -8,7 +8,7 @@ export default class Bullet
         this.posX = 0;
         this.posY = 0;
         this.isUse = false;
-        this.duration = 200; // ms
+        this.duration = 250; // ms
         this.timeCounter = 0;
 
         this.frames = [getPosOnSliceImage(4, 1, 16), getPosOnSliceImage(5, 1, 16), getPosOnSliceImage(6, 1, 16)];

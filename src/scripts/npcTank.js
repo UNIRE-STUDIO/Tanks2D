@@ -520,6 +520,12 @@ export default class NpcTank extends Tank
                 this.setReset();
                 this.deadNpcEvent();
             }, 300);
+        }else if (this.health === 2)
+        {
+            this.frames_down =  [getPosOnSliceImage(0,7,32), getPosOnSliceImage(1,7,32), getPosOnSliceImage(2,7,32)];
+            this.frames_left =  [getPosOnSliceImage(3,7,32), getPosOnSliceImage(4,7,32), getPosOnSliceImage(5,7,32)];
+            this.frames_right = [getPosOnSliceImage(6,7,32), getPosOnSliceImage(7,7,32), getPosOnSliceImage(8,7,32)];
+            this.frames_up =    [getPosOnSliceImage(9,7,32), getPosOnSliceImage(10,7,32), getPosOnSliceImage(11,7,32)];
         }
     }
 

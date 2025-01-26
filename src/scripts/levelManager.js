@@ -27,7 +27,7 @@ export default class LevelManager
         this.currentMap = null;
         this.tilesBackgroundPos = [getPosOnSliceImage(3,1,16), getPosOnSliceImage(2,1,16), getPosOnSliceImage(3,0,16), getPosOnSliceImage(2,0,16)];
                         // - Кирпич                   - Блок                        - Вода                      - Маскировка                - База
-        this.tilesPos = [getPosOnSliceImage(0,0,16), getPosOnSliceImage(1,0,16), getPosOnSliceImage(5,0,16), getPosOnSliceImage(4,0,16), getPosOnSliceImage(0,7,32)];
+        this.tilesPos = [getPosOnSliceImage(0,0,16), getPosOnSliceImage(1,0,16), getPosOnSliceImage(5,0,16), getPosOnSliceImage(4,0,16), getPosOnSliceImage(0,9,32)];
         
         this.config = config;
 
