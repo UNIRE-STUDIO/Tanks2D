@@ -6,6 +6,8 @@ import NpcPool from "./npcPool.js";
 import PlayerTank from "./playerTank.js";
 import BangPool from "./bangPool.js";
 
+export let Tiles = {background: 0, brick: 1, block: 2, water: 3, cover: 4, base: 9};
+
 export default class LevelManager
 {
     constructor(input, config, uiFields)
@@ -26,8 +28,8 @@ export default class LevelManager
         this.uiFields.currentLevel = 0;
         this.currentMap = null;
         this.tilesBackgroundPos = [getPosOnSliceImage(3,1,16), getPosOnSliceImage(2,1,16), getPosOnSliceImage(3,0,16), getPosOnSliceImage(2,0,16)];
-                        // - Кирпич                   - Блок                        - Вода                      - Маскировка                - База
-        this.tilesPos = [getPosOnSliceImage(0,0,16), getPosOnSliceImage(1,0,16), getPosOnSliceImage(5,0,16), getPosOnSliceImage(4,0,16), getPosOnSliceImage(0,9,32)];
+                        // - Кирпич                   - Блок                           - Маскировка                - База
+        this.tilesPos = [getPosOnSliceImage(0,0,16), getPosOnSliceImage(1,0,16), getPosOnSliceImage(4,0,16), getPosOnSliceImage(0,9,32)];
         
         this.config = config;
 
@@ -53,6 +55,10 @@ export default class LevelManager
         input.movePlayer2Event = this.players[1].setDirection.bind(this.players[1]);
         input.shootPlayer2Event = this.players[1].shoot.bind(this.players[1]);
 
+        this.durationWaterAnim = 3000; // ms
+        this.timeCounterWaterAnim = 0;
+        this.waterFrames = [getPosOnSliceImage(5,0,16), getPosOnSliceImage(6,0,16), getPosOnSliceImage(7,0,16)];
+
         this.timerStart;
     }
 
@@ -70,16 +76,21 @@ export default class LevelManager
         // Поскольку Object.assign делает только поверхностную копию мы присваиваем каждую полосу отдельно
         for (let i = 0; i < levels[this.uiFields.currentLevel].map.length; i++) {
             this.currentMap.push(levels[this.uiFields.currentLevel].map[i].slice());
-            for (let j = 0; j < levels[this.uiFields.currentLevel].map[i].length; j++) {
-                let tile = levels[this.uiFields.currentLevel].map[i][j];
+            for (let j = 0; j < levels[this.uiFields.currentLevel].map[i].length; j++) 
+            {
+                //let tile = levels[this.uiFields.currentLevel].map[i][j];
                 let tPos = this.tilesBackgroundPos[j%2+(i%2 * 2)];
-                if (tile === 3)
-                {
-                    tPos = this.tilesPos[2];
-                }
+                // if (tile === 3)
+                // {
+                //     tPos = this.tilesPos[2];
+                // }
                 drawSliceImage(this.config.ctxBackground, this.config.atlas, {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid}, tPos, {x:16,y:16});
+            }
         }
-        }
+
+        let basePos = {x: levels[this.uiFields.currentLevel].basePos.x * this.config.grid, y:levels[this.uiFields.currentLevel].basePos.y * this.config.grid};
+        drawSliceImage(this.config.ctxBackground, this.config.atlas, basePos, {x:this.config.grid2, y:this.config.grid2}, this.tilesPos[3], {x:this.config.atlasGrid*2, y:this.config.atlasGrid*2});
+        
         this.timerStart = setTimeout(() => {        
             this.delayedSpawn();
         }, 1000);
@@ -196,6 +207,9 @@ export default class LevelManager
         this.bulletPool.update(lag);
         this.npcPool.update(lag);
         this.bangPool.update(lag);
+
+        this.timeCounterWaterAnim += lag;
+        if (this.timeCounterWaterAnim >= this.durationWaterAnim) this.timeCounterWaterAnim = 0;
     }
 
     render()
@@ -204,26 +218,36 @@ export default class LevelManager
         let coversPos = [];
         this.players[0].render();
         if (this.uiFields.playersMode === 1) this.players[1].render();
-        this.bulletPool.render();
         this.npcPool.render();
 
-        let basePos = {x: levels[this.uiFields.currentLevel].basePos.x * this.config.grid, y:levels[this.uiFields.currentLevel].basePos.y * this.config.grid};
         for (let i = 0; i < this.config.viewSize.y; i++) {
             for (let j = 0; j < this.config.viewSize.x; j++)
             {
                 let tile = this.currentMap[i][j];
-                if (tile === 0 || tile === 9 || tile === 3) continue;
-                tPos = this.tilesPos[this.currentMap[i][j]-1];
+
+                if (tile === Tiles.background || tile === Tiles.base){ continue; }
+                else if (tile === Tiles.cover) 
+                {
+                    coversPos.push({x:j * this.config.grid, y:i * this.config.grid});
+                    continue;
+                }
+                else if (tile === Tiles.water) 
+                {
+                    tPos = this.waterFrames[Math.floor(this.timeCounterWaterAnim/(this.durationWaterAnim/this.waterFrames.length))];
+                }
+                else
+                {
+                    tPos = this.tilesPos[this.currentMap[i][j]-1];
+                }
                 drawSliceImage(this.config.ctxMain, this.config.atlas, {x:j * this.config.grid, y:i * this.config.grid}, {x:this.config.grid, y:this.config.grid}, tPos, {x:16,y:16});
             }
         }
-        drawSliceImage(this.config.ctxMain, this.config.atlas, basePos, {x:this.config.grid2, y:this.config.grid2}, this.tilesPos[4], {x:this.config.atlasGrid*2, y:this.config.atlasGrid*2});
-
+        this.bulletPool.render();
         this.bangPool.render();
 
-        // for (let i = 0; i < coversPos.length; i++) 
-        // {
-        //     drawSliceImage(this.config.ctxMain, this.config.atlas, {x:coversPos[i].x, y:coversPos[i].y}, {x:this.config.grid, y:this.config.grid}, this.tilesPos[3], {x:this.config.atlasGrid, y:this.config.atlasGrid});
-        // }
+        for (let i = 0; i < coversPos.length; i++) 
+        {
+            drawSliceImage(this.config.ctxMain, this.config.atlas, {x:coversPos[i].x, y:coversPos[i].y}, {x:this.config.grid, y:this.config.grid}, this.tilesPos[2], {x:this.config.atlasGrid, y:this.config.atlasGrid});
+        }
     }
 }
