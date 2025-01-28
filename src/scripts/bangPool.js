@@ -1,17 +1,19 @@
 import Bang from "./bang.js";
+import { getPosOnSliceImage } from "./general.js";
 
 export default class BangPool
 {
-    constructor(config)
+    constructor(config, size = config.grid, frames = [getPosOnSliceImage(4, 1, 16), getPosOnSliceImage(5, 1, 16), getPosOnSliceImage(6, 1, 16)])
     {
         this.config = config;
+        this.frames = frames;
 
         const pool_size = 12;
         this.bangs = [];
 
         for (let i = 0; i < pool_size; i++) 
         {
-            this.bangs[i] = new Bang(this.config);
+            this.bangs[i] = new Bang(this.config, this.frames, size);
         }
     }
 

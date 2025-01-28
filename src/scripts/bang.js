@@ -1,8 +1,8 @@
-import { getPosOnSliceImage, drawSliceImage} from "./general.js";
+import { drawSliceImage} from "./general.js";
 
 export default class Bullet
 {
-    constructor(config)
+    constructor(config, frames, size)
     {
         this.config = config;
         this.posX = 0;
@@ -11,8 +11,8 @@ export default class Bullet
         this.duration = 250; // ms
         this.timeCounter = 0;
 
-        this.frames = [getPosOnSliceImage(4, 1, 16), getPosOnSliceImage(5, 1, 16), getPosOnSliceImage(6, 1, 16)];
-        this.size = this.config.grid;
+        this.frames = frames;
+        this.size = size;
     }
 
     create(pos)
@@ -32,6 +32,6 @@ export default class Bullet
     render()
     {
         let pos = {x: this.posX, y: this.posY};
-        drawSliceImage(this.config.ctxMain, this.config.atlas, pos, {x:this.size, y:this.size}, this.frames[Math.floor(this.timeCounter/(this.duration/this.frames.length))], {x: 16, y:16});
+        drawSliceImage(this.config.ctxMain, this.config.atlas, pos, {x:this.size, y:this.size}, this.frames[Math.floor(this.timeCounter/(this.duration/this.frames.length))], {x: this.size, y:this.size});
     }
 }

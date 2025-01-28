@@ -33,12 +33,13 @@ export default class LevelManager
         
         this.config = config;
 
-        this.bangPool = new BangPool(this.config);
-        this.bulletPool = new BulletPool(this.config, this.removeTile.bind(this), this.destructionOfTheBase.bind(this), this.bangPool.create.bind(this.bangPool), this.uiFields);
+        this.bangBulletPool = new BangPool(this.config);
+        this.bangTankPool = new BangPool(this.config, this.config.grid2, [getPosOnSliceImage(1,9,32), getPosOnSliceImage(2,9,32), getPosOnSliceImage(3,9,32), getPosOnSliceImage(4,9,32), getPosOnSliceImage(5,9,32)]);
+        this.bulletPool = new BulletPool(this.config, this.removeTile.bind(this), this.destructionOfTheBase.bind(this), this.bangBulletPool.create.bind(this.bangBulletPool), this.uiFields);
         this.players = [];
         this.players[0] = new PlayerTank(this.config, this.bulletPool.create.bind(this.bulletPool), this.playerDead.bind(this), 0);
         this.players[1] = new PlayerTank(this.config, this.bulletPool.create.bind(this.bulletPool), this.playerDead.bind(this), 1);
-        this.npcPool = new NpcPool(this.config, this.bulletPool.create.bind(this.bulletPool), this.players, this.win.bind(this), uiFields);
+        this.npcPool = new NpcPool(this.config, this.bulletPool.create.bind(this.bulletPool), this.players, this.win.bind(this), this.bangTankPool.create.bind(this.bangTankPool), uiFields);
 
         this.players[0].otherTanks.push(...this.npcPool.tanks);
         this.players[1].otherTanks.push(...this.npcPool.tanks);
@@ -55,9 +56,9 @@ export default class LevelManager
         input.movePlayer2Event = this.players[1].setDirection.bind(this.players[1]);
         input.shootPlayer2Event = this.players[1].shoot.bind(this.players[1]);
 
-        this.durationWaterAnim = 3000; // ms
+        this.durationWaterAnim = 2000; // ms
         this.timeCounterWaterAnim = 0;
-        this.waterFrames = [getPosOnSliceImage(5,0,16), getPosOnSliceImage(6,0,16), getPosOnSliceImage(7,0,16)];
+        this.waterFrames = [getPosOnSliceImage(5,0,16), getPosOnSliceImage(6,0,16), getPosOnSliceImage(7,0,16), getPosOnSliceImage(8,0,16), getPosOnSliceImage(7,0,16), getPosOnSliceImage(6,0,16)];
 
         this.timerStart;
     }
@@ -168,7 +169,8 @@ export default class LevelManager
         } 
         this.npcPool.setReset();
         this.bulletPool.setReset();
-        this.bangPool.setReset();
+        this.bangBulletPool.setReset();
+        this.bangTankPool.setReset();
         this.uiFields.playersHealth[0] = 3;
     }
 
@@ -206,7 +208,8 @@ export default class LevelManager
         if (this.uiFields.playersMode === 1) this.players[1].update(lag);
         this.bulletPool.update(lag);
         this.npcPool.update(lag);
-        this.bangPool.update(lag);
+        this.bangBulletPool.update(lag);
+        this.bangTankPool.update(lag);
 
         this.timeCounterWaterAnim += lag;
         if (this.timeCounterWaterAnim >= this.durationWaterAnim) this.timeCounterWaterAnim = 0;
@@ -243,7 +246,8 @@ export default class LevelManager
             }
         }
         this.bulletPool.render();
-        this.bangPool.render();
+        this.bangBulletPool.render();
+        this.bangTankPool.render();
 
         for (let i = 0; i < coversPos.length; i++) 
         {

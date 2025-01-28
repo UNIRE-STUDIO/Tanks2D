@@ -4,7 +4,7 @@ import Timer from "./timer.js";
 
 export default class NpcTank extends Tank 
 {
-    constructor(config, spawnBullet, players, deadNpcEvent, id)
+    constructor(config, spawnBullet, players, deadNpcEvent, bangCreateEvent, id)
     {
         super(config, spawnBullet);
         this.npcId = id;
@@ -47,6 +47,8 @@ export default class NpcTank extends Tank
 
         this.basePos; // npcPool
         this.type = 0;
+
+        this.bangCreateEvent = bangCreateEvent;
     }
 
     create(currentMap, pos, basePos, playersMode, type)
@@ -65,7 +67,7 @@ export default class NpcTank extends Tank
             this.frames_down =  [getPosOnSliceImage(0,4,32), getPosOnSliceImage(1,4,32), getPosOnSliceImage(2,4,32)];
             this.frames_left =  [getPosOnSliceImage(3,4,32), getPosOnSliceImage(4,4,32), getPosOnSliceImage(5,4,32)];
             this.frames_right = [getPosOnSliceImage(6,4,32), getPosOnSliceImage(7,4,32), getPosOnSliceImage(8,4,32)];
-            this.frames_up =    [getPosOnSliceImage(9,4,32), getPosOnSliceImage(10,4,32), getPosOnSliceImage(11,4,32)];
+            this.frames_up =    [getPosOnSliceImage(9,4,32), getPosOnSliceImage(10,4,32),getPosOnSliceImage(11,4,32)];
         }
         else if (type === 1)
         {
@@ -87,7 +89,7 @@ export default class NpcTank extends Tank
             this.frames_down =  [getPosOnSliceImage(0,6,32), getPosOnSliceImage(1,6,32), getPosOnSliceImage(2,6,32)];
             this.frames_left =  [getPosOnSliceImage(3,6,32), getPosOnSliceImage(4,6,32), getPosOnSliceImage(5,6,32)];
             this.frames_right = [getPosOnSliceImage(6,6,32), getPosOnSliceImage(7,6,32), getPosOnSliceImage(8,6,32)];
-            this.frames_up =    [getPosOnSliceImage(9,6,32), getPosOnSliceImage(10,6,32), getPosOnSliceImage(11,6,32)];
+            this.frames_up =    [getPosOnSliceImage(9,6,32), getPosOnSliceImage(10,6,32),getPosOnSliceImage(11,6,32)];
         }
 
         this.moveX = this.dirX;
@@ -516,6 +518,7 @@ export default class NpcTank extends Tank
         if (this.health === 0)
         {
             this.isDead = true;
+            this.bangCreateEvent({x: this.position.x ,y: this.position.y});
             setTimeout(() => { // Уничтожение с задержкой
                 this.setReset();
                 this.deadNpcEvent();
@@ -525,7 +528,14 @@ export default class NpcTank extends Tank
             this.frames_down =  [getPosOnSliceImage(0,7,32), getPosOnSliceImage(1,7,32), getPosOnSliceImage(2,7,32)];
             this.frames_left =  [getPosOnSliceImage(3,7,32), getPosOnSliceImage(4,7,32), getPosOnSliceImage(5,7,32)];
             this.frames_right = [getPosOnSliceImage(6,7,32), getPosOnSliceImage(7,7,32), getPosOnSliceImage(8,7,32)];
-            this.frames_up =    [getPosOnSliceImage(9,7,32), getPosOnSliceImage(10,7,32), getPosOnSliceImage(11,7,32)];
+            this.frames_up =    [getPosOnSliceImage(9,7,32), getPosOnSliceImage(10,7,32),getPosOnSliceImage(11,7,32)];
+        }
+        else if (this.health === 1)
+        {
+            this.frames_down =  [getPosOnSliceImage(0,8,32), getPosOnSliceImage(1,8,32), getPosOnSliceImage(2,8,32)];
+            this.frames_left =  [getPosOnSliceImage(3,8,32), getPosOnSliceImage(4,8,32), getPosOnSliceImage(5,8,32)];
+            this.frames_right = [getPosOnSliceImage(6,8,32), getPosOnSliceImage(7,8,32), getPosOnSliceImage(8,8,32)];
+            this.frames_up =    [getPosOnSliceImage(9,8,32), getPosOnSliceImage(10,8,32),getPosOnSliceImage(11,8,32)];
         }
     }
 

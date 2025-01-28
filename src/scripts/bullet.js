@@ -172,14 +172,14 @@ export default class Bullet
             || this.checkCollisionWithBorders())
         {
             this.isUse = false;     // Спауним на середине пули // Смещаем по направлению
-            this.bangCreateEvent({x: this.posX + this.size/2 + this.size * this.dirX, y: this.posY + this.size/2 + this.size * this.dirY});
+            this.bangCreateEvent({x: this.posX + this.size/2 + this.size * this.dirX/2, y: this.posY + this.size/2 + this.size * this.dirY/2});
             return;
         }
         // Левый верхний угол пули и правый нижний угл
         if (isInside({x: this.posX, y:this.posY}, {x: this.basePos.x, y:this.basePos.y}, this.config.grid2, this.config.grid2) || 
             isInside({x: this.posX + this.size, y:this.posY + this.size}, {x: this.basePos.x, y:this.basePos.y}, this.config.grid2, this.config.grid2))
         {
-            this.isUse = false;
+            this.bangCreateEvent({x: this.posX + this.size/2 + this.size * this.dirX/2, y: this.posY + this.size/2 + this.size * this.dirY/2});
             this.destructionOfTheBaseEvent();
             return;
         }
