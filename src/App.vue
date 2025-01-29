@@ -66,7 +66,7 @@ export default {
                     <PlayScreen_Top v-if="uiFields.currentScreen === 1" :game="gameLink" />
                     <PauseScreen_Top v-if="uiFields.currentScreen === 2" :game="gameLink" />
                     <p id="current-level" v-if="uiFields.currentScreen !== 0">Уровень: {{ uiFields.currentLevel+1 }}</p>
-                    <p id="version">v1.1</p>
+                    <p id="version">v2.0</p>
                 </div>
                 <div class="canvas-wrapper">
                     <canvas ref="canvasBackground" class="myCanvas" id="canvasBackground"></canvas>

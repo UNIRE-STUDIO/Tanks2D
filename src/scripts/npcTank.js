@@ -518,7 +518,7 @@ export default class NpcTank extends Tank
         if (this.health === 0)
         {
             this.isDead = true;
-            this.bangCreateEvent({x: this.position.x ,y: this.position.y});
+            this.bangCreateEvent({x: this.position.x + this.config.grid2/2  ,y: this.position.y + this.config.grid2/2});
             setTimeout(() => { // Уничтожение с задержкой
                 this.setReset();
                 this.deadNpcEvent();
@@ -612,19 +612,5 @@ export default class NpcTank extends Tank
     render()
     {
         super.render();
-        // if (this.drivingMode === 0)
-        //     drawRect(this.config.ctxMain, this.position, {x:10, y:10}, "#ffffff");
-        // else if (this.drivingMode === 1)
-        //     drawRect(this.config.ctxMain, this.position, {x:10, y:10}, "#00ff00");
-        // else 
-        //     drawRect(this.config.ctxMain, this.position, {x:10, y:10}, "#ff0000");
-        // for (let i = 0; i < this.path.length; i++) 
-        // {
-        //     let pos = {
-        //                 x: idToCoordinates(this.path[i], this.currentMap[0].length).x * this.config.grid,
-        //                 y: idToCoordinates(this.path[i], this.currentMap[0].length).y * this.config.grid
-        //             }; 
-        //     drawRect(this.config.ctxMain, pos, {x:this.config.grid-4, y:this.config.grid-4}, "#f7f");
-        // }
     }
 }

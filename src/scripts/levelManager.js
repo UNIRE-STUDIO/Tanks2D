@@ -25,7 +25,6 @@ export default class LevelManager
         this.winEvent;
         this.saveManager;
 
-        this.uiFields.currentLevel = 0;
         this.currentMap = null;
         this.tilesBackgroundPos = [getPosOnSliceImage(3,1,16), getPosOnSliceImage(2,1,16), getPosOnSliceImage(3,0,16), getPosOnSliceImage(2,0,16)];
                         // - Кирпич                   - Блок                           - Маскировка                - База
@@ -33,12 +32,12 @@ export default class LevelManager
         
         this.config = config;
 
-        this.bangBulletPool = new BangPool(this.config);
-        this.bangTankPool = new BangPool(this.config, this.config.grid2, [getPosOnSliceImage(1,9,32), getPosOnSliceImage(2,9,32), getPosOnSliceImage(3,9,32), getPosOnSliceImage(4,9,32), getPosOnSliceImage(5,9,32)]);
+        this.bangBulletPool = new BangPool(this.config, this.config.grid);
+        this.bangTankPool = new BangPool(this.config, this.config.grid2, 32, [getPosOnSliceImage(1,9,32), getPosOnSliceImage(2,9,32), getPosOnSliceImage(3,9,32), getPosOnSliceImage(4,9,32), getPosOnSliceImage(5,9,32)]);
         this.bulletPool = new BulletPool(this.config, this.removeTile.bind(this), this.destructionOfTheBase.bind(this), this.bangBulletPool.create.bind(this.bangBulletPool), this.uiFields);
         this.players = [];
-        this.players[0] = new PlayerTank(this.config, this.bulletPool.create.bind(this.bulletPool), this.playerDead.bind(this), 0);
-        this.players[1] = new PlayerTank(this.config, this.bulletPool.create.bind(this.bulletPool), this.playerDead.bind(this), 1);
+        this.players[0] = new PlayerTank(this.config, this.bulletPool.create.bind(this.bulletPool), this.playerDead.bind(this), this.bangTankPool.create.bind(this.bangTankPool), 0);
+        this.players[1] = new PlayerTank(this.config, this.bulletPool.create.bind(this.bulletPool), this.playerDead.bind(this), this.bangTankPool.create.bind(this.bangTankPool), 1);
         this.npcPool = new NpcPool(this.config, this.bulletPool.create.bind(this.bulletPool), this.players, this.win.bind(this), this.bangTankPool.create.bind(this.bangTankPool), uiFields);
 
         this.players[0].otherTanks.push(...this.npcPool.tanks);
@@ -198,7 +197,11 @@ export default class LevelManager
 
     destructionOfTheBase()
     {
-        this.gameOver();
+        let basePos = {x: levels[this.uiFields.currentLevel].basePos.x * this.config.grid + this.config.grid2/2, y:levels[this.uiFields.currentLevel].basePos.y * this.config.grid + this.config.grid2/2};
+        this.bangTankPool.create(basePos);
+        setTimeout(() => { // Уничтожение с задержкой
+            this.gameOver();
+        }, 200);
     }
 
     update(lag)

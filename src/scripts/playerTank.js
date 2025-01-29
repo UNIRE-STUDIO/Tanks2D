@@ -4,7 +4,7 @@ import { getPosOnSliceImage } from "./general.js";
 
 export default class PlayerTank extends Tank 
 {
-    constructor(config, spawnBullet, deadEvent, playerId)
+    constructor(config, spawnBullet, deadEvent, bangCreateEvent, playerId)
     {
         super(config, spawnBullet);
 
@@ -29,6 +29,7 @@ export default class PlayerTank extends Tank
 
         this.deadEvent = deadEvent;
         this.playerId = playerId;
+        this.bangCreateEvent = bangCreateEvent;
     }
 
     setReset()
@@ -39,6 +40,7 @@ export default class PlayerTank extends Tank
         this.moveY = 0;
         this.isUse = false;
         this.isCooldown = false;
+        this.isPause = false;
         this.timerShoot.stop();
         this.timerShoot.reset();
     }
@@ -59,8 +61,12 @@ export default class PlayerTank extends Tank
         this.health = this.health - damage <= 0 ? 0 : this.health - damage;
         if (this.health === 0)
         {
-            this.setReset();
-            this.deadEvent(this.playerId);
+            this.isPause = true;
+            this.bangCreateEvent({x: this.position.x + this.config.grid2/2, y: this.position.y + this.config.grid2/2});
+            setTimeout(() => { // Уничтожение с задержкой
+                this.setReset();
+                this.deadEvent(this.playerId);
+            }, 300);
         }
     }
 
@@ -91,7 +97,7 @@ export default class PlayerTank extends Tank
 
     update(lag)
     {
-        if (!this.isUse) return;
+        if (!this.isUse && !this.isPause) return;
         super.update(lag);
         this.move(lag);
     }

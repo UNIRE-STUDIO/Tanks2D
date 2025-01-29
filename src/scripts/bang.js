@@ -1,18 +1,19 @@
 import { drawSliceImage} from "./general.js";
 
-export default class Bullet
+export default class Bang
 {
-    constructor(config, frames, size)
+    constructor(config, frames, size, sliceSize)
     {
         this.config = config;
         this.posX = 0;
         this.posY = 0;
         this.isUse = false;
-        this.duration = 250; // ms
+        this.duration = frames.length * 80; // ms
         this.timeCounter = 0;
 
         this.frames = frames;
         this.size = size;
+        this.sliceSize = sliceSize;
     }
 
     create(pos)
@@ -32,6 +33,6 @@ export default class Bullet
     render()
     {
         let pos = {x: this.posX, y: this.posY};
-        drawSliceImage(this.config.ctxMain, this.config.atlas, pos, {x:this.size, y:this.size}, this.frames[Math.floor(this.timeCounter/(this.duration/this.frames.length))], {x: this.size, y:this.size});
+        drawSliceImage(this.config.ctxMain, this.config.atlas, pos, {x:this.size, y:this.size}, this.frames[Math.floor(this.timeCounter/(this.duration/this.frames.length))], {x: this.sliceSize, y: this.sliceSize});
     }
 }
