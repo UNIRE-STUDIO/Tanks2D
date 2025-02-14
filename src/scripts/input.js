@@ -35,7 +35,6 @@ export default class Input
     pause_click()
     {
         this.changeScreenEvent(2);
-        console.log(2123123231);
     }
 
     restart_click()

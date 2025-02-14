@@ -8,9 +8,9 @@ export default class PlayerTank extends Tank
     {
         super(config, spawnBullet);
 
-        this.frames_up[0] = playerId === 0 ?    getPosOnSliceImage(9,2,32) : getPosOnSliceImage(9,3,32)
-        this.frames_up[1] = playerId === 0 ?    getPosOnSliceImage(10,2,32): getPosOnSliceImage(10,3,32)
-        this.frames_up[2] = playerId === 0 ?    getPosOnSliceImage(11,2,32): getPosOnSliceImage(11,3,32)
+        this.frames_up[0] = playerId === 0 ?    getPosOnSliceImage(9,2,32) : getPosOnSliceImage(9,3,32);
+        this.frames_up[1] = playerId === 0 ?    getPosOnSliceImage(10,2,32): getPosOnSliceImage(10,3,32);
+        this.frames_up[2] = playerId === 0 ?    getPosOnSliceImage(11,2,32): getPosOnSliceImage(11,3,32);
         this.frames_down[0] = playerId === 0 ?  getPosOnSliceImage(0,2,32) : getPosOnSliceImage(0,3,32);
         this.frames_down[1] = playerId === 0 ?  getPosOnSliceImage(1,2,32) : getPosOnSliceImage(1,3,32);
         this.frames_down[2] = playerId === 0 ?  getPosOnSliceImage(2,2,32) : getPosOnSliceImage(2,3,32);

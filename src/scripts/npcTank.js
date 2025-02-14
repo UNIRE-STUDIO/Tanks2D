@@ -63,7 +63,6 @@ export default class NpcTank extends Tank
             this.durationAnim = 200;
             this.maxTimeWaitOfJamming = 300;
             this.speed = 0.003 * this.config.grid;
-            this.health = 1;
             this.frames_down =  [getPosOnSliceImage(0,4,32), getPosOnSliceImage(1,4,32), getPosOnSliceImage(2,4,32)];
             this.frames_left =  [getPosOnSliceImage(3,4,32), getPosOnSliceImage(4,4,32), getPosOnSliceImage(5,4,32)];
             this.frames_right = [getPosOnSliceImage(6,4,32), getPosOnSliceImage(7,4,32), getPosOnSliceImage(8,4,32)];
@@ -558,8 +557,10 @@ export default class NpcTank extends Tank
     shoot()
     {
         if (this.isPause || !this.isUse || this.isDead) return;
-        let centerPos = {x: this.position.x + this.config.grid2/2 + (this.config.grid2/2 * this.dirX), 
-        y: this.position.y + this.config.grid2/2 + (this.config.grid2/2 * this.dirY)}; 
+        let centerPos = {
+            x: this.position.x + this.config.grid2/2 + (this.config.grid2/2 * this.dirX), 
+            y: this.position.y + this.config.grid2/2 + (this.config.grid2/2 * this.dirY)
+        }; 
         this.spawnBullet(centerPos, {x: this.dirX, y: this.dirY}, false, this.npcId, this.type === 2); // this.type === 2 (BulletFast)
     }
 

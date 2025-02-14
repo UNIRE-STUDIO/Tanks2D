@@ -74,8 +74,7 @@ export default class Tank
         let extraX = tileX;
         let extraY = tileY;
 
-        if (this.currentMap[tileY] === undefined 
-            || this.currentMap[tileY][tileX] === undefined) return true;
+        if (this.currentMap[tileY] === undefined || this.currentMap[tileY][tileX] === undefined) return true;
 
         if (this.moveY != 0) extraX += 1;
         else if (this.moveX != 0) extraY += 1;

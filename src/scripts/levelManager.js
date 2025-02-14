@@ -26,11 +26,12 @@ export default class LevelManager
         this.saveManager;
 
         this.currentMap = null;
-        this.tilesBackgroundPos = [getPosOnSliceImage(3,1,16), getPosOnSliceImage(2,1,16), getPosOnSliceImage(3,0,16), getPosOnSliceImage(2,0,16)];
-                        // - Кирпич                   - Блок                           - Маскировка                - База
-        this.tilesPos = [getPosOnSliceImage(0,0,16), getPosOnSliceImage(1,0,16), getPosOnSliceImage(4,0,16), getPosOnSliceImage(0,9,32)];
         
         this.config = config;
+
+        this.tilesBackgroundPos = [getPosOnSliceImage(3,1,16), getPosOnSliceImage(2,1,16), getPosOnSliceImage(3,0,16), getPosOnSliceImage(2,0,16)];
+                            // - Кирпич                   - Блок                           - Маскировка                - База
+        this.tilesPos = [getPosOnSliceImage(0,0,16), getPosOnSliceImage(1,0,16), getPosOnSliceImage(4,0,16), getPosOnSliceImage(0,9,32)];
 
         this.bangBulletPool = new BangPool(this.config, this.config.grid);
         this.bangTankPool = new BangPool(this.config, this.config.grid2, 32, [getPosOnSliceImage(1,9,32), getPosOnSliceImage(2,9,32), getPosOnSliceImage(3,9,32), getPosOnSliceImage(4,9,32), getPosOnSliceImage(5,9,32)]);
@@ -70,7 +71,6 @@ export default class LevelManager
         this.currentMap = [];
 
         // canvas background
-
         this.config.ctxBackground.clearRect(0, 0, this.config.canvasMain.width, this.config.canvasMain.height);
 
         // Поскольку Object.assign делает только поверхностную копию мы присваиваем каждую полосу отдельно
@@ -98,7 +98,10 @@ export default class LevelManager
 
     delayedSpawn()
     {
-        let base = {x: levels[this.uiFields.currentLevel].basePos.x * this.config.grid, y: levels[this.uiFields.currentLevel].basePos.y * this.config.grid};
+        let base = {
+            x: levels[this.uiFields.currentLevel].basePos.x * this.config.grid, 
+            y: levels[this.uiFields.currentLevel].basePos.y * this.config.grid
+        };
         this.bulletPool.init(this.currentMap, base);
         this.isPause = false;
         this.players[0].create(this.currentMap, levels[this.uiFields.currentLevel].playerSpawnsPos[0]);

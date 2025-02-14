@@ -12,6 +12,7 @@ export default class Game
         this.config;
         this.uiFields;
         this.levelManager;
+        
         this.input = new Input();
         this.input.changeScreenEvent = this.changeScreen.bind(this);
 
