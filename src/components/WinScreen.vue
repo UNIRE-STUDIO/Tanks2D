@@ -21,8 +21,8 @@ export default {
             scoreType1p1: this.uiFields.getScoreForType(1, 1),
             scoreType2p1: this.uiFields.getScoreForType(2, 1),
 
-            sumDestroyedP0: this.uiFields.getSumScore(0),
-            sumDestroyedP1: this.uiFields.getSumScore(1),
+            sumDestroyedP0: this.uiFields.getSumDestroyed(0),
+            sumDestroyedP1: this.uiFields.getSumDestroyed(1),
         }
     }
 }

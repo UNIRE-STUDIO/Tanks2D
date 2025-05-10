@@ -27,4 +27,7 @@ export default class UIFields
     {
         return (this.getScoreForType(0, playerId) + this.getScoreForType(1, playerId) + this.getScoreForType(2, playerId));
     }
+    getSumDestroyed(playerId){
+        return (this.numDestroyedTypes[0][playerId] + this.numDestroyedTypes[1][playerId] + this.numDestroyedTypes[2][playerId])
+    }
 }
